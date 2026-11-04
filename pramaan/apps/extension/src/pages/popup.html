@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pramaan</title>
+    <link rel="stylesheet" href="./pages.css" />
+  </head>
+  <body class="popup">
+    <header class="bar">
+      <div class="logo"><span class="mark"></span><span>Pramaan</span></div>
+      <select id="lang" aria-label="Language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="mr">मराठी</option>
+      </select>
+    </header>
+    <main id="root"><p class="muted">Loading…</p></main>
+    <footer class="links">
+      <a href="#" id="reverify">Verify again</a>
+      <a href="options.html" target="_blank" id="options">Settings</a>
+      <a href="#" id="dashboard">Dashboard</a>
+    </footer>
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

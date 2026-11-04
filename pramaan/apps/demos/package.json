@@ -1,0 +1,20 @@
+{
+  "name": "@pramaan/demos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "VaultLab, MirrorYield and PermitMarket: three independent demo dApps (separate origins, manifests and ENS identities) on one Pramaan infrastructure.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node server/serve.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@pramaan/manifest": "workspace:*",
+    "@pramaan/release": "workspace:*",
+    "viem": "2.57.7"
+  },
+  "devDependencies": {
+    "vite": "7.3.7"
+  }
+}

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pramaan · review before you sign</title>
+    <link rel="stylesheet" href="./pages.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="logo"><span class="mark"></span><span id="title">Review before you sign</span></div>
+      <select id="lang" aria-label="Language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="mr">मराठी</option>
+      </select>
+    </header>
+    <main id="root"><p class="muted">Loading…</p></main>
+    <div class="actions">
+      <button class="reject" id="reject">Reject</button>
+      <button class="continue" id="continue">Continue to wallet</button>
+    </div>
+    <script type="module" src="./verdict.ts"></script>
+  </body>
+</html>

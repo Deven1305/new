@@ -1,0 +1,7801 @@
+{
+ "mode": "analyze",
+ "tools": [
+  {
+   "name": "forge",
+   "version": "forge Version: 1.8.7"
+  },
+  {
+   "name": "slither",
+   "version": "0.11.6"
+  },
+  {
+   "name": "aderyn",
+   "version": "aderyn 0.6.8"
+  },
+  {
+   "name": "solc",
+   "version": "0.8.20,0.8.24,0.8.26,0.8.28,0.8.30,0.8.33,0.8.35,0.8.38"
+  },
+  {
+   "name": "pramaan-sandbox",
+   "version": "1"
+  }
+ ],
+ "slither": {
+  "ok": true,
+  "error": null,
+  "detectors": [
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "withdrawAll",
+      "source_mapping": {
+       "start": 3653,
+       "length": 472,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "VulnerableVault",
+        "source_mapping": {
+         "start": 949,
+         "length": 3250,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "withdrawAll()"
+      }
+     },
+     {
+      "type": "node",
+      "name": "(ok,None) = address(msg.sender).call{value: ethAmount}()",
+      "source_mapping": {
+       "start": 3944,
+       "length": 59,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        91
+       ],
+       "starting_column": 9,
+       "ending_column": 68
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdrawAll",
+        "source_mapping": {
+         "start": 3653,
+         "length": 472,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VulnerableVault",
+          "source_mapping": {
+           "start": 949,
+           "length": 3250,
+           "filename_relative": "src/demo/VulnerableVault.sol",
+           "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+           "filename_short": "src/demo/VulnerableVault.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdrawAll()"
+        }
+       }
+      }
+     }
+    ],
+    "description": "VulnerableVault.withdrawAll() (src/demo/VulnerableVault.sol#85-94) sends eth to arbitrary user\n\tDangerous calls:\n\t- (ok,None) = address(msg.sender).call{value: ethAmount}() (src/demo/VulnerableVault.sol#91)\n",
+    "markdown": "[VulnerableVault.withdrawAll()](src/demo/VulnerableVault.sol#L85-L94) sends eth to arbitrary user\n\tDangerous calls:\n\t- [(ok,None) = address(msg.sender).call{value: ethAmount}()](src/demo/VulnerableVault.sol#L91)\n",
+    "first_markdown_element": "src/demo/VulnerableVault.sol#L85-L94",
+    "id": "7cb774494b6ed5a8a4fd8e2ebc93c2061e41a973a0da09031d7690970fe4adf2",
+    "check": "arbitrary-send-eth",
+    "impact": "High",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#functions-that-send-ether-to-arbitrary-destinations"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "withdrawAll",
+      "source_mapping": {
+       "start": 3653,
+       "length": 472,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "VulnerableVault",
+        "source_mapping": {
+         "start": 949,
+         "length": 3250,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "withdrawAll()"
+      }
+     }
+    ],
+    "description": "VulnerableVault.withdrawAll() (src/demo/VulnerableVault.sol#85-94) moves the contract's entire balance and does not restrict msg.sender\n",
+    "markdown": "[VulnerableVault.withdrawAll()](src/demo/VulnerableVault.sol#L85-L94) moves the contract's entire balance and does not restrict msg.sender\n",
+    "first_markdown_element": "src/demo/VulnerableVault.sol#L85-L94",
+    "id": "5677324ed043b86d15ae3186c4070c13140794ac316df7d27a770903d2cac3a2",
+    "check": "pramaan-unprotected-sweep",
+    "impact": "High",
+    "confidence": "Medium",
+    "reference": "https://github.com/pramaan-dev/pramaan/blob/main/docs/SECURITY.md#detectors"
+   },
+   {
+    "elements": [
+     {
+      "type": "variable",
+      "name": "to",
+      "source_mapping": {
+       "start": 908,
+       "length": 18,
+       "filename_relative": "src/demo/VaultV3Unaudited.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV3Unaudited.sol",
+       "filename_short": "src/demo/VaultV3Unaudited.sol",
+       "is_dependency": false,
+       "lines": [
+        21
+       ],
+       "starting_column": 28,
+       "ending_column": 46
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "operatorSweep",
+        "source_mapping": {
+         "start": 885,
+         "length": 353,
+         "filename_relative": "src/demo/VaultV3Unaudited.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV3Unaudited.sol",
+         "filename_short": "src/demo/VaultV3Unaudited.sol",
+         "is_dependency": false,
+         "lines": [
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VaultV3Unaudited",
+          "source_mapping": {
+           "start": 612,
+           "length": 628,
+           "filename_relative": "src/demo/VaultV3Unaudited.sol",
+           "filename_absolute": "/work/slither/src/demo/VaultV3Unaudited.sol",
+           "filename_short": "src/demo/VaultV3Unaudited.sol",
+           "is_dependency": false,
+           "lines": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "operatorSweep(address)"
+        }
+       }
+      }
+     },
+     {
+      "type": "node",
+      "name": "(ok,None) = to.call{value: address(this).balance}()",
+      "source_mapping": {
+       "start": 1132,
+       "length": 54,
+       "filename_relative": "src/demo/VaultV3Unaudited.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV3Unaudited.sol",
+       "filename_short": "src/demo/VaultV3Unaudited.sol",
+       "is_dependency": false,
+       "lines": [
+        25
+       ],
+       "starting_column": 9,
+       "ending_column": 63
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "operatorSweep",
+        "source_mapping": {
+         "start": 885,
+         "length": 353,
+         "filename_relative": "src/demo/VaultV3Unaudited.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV3Unaudited.sol",
+         "filename_short": "src/demo/VaultV3Unaudited.sol",
+         "is_dependency": false,
+         "lines": [
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VaultV3Unaudited",
+          "source_mapping": {
+           "start": 612,
+           "length": 628,
+           "filename_relative": "src/demo/VaultV3Unaudited.sol",
+           "filename_absolute": "/work/slither/src/demo/VaultV3Unaudited.sol",
+           "filename_short": "src/demo/VaultV3Unaudited.sol",
+           "is_dependency": false,
+           "lines": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "operatorSweep(address)"
+        }
+       }
+      }
+     }
+    ],
+    "description": "VaultV3Unaudited.operatorSweep(address).to (src/demo/VaultV3Unaudited.sol#21) lacks a zero-check on :\n\t\t- (ok,None) = to.call{value: address(this).balance}() (src/demo/VaultV3Unaudited.sol#25)\n",
+    "markdown": "[VaultV3Unaudited.operatorSweep(address).to](src/demo/VaultV3Unaudited.sol#L21) lacks a zero-check on :\n\t\t- [(ok,None) = to.call{value: address(this).balance}()](src/demo/VaultV3Unaudited.sol#L25)\n",
+    "first_markdown_element": "src/demo/VaultV3Unaudited.sol#L21",
+    "id": "df2c9f317548e2e530d22340df5ac220210773ec87c4798030bf07811c3770d6",
+    "check": "missing-zero-check",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "execute",
+      "source_mapping": {
+       "start": 4488,
+       "length": 539,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "PramaanTimelock",
+        "source_mapping": {
+         "start": 785,
+         "length": 6065,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "execute(uint256)"
+      }
+     },
+     {
+      "type": "node",
+      "name": "resolver.setText(_dnsName,KEY,op.value)",
+      "source_mapping": {
+       "start": 4930,
+       "length": 41,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        112
+       ],
+       "starting_column": 9,
+       "ending_column": 50
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "execute",
+        "source_mapping": {
+         "start": 4488,
+         "length": 539,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "PramaanTimelock",
+          "source_mapping": {
+           "start": 785,
+           "length": 6065,
+           "filename_relative": "src/PramaanTimelock.sol",
+           "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+           "filename_short": "src/PramaanTimelock.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "execute(uint256)"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "external_calls"
+      }
+     },
+     {
+      "type": "node",
+      "name": "Executed(id,op.value,msg.sender)",
+      "source_mapping": {
+       "start": 4981,
+       "length": 39,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        113
+       ],
+       "starting_column": 9,
+       "ending_column": 48
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "execute",
+        "source_mapping": {
+         "start": 4488,
+         "length": 539,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "PramaanTimelock",
+          "source_mapping": {
+           "start": 785,
+           "length": 6065,
+           "filename_relative": "src/PramaanTimelock.sol",
+           "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+           "filename_short": "src/PramaanTimelock.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "execute(uint256)"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "event"
+      }
+     }
+    ],
+    "description": "Reentrancy in PramaanTimelock.execute(uint256) (src/PramaanTimelock.sol#104-114):\n\tExternal calls:\n\t- resolver.setText(_dnsName,KEY,op.value) (src/PramaanTimelock.sol#112)\n\tEvent emitted after the call(s):\n\t- Executed(id,op.value,msg.sender) (src/PramaanTimelock.sol#113)\n",
+    "markdown": "Reentrancy in [PramaanTimelock.execute(uint256)](src/PramaanTimelock.sol#L104-L114):\n\tExternal calls:\n\t- [resolver.setText(_dnsName,KEY,op.value)](src/PramaanTimelock.sol#L112)\n\tEvent emitted after the call(s):\n\t- [Executed(id,op.value,msg.sender)](src/PramaanTimelock.sol#L113)\n",
+    "first_markdown_element": "src/PramaanTimelock.sol#L104-L114",
+    "id": "3185e54a67917bf573e75709cc7d01b0f7386acaa618854181804f52f3c14c72",
+    "check": "reentrancy-events",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "withdraw",
+      "source_mapping": {
+       "start": 2672,
+       "length": 475,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "VulnerableVault",
+        "source_mapping": {
+         "start": 949,
+         "length": 3250,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "withdraw(uint256)"
+      }
+     },
+     {
+      "type": "node",
+      "name": "(ok,None) = address(msg.sender).call{value: amount}()",
+      "source_mapping": {
+       "start": 2995,
+       "length": 56,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        69
+       ],
+       "starting_column": 9,
+       "ending_column": 65
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdraw",
+        "source_mapping": {
+         "start": 2672,
+         "length": 475,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VulnerableVault",
+          "source_mapping": {
+           "start": 949,
+           "length": 3250,
+           "filename_relative": "src/demo/VulnerableVault.sol",
+           "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+           "filename_short": "src/demo/VulnerableVault.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdraw(uint256)"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "external_calls"
+      }
+     },
+     {
+      "type": "node",
+      "name": "Withdrawn(msg.sender,amount)",
+      "source_mapping": {
+       "start": 3106,
+       "length": 34,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        71
+       ],
+       "starting_column": 9,
+       "ending_column": 43
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdraw",
+        "source_mapping": {
+         "start": 2672,
+         "length": 475,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VulnerableVault",
+          "source_mapping": {
+           "start": 949,
+           "length": 3250,
+           "filename_relative": "src/demo/VulnerableVault.sol",
+           "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+           "filename_short": "src/demo/VulnerableVault.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdraw(uint256)"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "event"
+      }
+     }
+    ],
+    "description": "Reentrancy in VulnerableVault.withdraw(uint256) (src/demo/VulnerableVault.sol#63-72):\n\tExternal calls:\n\t- (ok,None) = address(msg.sender).call{value: amount}() (src/demo/VulnerableVault.sol#69)\n\tEvent emitted after the call(s):\n\t- Withdrawn(msg.sender,amount) (src/demo/VulnerableVault.sol#71)\n",
+    "markdown": "Reentrancy in [VulnerableVault.withdraw(uint256)](src/demo/VulnerableVault.sol#L63-L72):\n\tExternal calls:\n\t- [(ok,None) = address(msg.sender).call{value: amount}()](src/demo/VulnerableVault.sol#L69)\n\tEvent emitted after the call(s):\n\t- [Withdrawn(msg.sender,amount)](src/demo/VulnerableVault.sol#L71)\n",
+    "first_markdown_element": "src/demo/VulnerableVault.sol#L63-L72",
+    "id": "4817d162fbbab2381af497b5715d462444b626d234e921bdb48c15d7d80c71c4",
+    "check": "reentrancy-events",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "withdrawAll",
+      "source_mapping": {
+       "start": 3653,
+       "length": 472,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "VulnerableVault",
+        "source_mapping": {
+         "start": 949,
+         "length": 3250,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "withdrawAll()"
+      }
+     },
+     {
+      "type": "node",
+      "name": "(ok,None) = address(msg.sender).call{value: ethAmount}()",
+      "source_mapping": {
+       "start": 3944,
+       "length": 59,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        91
+       ],
+       "starting_column": 9,
+       "ending_column": 68
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdrawAll",
+        "source_mapping": {
+         "start": 3653,
+         "length": 472,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VulnerableVault",
+          "source_mapping": {
+           "start": 949,
+           "length": 3250,
+           "filename_relative": "src/demo/VulnerableVault.sol",
+           "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+           "filename_short": "src/demo/VulnerableVault.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdrawAll()"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "external_calls"
+      }
+     },
+     {
+      "type": "node",
+      "name": "EmergencyWithdrawal(msg.sender,ethAmount,tokenAmount)",
+      "source_mapping": {
+       "start": 4058,
+       "length": 60,
+       "filename_relative": "src/demo/VulnerableVault.sol",
+       "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+       "filename_short": "src/demo/VulnerableVault.sol",
+       "is_dependency": false,
+       "lines": [
+        93
+       ],
+       "starting_column": 9,
+       "ending_column": 69
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdrawAll",
+        "source_mapping": {
+         "start": 3653,
+         "length": 472,
+         "filename_relative": "src/demo/VulnerableVault.sol",
+         "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+         "filename_short": "src/demo/VulnerableVault.sol",
+         "is_dependency": false,
+         "lines": [
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VulnerableVault",
+          "source_mapping": {
+           "start": 949,
+           "length": 3250,
+           "filename_relative": "src/demo/VulnerableVault.sol",
+           "filename_absolute": "/work/slither/src/demo/VulnerableVault.sol",
+           "filename_short": "src/demo/VulnerableVault.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdrawAll()"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "event"
+      }
+     }
+    ],
+    "description": "Reentrancy in VulnerableVault.withdrawAll() (src/demo/VulnerableVault.sol#85-94):\n\tExternal calls:\n\t- (ok,None) = address(msg.sender).call{value: ethAmount}() (src/demo/VulnerableVault.sol#91)\n\tEvent emitted after the call(s):\n\t- EmergencyWithdrawal(msg.sender,ethAmount,tokenAmount) (src/demo/VulnerableVault.sol#93)\n",
+    "markdown": "Reentrancy in [VulnerableVault.withdrawAll()](src/demo/VulnerableVault.sol#L85-L94):\n\tExternal calls:\n\t- [(ok,None) = address(msg.sender).call{value: ethAmount}()](src/demo/VulnerableVault.sol#L91)\n\tEvent emitted after the call(s):\n\t- [EmergencyWithdrawal(msg.sender,ethAmount,tokenAmount)](src/demo/VulnerableVault.sol#L93)\n",
+    "first_markdown_element": "src/demo/VulnerableVault.sol#L85-L94",
+    "id": "5f0f8183e975fc66dd25fc3d0bb259eba5f14c1f209d7a987670054d316ab739",
+    "check": "reentrancy-events",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "withdrawAll",
+      "source_mapping": {
+       "start": 3477,
+       "length": 482,
+       "filename_relative": "src/demo/VaultV2.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+       "filename_short": "src/demo/VaultV2.sol",
+       "is_dependency": false,
+       "lines": [
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "VaultV2",
+        "source_mapping": {
+         "start": 769,
+         "length": 3264,
+         "filename_relative": "src/demo/VaultV2.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+         "filename_short": "src/demo/VaultV2.sol",
+         "is_dependency": false,
+         "lines": [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "withdrawAll()"
+      }
+     },
+     {
+      "type": "node",
+      "name": "(ok,None) = address(msg.sender).call{value: ethAmount}()",
+      "source_mapping": {
+       "start": 3778,
+       "length": 59,
+       "filename_relative": "src/demo/VaultV2.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+       "filename_short": "src/demo/VaultV2.sol",
+       "is_dependency": false,
+       "lines": [
+        89
+       ],
+       "starting_column": 9,
+       "ending_column": 68
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdrawAll",
+        "source_mapping": {
+         "start": 3477,
+         "length": 482,
+         "filename_relative": "src/demo/VaultV2.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+         "filename_short": "src/demo/VaultV2.sol",
+         "is_dependency": false,
+         "lines": [
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VaultV2",
+          "source_mapping": {
+           "start": 769,
+           "length": 3264,
+           "filename_relative": "src/demo/VaultV2.sol",
+           "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+           "filename_short": "src/demo/VaultV2.sol",
+           "is_dependency": false,
+           "lines": [
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdrawAll()"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "external_calls"
+      }
+     },
+     {
+      "type": "node",
+      "name": "EmergencyWithdrawal(msg.sender,ethAmount,tokenAmount)",
+      "source_mapping": {
+       "start": 3892,
+       "length": 60,
+       "filename_relative": "src/demo/VaultV2.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+       "filename_short": "src/demo/VaultV2.sol",
+       "is_dependency": false,
+       "lines": [
+        91
+       ],
+       "starting_column": 9,
+       "ending_column": 69
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdrawAll",
+        "source_mapping": {
+         "start": 3477,
+         "length": 482,
+         "filename_relative": "src/demo/VaultV2.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+         "filename_short": "src/demo/VaultV2.sol",
+         "is_dependency": false,
+         "lines": [
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VaultV2",
+          "source_mapping": {
+           "start": 769,
+           "length": 3264,
+           "filename_relative": "src/demo/VaultV2.sol",
+           "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+           "filename_short": "src/demo/VaultV2.sol",
+           "is_dependency": false,
+           "lines": [
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdrawAll()"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "event"
+      }
+     }
+    ],
+    "description": "Reentrancy in VaultV2.withdrawAll() (src/demo/VaultV2.sol#83-92):\n\tExternal calls:\n\t- (ok,None) = address(msg.sender).call{value: ethAmount}() (src/demo/VaultV2.sol#89)\n\tEvent emitted after the call(s):\n\t- EmergencyWithdrawal(msg.sender,ethAmount,tokenAmount) (src/demo/VaultV2.sol#91)\n",
+    "markdown": "Reentrancy in [VaultV2.withdrawAll()](src/demo/VaultV2.sol#L83-L92):\n\tExternal calls:\n\t- [(ok,None) = address(msg.sender).call{value: ethAmount}()](src/demo/VaultV2.sol#L89)\n\tEvent emitted after the call(s):\n\t- [EmergencyWithdrawal(msg.sender,ethAmount,tokenAmount)](src/demo/VaultV2.sol#L91)\n",
+    "first_markdown_element": "src/demo/VaultV2.sol#L83-L92",
+    "id": "6debe0a5736a658ca14d6fb5794ae4c31d5938e4f12fa76d93bea6a90d5fbe8c",
+    "check": "reentrancy-events",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "withdraw",
+      "source_mapping": {
+       "start": 2484,
+       "length": 475,
+       "filename_relative": "src/demo/VaultV2.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+       "filename_short": "src/demo/VaultV2.sol",
+       "is_dependency": false,
+       "lines": [
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "VaultV2",
+        "source_mapping": {
+         "start": 769,
+         "length": 3264,
+         "filename_relative": "src/demo/VaultV2.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+         "filename_short": "src/demo/VaultV2.sol",
+         "is_dependency": false,
+         "lines": [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "withdraw(uint256)"
+      }
+     },
+     {
+      "type": "node",
+      "name": "(ok,None) = address(msg.sender).call{value: amount}()",
+      "source_mapping": {
+       "start": 2807,
+       "length": 56,
+       "filename_relative": "src/demo/VaultV2.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+       "filename_short": "src/demo/VaultV2.sol",
+       "is_dependency": false,
+       "lines": [
+        67
+       ],
+       "starting_column": 9,
+       "ending_column": 65
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdraw",
+        "source_mapping": {
+         "start": 2484,
+         "length": 475,
+         "filename_relative": "src/demo/VaultV2.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+         "filename_short": "src/demo/VaultV2.sol",
+         "is_dependency": false,
+         "lines": [
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VaultV2",
+          "source_mapping": {
+           "start": 769,
+           "length": 3264,
+           "filename_relative": "src/demo/VaultV2.sol",
+           "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+           "filename_short": "src/demo/VaultV2.sol",
+           "is_dependency": false,
+           "lines": [
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdraw(uint256)"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "external_calls"
+      }
+     },
+     {
+      "type": "node",
+      "name": "Withdrawn(msg.sender,amount)",
+      "source_mapping": {
+       "start": 2918,
+       "length": 34,
+       "filename_relative": "src/demo/VaultV2.sol",
+       "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+       "filename_short": "src/demo/VaultV2.sol",
+       "is_dependency": false,
+       "lines": [
+        69
+       ],
+       "starting_column": 9,
+       "ending_column": 43
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "withdraw",
+        "source_mapping": {
+         "start": 2484,
+         "length": 475,
+         "filename_relative": "src/demo/VaultV2.sol",
+         "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+         "filename_short": "src/demo/VaultV2.sol",
+         "is_dependency": false,
+         "lines": [
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "VaultV2",
+          "source_mapping": {
+           "start": 769,
+           "length": 3264,
+           "filename_relative": "src/demo/VaultV2.sol",
+           "filename_absolute": "/work/slither/src/demo/VaultV2.sol",
+           "filename_short": "src/demo/VaultV2.sol",
+           "is_dependency": false,
+           "lines": [
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "withdraw(uint256)"
+        }
+       }
+      },
+      "additional_fields": {
+       "underlying_type": "event"
+      }
+     }
+    ],
+    "description": "Reentrancy in VaultV2.withdraw(uint256) (src/demo/VaultV2.sol#61-70):\n\tExternal calls:\n\t- (ok,None) = address(msg.sender).call{value: amount}() (src/demo/VaultV2.sol#67)\n\tEvent emitted after the call(s):\n\t- Withdrawn(msg.sender,amount) (src/demo/VaultV2.sol#69)\n",
+    "markdown": "Reentrancy in [VaultV2.withdraw(uint256)](src/demo/VaultV2.sol#L61-L70):\n\tExternal calls:\n\t- [(ok,None) = address(msg.sender).call{value: amount}()](src/demo/VaultV2.sol#L67)\n\tEvent emitted after the call(s):\n\t- [Withdrawn(msg.sender,amount)](src/demo/VaultV2.sol#L69)\n",
+    "first_markdown_element": "src/demo/VaultV2.sol#L61-L70",
+    "id": "aceb1ff1d8a4ae23c9366eb71d454997a8d6b9e600a9f1b974f269effca509bd",
+    "check": "reentrancy-events",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "faucet",
+      "source_mapping": {
+       "start": 800,
+       "length": 291,
+       "filename_relative": "src/demo/DemoToken.sol",
+       "filename_absolute": "/work/slither/src/demo/DemoToken.sol",
+       "filename_short": "src/demo/DemoToken.sol",
+       "is_dependency": false,
+       "lines": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "DemoToken",
+        "source_mapping": {
+         "start": 358,
+         "length": 735,
+         "filename_relative": "src/demo/DemoToken.sol",
+         "filename_absolute": "/work/slither/src/demo/DemoToken.sol",
+         "filename_short": "src/demo/DemoToken.sol",
+         "is_dependency": false,
+         "lines": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "faucet()"
+      }
+     },
+     {
+      "type": "node",
+      "name": "last != 0 && block.timestamp < last + FAUCET_COOLDOWN",
+      "source_mapping": {
+       "start": 890,
+       "length": 53,
+       "filename_relative": "src/demo/DemoToken.sol",
+       "filename_absolute": "/work/slither/src/demo/DemoToken.sol",
+       "filename_short": "src/demo/DemoToken.sol",
+       "is_dependency": false,
+       "lines": [
+        25
+       ],
+       "starting_column": 13,
+       "ending_column": 66
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "faucet",
+        "source_mapping": {
+         "start": 800,
+         "length": 291,
+         "filename_relative": "src/demo/DemoToken.sol",
+         "filename_absolute": "/work/slither/src/demo/DemoToken.sol",
+         "filename_short": "src/demo/DemoToken.sol",
+         "is_dependency": false,
+         "lines": [
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "DemoToken",
+          "source_mapping": {
+           "start": 358,
+           "length": 735,
+           "filename_relative": "src/demo/DemoToken.sol",
+           "filename_absolute": "/work/slither/src/demo/DemoToken.sol",
+           "filename_short": "src/demo/DemoToken.sol",
+           "is_dependency": false,
+           "lines": [
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "faucet()"
+        }
+       }
+      }
+     }
+    ],
+    "description": "DemoToken.faucet() (src/demo/DemoToken.sol#23-28) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- last != 0 && block.timestamp < last + FAUCET_COOLDOWN (src/demo/DemoToken.sol#25)\n",
+    "markdown": "[DemoToken.faucet()](src/demo/DemoToken.sol#L23-L28) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- [last != 0 && block.timestamp < last + FAUCET_COOLDOWN](src/demo/DemoToken.sol#L25)\n",
+    "first_markdown_element": "src/demo/DemoToken.sol#L23-L28",
+    "id": "4c86f03e316d618cc8128a0c8cef95b920514c12647f57fd08b0b1ede18d6c3b",
+    "check": "timestamp",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "execute",
+      "source_mapping": {
+       "start": 4488,
+       "length": 539,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "PramaanTimelock",
+        "source_mapping": {
+         "start": 785,
+         "length": 6065,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "execute(uint256)"
+      }
+     },
+     {
+      "type": "node",
+      "name": "block.timestamp < op.eta",
+      "source_mapping": {
+       "start": 4648,
+       "length": 24,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        107
+       ],
+       "starting_column": 13,
+       "ending_column": 37
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "execute",
+        "source_mapping": {
+         "start": 4488,
+         "length": 539,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "PramaanTimelock",
+          "source_mapping": {
+           "start": 785,
+           "length": 6065,
+           "filename_relative": "src/PramaanTimelock.sol",
+           "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+           "filename_short": "src/PramaanTimelock.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "execute(uint256)"
+        }
+       }
+      }
+     },
+     {
+      "type": "node",
+      "name": "block.timestamp > uint256(op.eta) + GRACE_PERIOD",
+      "source_mapping": {
+       "start": 4715,
+       "length": 48,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        108
+       ],
+       "starting_column": 13,
+       "ending_column": 61
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "execute",
+        "source_mapping": {
+         "start": 4488,
+         "length": 539,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "PramaanTimelock",
+          "source_mapping": {
+           "start": 785,
+           "length": 6065,
+           "filename_relative": "src/PramaanTimelock.sol",
+           "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+           "filename_short": "src/PramaanTimelock.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "execute(uint256)"
+        }
+       }
+      }
+     }
+    ],
+    "description": "PramaanTimelock.execute(uint256) (src/PramaanTimelock.sol#104-114) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- block.timestamp < op.eta (src/PramaanTimelock.sol#107)\n\t- block.timestamp > uint256(op.eta) + GRACE_PERIOD (src/PramaanTimelock.sol#108)\n",
+    "markdown": "[PramaanTimelock.execute(uint256)](src/PramaanTimelock.sol#L104-L114) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- [block.timestamp < op.eta](src/PramaanTimelock.sol#L107)\n\t- [block.timestamp > uint256(op.eta) + GRACE_PERIOD](src/PramaanTimelock.sol#L108)\n",
+    "first_markdown_element": "src/PramaanTimelock.sol#L104-L114",
+    "id": "a681c7a31c60a5cd76844a4d109041a4cc2fa8276ac8436da8d915e94e0b094a",
+    "check": "timestamp",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp"
+   },
+   {
+    "elements": [
+     {
+      "type": "function",
+      "name": "isReady",
+      "source_mapping": {
+       "start": 5950,
+       "length": 271,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        137,
+        138,
+        139,
+        140,
+        141
+       ],
+       "starting_column": 5,
+       "ending_column": 6
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "contract",
+        "name": "PramaanTimelock",
+        "source_mapping": {
+         "start": 785,
+         "length": 6065,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156
+         ],
+         "starting_column": 1,
+         "ending_column": 2
+        }
+       },
+       "signature": "isReady(uint256)"
+      }
+     },
+     {
+      "type": "node",
+      "name": "op.state == State.Queued && block.timestamp >= op.eta && block.timestamp <= uint256(op.eta) + GRACE_PERIOD && id > lastExecutedId",
+      "source_mapping": {
+       "start": 6066,
+       "length": 148,
+       "filename_relative": "src/PramaanTimelock.sol",
+       "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+       "filename_short": "src/PramaanTimelock.sol",
+       "is_dependency": false,
+       "lines": [
+        139,
+        140
+       ],
+       "starting_column": 9,
+       "ending_column": 35
+      },
+      "type_specific_fields": {
+       "parent": {
+        "type": "function",
+        "name": "isReady",
+        "source_mapping": {
+         "start": 5950,
+         "length": 271,
+         "filename_relative": "src/PramaanTimelock.sol",
+         "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+         "filename_short": "src/PramaanTimelock.sol",
+         "is_dependency": false,
+         "lines": [
+          137,
+          138,
+          139,
+          140,
+          141
+         ],
+         "starting_column": 5,
+         "ending_column": 6
+        },
+        "type_specific_fields": {
+         "parent": {
+          "type": "contract",
+          "name": "PramaanTimelock",
+          "source_mapping": {
+           "start": 785,
+           "length": 6065,
+           "filename_relative": "src/PramaanTimelock.sol",
+           "filename_absolute": "/work/slither/src/PramaanTimelock.sol",
+           "filename_short": "src/PramaanTimelock.sol",
+           "is_dependency": false,
+           "lines": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+           ],
+           "starting_column": 1,
+           "ending_column": 2
+          }
+         },
+         "signature": "isReady(uint256)"
+        }
+       }
+      }
+     }
+    ],
+    "description": "PramaanTimelock.isReady(uint256) (src/PramaanTimelock.sol#137-141) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- op.state == State.Queued && block.timestamp >= op.eta && block.timestamp <= uint256(op.eta) + GRACE_PERIOD && id > lastExecutedId (src/PramaanTimelock.sol#139-140)\n",
+    "markdown": "[PramaanTimelock.isReady(uint256)](src/PramaanTimelock.sol#L137-L141) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- [op.state == State.Queued && block.timestamp >= op.eta && block.timestamp <= uint256(op.eta) + GRACE_PERIOD && id > lastExecutedId](src/PramaanTimelock.sol#L139-L140)\n",
+    "first_markdown_element": "src/PramaanTimelock.sol#L137-L141",
+    "id": "f21a7b7c2e340642983e806c178593edcdc91a34129ad3589a80efcf792d7e13",
+    "check": "timestamp",
+    "impact": "Low",
+    "confidence": "Medium",
+    "reference": "https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp"
+   }
+  ],
+  "durationMs": 4226
+ },
+ "build": {
+  "ok": true,
+  "exitCode": 0,
+  "log": "",
+  "durationMs": 5529
+ },
+ "contracts": [
+  {
+   "name": "VulnerableVault",
+   "source": "src/demo/VulnerableVault.sol",
+   "kind": "contract",
+   "abstract": false,
+   "bases": [
+    "UUPSUpgradeable",
+    "IERC1822Proxiable",
+    "OwnableUpgradeable",
+    "ContextUpgradeable",
+    "Initializable"
+   ],
+   "deployable": true,
+   "abi": [
+    {
+     "type": "constructor",
+     "inputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "UPGRADE_INTERFACE_VERSION",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "deposit",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "payable"
+    },
+    {
+     "type": "function",
+     "name": "depositToken",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "ethBalanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "initialize",
+     "inputs": [
+      {
+       "name": "initialOwner",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "token_",
+       "type": "address",
+       "internalType": "contract IERC20"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "owner",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "proxiableUUID",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "renounceOwnership",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "token",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "contract IERC20"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "tokenBalanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalEthDeposits",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalTokenDeposits",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "transferOwnership",
+     "inputs": [
+      {
+       "name": "newOwner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "upgradeToAndCall",
+     "inputs": [
+      {
+       "name": "newImplementation",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "data",
+       "type": "bytes",
+       "internalType": "bytes"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "payable"
+    },
+    {
+     "type": "function",
+     "name": "version",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "pure"
+    },
+    {
+     "type": "function",
+     "name": "withdraw",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "withdrawAll",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "withdrawToken",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "event",
+     "name": "Deposited",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "EmergencyWithdrawal",
+     "inputs": [
+      {
+       "name": "to",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "ethAmount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      },
+      {
+       "name": "tokenAmount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Initialized",
+     "inputs": [
+      {
+       "name": "version",
+       "type": "uint64",
+       "indexed": false,
+       "internalType": "uint64"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "OwnershipTransferred",
+     "inputs": [
+      {
+       "name": "previousOwner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "newOwner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "TokenDeposited",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "TokenWithdrawn",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Upgraded",
+     "inputs": [
+      {
+       "name": "implementation",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Withdrawn",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "error",
+     "name": "AddressEmptyCode",
+     "inputs": [
+      {
+       "name": "target",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC1967InvalidImplementation",
+     "inputs": [
+      {
+       "name": "implementation",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC1967NonPayable",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "EthTransferFailed",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "FailedCall",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "InsufficientBalance",
+     "inputs": [
+      {
+       "name": "requested",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "available",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "InvalidInitialization",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "NotInitializing",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "OwnableInvalidOwner",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "OwnableUnauthorizedAccount",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "SafeERC20FailedOperation",
+     "inputs": [
+      {
+       "name": "token",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "UUPSUnauthorizedCallContext",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "UUPSUnsupportedProxiableUUID",
+     "inputs": [
+      {
+       "name": "slot",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ZeroAmount",
+     "inputs": []
+    }
+   ],
+   "functions": [
+    {
+     "name": "constructor",
+     "kind": "constructor",
+     "visibility": "public",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 1821,
+      "length": 53,
+      "bodyStart": 1835
+     },
+     "lines": [
+      35,
+      37
+     ]
+    },
+    {
+     "name": "initialize",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "initializer"
+     ],
+     "parameters": [
+      {
+       "name": "initialOwner",
+       "type": "address"
+      },
+      {
+       "name": "token_",
+       "type": "contract IERC20"
+      }
+     ],
+     "src": {
+      "start": 1880,
+      "length": 147,
+      "bodyStart": 1958
+     },
+     "lines": [
+      39,
+      42
+     ]
+    },
+    {
+     "name": "version",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "pure",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 2033,
+      "length": 96,
+      "bodyStart": 2098
+     },
+     "lines": [
+      44,
+      46
+     ]
+    },
+    {
+     "name": "deposit",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "payable",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 2135,
+      "length": 225,
+      "bodyStart": 2171
+     },
+     "lines": [
+      48,
+      53
+     ]
+    },
+    {
+     "name": "depositToken",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "amount",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 2366,
+      "length": 300,
+      "bodyStart": 2413
+     },
+     "lines": [
+      55,
+      61
+     ]
+    },
+    {
+     "name": "withdraw",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "amount",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 2672,
+      "length": 475,
+      "bodyStart": 2715
+     },
+     "lines": [
+      63,
+      72
+     ]
+    },
+    {
+     "name": "withdrawToken",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "amount",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 3153,
+      "length": 428,
+      "bodyStart": 3201
+     },
+     "lines": [
+      74,
+      82
+     ]
+    },
+    {
+     "name": "withdrawAll",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 3653,
+      "length": 472,
+      "bodyStart": 3685
+     },
+     "lines": [
+      85,
+      94
+     ]
+    },
+    {
+     "name": "_authorizeUpgrade",
+     "kind": "function",
+     "visibility": "internal",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "onlyOwner"
+     ],
+     "parameters": [
+      {
+       "name": "",
+       "type": "address"
+      }
+     ],
+     "src": {
+      "start": 4131,
+      "length": 66,
+      "bodyStart": 4195
+     },
+     "lines": [
+      96,
+      96
+     ]
+    }
+   ]
+  },
+  {
+   "name": "VaultV3Unaudited",
+   "source": "src/demo/VaultV3Unaudited.sol",
+   "kind": "contract",
+   "abstract": false,
+   "bases": [
+    "VaultV2",
+    "UUPSUpgradeable",
+    "IERC1822Proxiable",
+    "OwnableUpgradeable",
+    "ContextUpgradeable",
+    "Initializable"
+   ],
+   "deployable": true,
+   "abi": [
+    {
+     "type": "function",
+     "name": "OPERATOR",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "UPGRADE_INTERFACE_VERSION",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "deposit",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "payable"
+    },
+    {
+     "type": "function",
+     "name": "depositToken",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "ethBalanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "initialize",
+     "inputs": [
+      {
+       "name": "initialOwner",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "token_",
+       "type": "address",
+       "internalType": "contract IERC20"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "operatorSweep",
+     "inputs": [
+      {
+       "name": "to",
+       "type": "address",
+       "internalType": "address payable"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "owner",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "proxiableUUID",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "renounceOwnership",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "token",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "contract IERC20"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "tokenBalanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalEthDeposits",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalTokenDeposits",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "transferOwnership",
+     "inputs": [
+      {
+       "name": "newOwner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "upgradeToAndCall",
+     "inputs": [
+      {
+       "name": "newImplementation",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "data",
+       "type": "bytes",
+       "internalType": "bytes"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "payable"
+    },
+    {
+     "type": "function",
+     "name": "version",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "pure"
+    },
+    {
+     "type": "function",
+     "name": "withdraw",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "withdrawAll",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "withdrawToken",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "event",
+     "name": "Deposited",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "EmergencyWithdrawal",
+     "inputs": [
+      {
+       "name": "to",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "ethAmount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      },
+      {
+       "name": "tokenAmount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Initialized",
+     "inputs": [
+      {
+       "name": "version",
+       "type": "uint64",
+       "indexed": false,
+       "internalType": "uint64"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "OwnershipTransferred",
+     "inputs": [
+      {
+       "name": "previousOwner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "newOwner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "TokenDeposited",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "TokenWithdrawn",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Upgraded",
+     "inputs": [
+      {
+       "name": "implementation",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Withdrawn",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "error",
+     "name": "AddressEmptyCode",
+     "inputs": [
+      {
+       "name": "target",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC1967InvalidImplementation",
+     "inputs": [
+      {
+       "name": "implementation",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC1967NonPayable",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "EthTransferFailed",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "FailedCall",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "InsufficientBalance",
+     "inputs": [
+      {
+       "name": "requested",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "available",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "InvalidInitialization",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "NotInitializing",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "OwnableInvalidOwner",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "OwnableUnauthorizedAccount",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "SafeERC20FailedOperation",
+     "inputs": [
+      {
+       "name": "token",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "UUPSUnauthorizedCallContext",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "UUPSUnsupportedProxiableUUID",
+     "inputs": [
+      {
+       "name": "slot",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ZeroAmount",
+     "inputs": []
+    }
+   ],
+   "functions": [
+    {
+     "name": "version",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "pure",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 772,
+      "length": 107,
+      "bodyStart": 838
+     },
+     "lines": [
+      17,
+      19
+     ]
+    },
+    {
+     "name": "operatorSweep",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "to",
+       "type": "address payable"
+      }
+     ],
+     "src": {
+      "start": 885,
+      "length": 353,
+      "bodyStart": 937
+     },
+     "lines": [
+      21,
+      27
+     ]
+    }
+   ]
+  },
+  {
+   "name": "VaultV2",
+   "source": "src/demo/VaultV2.sol",
+   "kind": "contract",
+   "abstract": false,
+   "bases": [
+    "UUPSUpgradeable",
+    "IERC1822Proxiable",
+    "OwnableUpgradeable",
+    "ContextUpgradeable",
+    "Initializable"
+   ],
+   "deployable": true,
+   "abi": [
+    {
+     "type": "constructor",
+     "inputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "UPGRADE_INTERFACE_VERSION",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "deposit",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "payable"
+    },
+    {
+     "type": "function",
+     "name": "depositToken",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "ethBalanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "initialize",
+     "inputs": [
+      {
+       "name": "initialOwner",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "token_",
+       "type": "address",
+       "internalType": "contract IERC20"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "owner",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "proxiableUUID",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "renounceOwnership",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "token",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "contract IERC20"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "tokenBalanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalEthDeposits",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalTokenDeposits",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "transferOwnership",
+     "inputs": [
+      {
+       "name": "newOwner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "upgradeToAndCall",
+     "inputs": [
+      {
+       "name": "newImplementation",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "data",
+       "type": "bytes",
+       "internalType": "bytes"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "payable"
+    },
+    {
+     "type": "function",
+     "name": "version",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "pure"
+    },
+    {
+     "type": "function",
+     "name": "withdraw",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "withdrawAll",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "withdrawToken",
+     "inputs": [
+      {
+       "name": "amount",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "event",
+     "name": "Deposited",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "EmergencyWithdrawal",
+     "inputs": [
+      {
+       "name": "to",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "ethAmount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      },
+      {
+       "name": "tokenAmount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Initialized",
+     "inputs": [
+      {
+       "name": "version",
+       "type": "uint64",
+       "indexed": false,
+       "internalType": "uint64"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "OwnershipTransferred",
+     "inputs": [
+      {
+       "name": "previousOwner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "newOwner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "TokenDeposited",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "TokenWithdrawn",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Upgraded",
+     "inputs": [
+      {
+       "name": "implementation",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Withdrawn",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "amount",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "error",
+     "name": "AddressEmptyCode",
+     "inputs": [
+      {
+       "name": "target",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC1967InvalidImplementation",
+     "inputs": [
+      {
+       "name": "implementation",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC1967NonPayable",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "EthTransferFailed",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "FailedCall",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "InsufficientBalance",
+     "inputs": [
+      {
+       "name": "requested",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "available",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "InvalidInitialization",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "NotInitializing",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "OwnableInvalidOwner",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "OwnableUnauthorizedAccount",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "SafeERC20FailedOperation",
+     "inputs": [
+      {
+       "name": "token",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "UUPSUnauthorizedCallContext",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "UUPSUnsupportedProxiableUUID",
+     "inputs": [
+      {
+       "name": "slot",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ZeroAmount",
+     "inputs": []
+    }
+   ],
+   "functions": [
+    {
+     "name": "constructor",
+     "kind": "constructor",
+     "visibility": "public",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 1633,
+      "length": 53,
+      "bodyStart": 1647
+     },
+     "lines": [
+      33,
+      35
+     ]
+    },
+    {
+     "name": "initialize",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "initializer"
+     ],
+     "parameters": [
+      {
+       "name": "initialOwner",
+       "type": "address"
+      },
+      {
+       "name": "token_",
+       "type": "contract IERC20"
+      }
+     ],
+     "src": {
+      "start": 1692,
+      "length": 147,
+      "bodyStart": 1770
+     },
+     "lines": [
+      37,
+      40
+     ]
+    },
+    {
+     "name": "version",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "pure",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 1845,
+      "length": 96,
+      "bodyStart": 1910
+     },
+     "lines": [
+      42,
+      44
+     ]
+    },
+    {
+     "name": "deposit",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "payable",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 1947,
+      "length": 225,
+      "bodyStart": 1983
+     },
+     "lines": [
+      46,
+      51
+     ]
+    },
+    {
+     "name": "depositToken",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "amount",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 2178,
+      "length": 300,
+      "bodyStart": 2225
+     },
+     "lines": [
+      53,
+      59
+     ]
+    },
+    {
+     "name": "withdraw",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "amount",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 2484,
+      "length": 475,
+      "bodyStart": 2527
+     },
+     "lines": [
+      61,
+      70
+     ]
+    },
+    {
+     "name": "withdrawToken",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "amount",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 2965,
+      "length": 428,
+      "bodyStart": 3013
+     },
+     "lines": [
+      72,
+      80
+     ]
+    },
+    {
+     "name": "withdrawAll",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "onlyOwner"
+     ],
+     "parameters": [],
+     "src": {
+      "start": 3477,
+      "length": 482,
+      "bodyStart": 3519
+     },
+     "lines": [
+      83,
+      92
+     ]
+    },
+    {
+     "name": "_authorizeUpgrade",
+     "kind": "function",
+     "visibility": "internal",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "onlyOwner"
+     ],
+     "parameters": [
+      {
+       "name": "",
+       "type": "address"
+      }
+     ],
+     "src": {
+      "start": 3965,
+      "length": 66,
+      "bodyStart": 4029
+     },
+     "lines": [
+      94,
+      94
+     ]
+    }
+   ]
+  },
+  {
+   "name": "DemoToken",
+   "source": "src/demo/DemoToken.sol",
+   "kind": "contract",
+   "abstract": false,
+   "bases": [
+    "ERC20Permit",
+    "Nonces",
+    "EIP712",
+    "IERC5267",
+    "IERC20Permit",
+    "ERC20",
+    "IERC20Errors",
+    "IERC20Metadata",
+    "IERC20",
+    "Context"
+   ],
+   "deployable": true,
+   "abi": [
+    {
+     "type": "constructor",
+     "inputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "DOMAIN_SEPARATOR",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "FAUCET_AMOUNT",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "FAUCET_COOLDOWN",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "allowance",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "spender",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "approve",
+     "inputs": [
+      {
+       "name": "spender",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "value",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bool",
+       "internalType": "bool"
+      }
+     ],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "balanceOf",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "decimals",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint8",
+       "internalType": "uint8"
+      }
+     ],
+     "stateMutability": "pure"
+    },
+    {
+     "type": "function",
+     "name": "eip712Domain",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "fields",
+       "type": "bytes1",
+       "internalType": "bytes1"
+      },
+      {
+       "name": "name",
+       "type": "string",
+       "internalType": "string"
+      },
+      {
+       "name": "version",
+       "type": "string",
+       "internalType": "string"
+      },
+      {
+       "name": "chainId",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "verifyingContract",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "salt",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      },
+      {
+       "name": "extensions",
+       "type": "uint256[]",
+       "internalType": "uint256[]"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "faucet",
+     "inputs": [],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "lastFaucetAt",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "name",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "nonces",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "permit",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "spender",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "value",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "deadline",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "v",
+       "type": "uint8",
+       "internalType": "uint8"
+      },
+      {
+       "name": "r",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      },
+      {
+       "name": "s",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "symbol",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "totalSupply",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "transfer",
+     "inputs": [
+      {
+       "name": "to",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "value",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bool",
+       "internalType": "bool"
+      }
+     ],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "transferFrom",
+     "inputs": [
+      {
+       "name": "from",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "to",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "value",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bool",
+       "internalType": "bool"
+      }
+     ],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "event",
+     "name": "Approval",
+     "inputs": [
+      {
+       "name": "owner",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "spender",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "value",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "EIP712DomainChanged",
+     "inputs": [],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Transfer",
+     "inputs": [
+      {
+       "name": "from",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "to",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "value",
+       "type": "uint256",
+       "indexed": false,
+       "internalType": "uint256"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "error",
+     "name": "ECDSAInvalidSignature",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "ECDSAInvalidSignatureLength",
+     "inputs": [
+      {
+       "name": "length",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ECDSAInvalidSignatureS",
+     "inputs": [
+      {
+       "name": "s",
+       "type": "bytes32",
+       "internalType": "bytes32"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC20InsufficientAllowance",
+     "inputs": [
+      {
+       "name": "spender",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "allowance",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "needed",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC20InsufficientBalance",
+     "inputs": [
+      {
+       "name": "sender",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "balance",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "needed",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC20InvalidApprover",
+     "inputs": [
+      {
+       "name": "approver",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC20InvalidReceiver",
+     "inputs": [
+      {
+       "name": "receiver",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC20InvalidSender",
+     "inputs": [
+      {
+       "name": "sender",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC20InvalidSpender",
+     "inputs": [
+      {
+       "name": "spender",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC2612ExpiredSignature",
+     "inputs": [
+      {
+       "name": "deadline",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "ERC2612InvalidSigner",
+     "inputs": [
+      {
+       "name": "signer",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "owner",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "FaucetCooldown",
+     "inputs": [
+      {
+       "name": "availableAt",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "InvalidAccountNonce",
+     "inputs": [
+      {
+       "name": "account",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "currentNonce",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "InvalidShortString",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "StringTooLong",
+     "inputs": [
+      {
+       "name": "str",
+       "type": "string",
+       "internalType": "string"
+      }
+     ]
+    }
+   ],
+   "functions": [
+    {
+     "name": "constructor",
+     "kind": "constructor",
+     "visibility": "public",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "ERC20",
+      "ERC20Permit"
+     ],
+     "parameters": [],
+     "src": {
+      "start": 624,
+      "length": 82,
+      "bodyStart": 704
+     },
+     "lines": [
+      17,
+      17
+     ]
+    },
+    {
+     "name": "decimals",
+     "kind": "function",
+     "visibility": "public",
+     "stateMutability": "pure",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 712,
+      "length": 82,
+      "bodyStart": 769
+     },
+     "lines": [
+      19,
+      21
+     ]
+    },
+    {
+     "name": "faucet",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 800,
+      "length": 291,
+      "bodyStart": 827
+     },
+     "lines": [
+      23,
+      28
+     ]
+    }
+   ]
+  },
+  {
+   "name": "PramaanTimelock",
+   "source": "src/PramaanTimelock.sol",
+   "kind": "contract",
+   "abstract": false,
+   "bases": [],
+   "deployable": true,
+   "abi": [
+    {
+     "type": "constructor",
+     "inputs": [
+      {
+       "name": "resolver_",
+       "type": "address",
+       "internalType": "contract ITextSetter"
+      },
+      {
+       "name": "dnsName_",
+       "type": "bytes",
+       "internalType": "bytes"
+      },
+      {
+       "name": "delay_",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "proposer_",
+       "type": "address",
+       "internalType": "address"
+      },
+      {
+       "name": "guardian_",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "GRACE_PERIOD",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "KEY",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "MAX_DELAY",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "MAX_VALUE_LENGTH",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "MIN_DELAY",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "cancel",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "delay",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "dnsName",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bytes",
+       "internalType": "bytes"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "execute",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "getOperation",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "value",
+       "type": "string",
+       "internalType": "string"
+      },
+      {
+       "name": "eta",
+       "type": "uint64",
+       "internalType": "uint64"
+      },
+      {
+       "name": "state",
+       "type": "uint8",
+       "internalType": "enum PramaanTimelock.State"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "guardian",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "isReady",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "",
+       "type": "bool",
+       "internalType": "bool"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "lastExecutedId",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "operationCount",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "proposer",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "queue",
+     "inputs": [
+      {
+       "name": "value",
+       "type": "string",
+       "internalType": "string"
+      }
+     ],
+     "outputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "function",
+     "name": "resolver",
+     "inputs": [],
+     "outputs": [
+      {
+       "name": "",
+       "type": "address",
+       "internalType": "contract ITextSetter"
+      }
+     ],
+     "stateMutability": "view"
+    },
+    {
+     "type": "function",
+     "name": "setProposer",
+     "inputs": [
+      {
+       "name": "newProposer",
+       "type": "address",
+       "internalType": "address"
+      }
+     ],
+     "outputs": [],
+     "stateMutability": "nonpayable"
+    },
+    {
+     "type": "event",
+     "name": "Cancelled",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "indexed": true,
+       "internalType": "uint256"
+      },
+      {
+       "name": "guardian",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Executed",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "indexed": true,
+       "internalType": "uint256"
+      },
+      {
+       "name": "value",
+       "type": "string",
+       "indexed": false,
+       "internalType": "string"
+      },
+      {
+       "name": "executor",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "ProposerChanged",
+     "inputs": [
+      {
+       "name": "previousProposer",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      },
+      {
+       "name": "newProposer",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "event",
+     "name": "Queued",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "indexed": true,
+       "internalType": "uint256"
+      },
+      {
+       "name": "value",
+       "type": "string",
+       "indexed": false,
+       "internalType": "string"
+      },
+      {
+       "name": "eta",
+       "type": "uint64",
+       "indexed": false,
+       "internalType": "uint64"
+      },
+      {
+       "name": "proposer",
+       "type": "address",
+       "indexed": true,
+       "internalType": "address"
+      }
+     ],
+     "anonymous": false
+    },
+    {
+     "type": "error",
+     "name": "Expired",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "InvalidConfig",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "InvalidValue",
+     "inputs": []
+    },
+    {
+     "type": "error",
+     "name": "NotGuardian",
+     "inputs": [
+      {
+       "name": "caller",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "NotProposer",
+     "inputs": [
+      {
+       "name": "caller",
+       "type": "address",
+       "internalType": "address"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "NotQueued",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "NotReady",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "eta",
+       "type": "uint64",
+       "internalType": "uint64"
+      }
+     ]
+    },
+    {
+     "type": "error",
+     "name": "Superseded",
+     "inputs": [
+      {
+       "name": "id",
+       "type": "uint256",
+       "internalType": "uint256"
+      },
+      {
+       "name": "lastExecutedId",
+       "type": "uint256",
+       "internalType": "uint256"
+      }
+     ]
+    }
+   ],
+   "functions": [
+    {
+     "name": "constructor",
+     "kind": "constructor",
+     "visibility": "public",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "resolver_",
+       "type": "contract ITextSetter"
+      },
+      {
+       "name": "dnsName_",
+       "type": "bytes"
+      },
+      {
+       "name": "delay_",
+       "type": "uint256"
+      },
+      {
+       "name": "proposer_",
+       "type": "address"
+      },
+      {
+       "name": "guardian_",
+       "type": "address"
+      }
+     ],
+     "src": {
+      "start": 2996,
+      "length": 585,
+      "bodyStart": 3108
+     },
+     "lines": [
+      73,
+      84
+     ]
+    },
+    {
+     "name": "dnsName",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "view",
+     "modifiers": [],
+     "parameters": [],
+     "src": {
+      "start": 3673,
+      "length": 88,
+      "bodyStart": 3729
+     },
+     "lines": [
+      87,
+      89
+     ]
+    },
+    {
+     "name": "queue",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "value",
+       "type": "string"
+      }
+     ],
+     "src": {
+      "start": 3840,
+      "length": 387,
+      "bodyStart": 3908
+     },
+     "lines": [
+      92,
+      99
+     ]
+    },
+    {
+     "name": "execute",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "id",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 4488,
+      "length": 539,
+      "bodyStart": 4526
+     },
+     "lines": [
+      104,
+      114
+     ]
+    },
+    {
+     "name": "cancel",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "onlyGuardian"
+     ],
+     "parameters": [
+      {
+       "name": "id",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 5102,
+      "length": 241,
+      "bodyStart": 5152
+     },
+     "lines": [
+      117,
+      122
+     ]
+    },
+    {
+     "name": "setProposer",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "nonpayable",
+     "modifiers": [
+      "onlyGuardian"
+     ],
+     "parameters": [
+      {
+       "name": "newProposer",
+       "type": "address"
+      }
+     ],
+     "src": {
+      "start": 5449,
+      "length": 219,
+      "bodyStart": 5513
+     },
+     "lines": [
+      125,
+      129
+     ]
+    },
+    {
+     "name": "getOperation",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "view",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "id",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 5674,
+      "length": 203,
+      "bodyStart": 5777
+     },
+     "lines": [
+      131,
+      134
+     ]
+    },
+    {
+     "name": "isReady",
+     "kind": "function",
+     "visibility": "external",
+     "stateMutability": "view",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "id",
+       "type": "uint256"
+      }
+     ],
+     "src": {
+      "start": 5950,
+      "length": 271,
+      "bodyStart": 6008
+     },
+     "lines": [
+      137,
+      141
+     ]
+    },
+    {
+     "name": "_validate",
+     "kind": "function",
+     "visibility": "private",
+     "stateMutability": "pure",
+     "modifiers": [],
+     "parameters": [
+      {
+       "name": "value",
+       "type": "string"
+      }
+     ],
+     "src": {
+      "start": 6227,
+      "length": 621,
+      "bodyStart": 6282
+     },
+     "lines": [
+      143,
+      155
+     ]
+    }
+   ]
+  }
+ ],
+ "aderyn": {
+  "ok": true,
+  "durationMs": 720,
+  "report": {
+   "high_issues": {
+    "issues": [
+     {
+      "title": "ETH transferred without address checks",
+      "description": "Consider introducing checks for `msg.sender` to ensure the recipient of the money is as intended.",
+      "detector_name": "eth-send-unchecked-address",
+      "instances": [
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 61,
+        "src": "2493:8",
+        "src_char": "2493:8"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 63,
+        "src": "2681:8",
+        "src_char": "2681:8"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 85,
+        "src": "3662:11",
+        "src_char": "3662:11"
+       }
+      ]
+     },
+     {
+      "title": "Reentrancy: State change after external call",
+      "description": "Changing state after an external call can lead to re-entrancy attacks.Use the checks-effects-interactions pattern to avoid this issue.",
+      "detector_name": "reentrancy-state-change",
+      "instances": [
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 85,
+        "src": "3580:52",
+        "src_char": "3580:52",
+        "hint": "State is changed at: `totalEthDeposits = 0`, `totalTokenDeposits = 0`"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 87,
+        "src": "3746:52",
+        "src_char": "3746:52",
+        "hint": "State is changed at: `totalEthDeposits = 0`, `totalTokenDeposits = 0`"
+       }
+      ]
+     }
+    ]
+   },
+   "low_issues": {
+    "issues": [
+     {
+      "title": "Centralization Risk",
+      "description": "Contracts have owners with privileged rights to perform admin tasks and need to be trusted to not perform malicious updates or drain funds.",
+      "detector_name": "centralization-risk",
+      "instances": [
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 83,
+        "src": "3509:9",
+        "src_char": "3509:9"
+       },
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 94,
+        "src": "4019:9",
+        "src_char": "4019:9"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 96,
+        "src": "4185:9",
+        "src_char": "4185:9"
+       }
+      ]
+     },
+     {
+      "title": "Empty Block",
+      "description": "Consider removing empty blocks.",
+      "detector_name": "empty-block",
+      "instances": [
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 94,
+        "src": "3974:17",
+        "src_char": "3974:17"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 96,
+        "src": "4140:17",
+        "src_char": "4140:17"
+       }
+      ]
+     },
+     {
+      "title": "PUSH0 Opcode",
+      "description": "Solc compiler version 0.8.20 switches the default target EVM version to Shanghai, which means that the generated bytecode will include PUSH0 opcodes. Be sure to select the appropriate EVM version in case you intend to deploy on a chain other than mainnet like L2 chains that may not support PUSH0, otherwise deployment of your contracts will fail.",
+      "detector_name": "push-zero-opcode",
+      "instances": [
+       {
+        "contract_path": "src/PramaanTimelock.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/DemoNFT.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/DemoToken.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/VaultV3Unaudited.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/interfaces/ITextSetter.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       }
+      ]
+     },
+     {
+      "title": "Loop Contains `require`/`revert`",
+      "description": "Avoid `require` / `revert` statements in a loop because a single bad item can cause the whole transaction to fail. It's better to forgive on fail and return failed elements post processing of the loop",
+      "detector_name": "require-revert-in-loop",
+      "instances": [
+       {
+        "contract_path": "src/PramaanTimelock.sol",
+        "line_no": 147,
+        "src": "6518:77",
+        "src_char": "6518:77"
+       },
+       {
+        "contract_path": "src/PramaanTimelock.sol",
+        "line_no": 151,
+        "src": "6741:101",
+        "src_char": "6741:101"
+       }
+      ]
+     },
+     {
+      "title": "Address State Variable Set Without Checks",
+      "description": "Check for `address(0)` when assigning values to address state variables.",
+      "detector_name": "state-no-address-check",
+      "instances": [
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 39,
+        "src": "1818:14",
+        "src_char": "1818:14"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 41,
+        "src": "2006:14",
+        "src_char": "2006:14"
+       }
+      ]
+     },
+     {
+      "title": "State Variable Could Be Immutable",
+      "description": "State variables that are only changed in the constructor should be declared immutable to save gas. Add the `immutable` attribute to state variables that are only changed in the constructor",
+      "detector_name": "state-variable-could-be-immutable",
+      "instances": [
+       {
+        "contract_path": "src/PramaanTimelock.sol",
+        "line_no": 43,
+        "src": "1708:8",
+        "src_char": "1708:8"
+       }
+      ]
+     },
+     {
+      "title": "Unspecific Solidity Pragma",
+      "description": "Consider using a specific version of Solidity in your contracts instead of a wide version. For example, instead of `pragma solidity ^0.8.0;`, use `pragma solidity 0.8.0;`",
+      "detector_name": "unspecific-solidity-pragma",
+      "instances": [
+       {
+        "contract_path": "src/PramaanTimelock.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/DemoNFT.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/DemoToken.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/VaultV2.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/VaultV3Unaudited.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/demo/VulnerableVault.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       },
+       {
+        "contract_path": "src/interfaces/ITextSetter.sol",
+        "line_no": 2,
+        "src": "32:24",
+        "src_char": "32:24"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

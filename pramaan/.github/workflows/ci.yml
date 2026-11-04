@@ -1,0 +1,90 @@
+# Continuous integration: typecheck, unit tests, Solidity tests and the extension build on every push and PR.
+# The sandbox E2E job (real Slither/Aderyn/Foundry inside Docker) runs on main and on demand.
+# Third-party actions are pinned to full commit SHAs.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
+        with:
+          version: v1.8.7
+      - run: pnpm install --frozen-lockfile
+      - name: Compile contracts (artifacts are used by the TypeScript tests)
+        run: forge build
+        working-directory: contracts
+      - run: pnpm typecheck
+      - run: pnpm test:unit
+      - run: pnpm build:extension
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pramaan-extension
+          path: apps/extension/dist
+          if-no-files-found: error
+
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SEPOLIA_RPC_URL_A: ${{ secrets.SEPOLIA_RPC_URL_A }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
+        with:
+          version: v1.8.7
+      - name: Unit and fuzz tests (fork tests run in the fork job)
+        run: forge test -vv --no-match-path "test/fork/*"
+        working-directory: contracts
+      - name: Fork tests against the real ENSv2 contracts on Sepolia
+        if: ${{ env.SEPOLIA_RPC_URL_A != '' }}
+        run: forge test -vv --match-path "test/fork/*" --fork-url "$SEPOLIA_RPC_URL_A"
+        working-directory: contracts
+
+  sandbox-e2e:
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
+        with:
+          version: v1.8.7
+      - run: pnpm install --frozen-lockfile
+      - name: Build the network-less analysis sandbox image
+        run: pnpm sandbox:build
+      - name: PROVE end to end (real exploit reproduction and fix re-verification in the sandbox)
+        env:
+          PRAMAAN_E2E: "1"
+        run: pnpm vitest run --project engine

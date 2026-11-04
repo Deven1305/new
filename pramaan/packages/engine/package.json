@@ -1,0 +1,20 @@
+{
+  "name": "@pramaan/engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pramaan PROVE engine: sandboxed Slither/Aderyn/Foundry runs, exploit templates with gates, fixes, re-verification and evidence.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.137.0",
+    "@pramaan/manifest": "workspace:*",
+    "diff": "9.0.0",
+    "fflate": "0.8.3",
+    "zod": "4.6.7"
+  }
+}

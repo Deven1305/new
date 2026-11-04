@@ -1,0 +1,25 @@
+{
+  "name": "pramaan-cre-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pramaan WATCH: Chainlink CRE workflow that monitors release pointers, revocations, timelocked upgrades and proxy implementations, and reports non-OK decisions to the Pramaan server.",
+  "main": "dist/main.js",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.check.json",
+    "test": "bun test test/unit",
+    "test:harness": "bun test test/harness",
+    "build": "cre workflow build . -R .. -T local-simulation -o dist/pramaan-monitor.wasm"
+  },
+  "dependencies": {
+    "@chainlink/cre-sdk": "1.23.0",
+    "@noble/hashes": "2.4.0",
+    "viem": "2.57.7",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.3",
+    "typescript": "5.9.3"
+  }
+}
