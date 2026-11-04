@@ -23,3 +23,9 @@ Updated 2026-11-05. Work in progress on `codex/project-start`; no deployment or 
 ## Event eligibility
 
 This checkout contains pre-event project code (base commit `6d30220`); this continuation is existing-project development. The team is registered From Scratch. Eligibility for using this work is unresolved and requires organizer guidance; do not present it as newly created during the event. See [ETHGlobal rules](https://ethglobal.com/rules).
+
+## Local chain test update
+
+- Downloaded official Foundry v1.9.0 Windows x64 into ignored `.pramaan/tools`, verified the GitHub release asset SHA-256 `2b02444d46c9218fe2e6be66015265ce131fe6b7c384e33e630b00f9a0bff072`. This is a local test deviation from the repository's prior 1.8.7 environment, not a change to CI. Source: https://github.com/foundry-rs/foundry/releases/tag/v1.9.0 .
+- With that directory on PATH, `pnpm test:contracts`: 108 passed, 0 failed, 1 ENS fork setup skipped. `pnpm test:unit`: 156 passed, 0 failed, 6 Docker sandbox tests skipped; this includes 13 verifier-core tests against a local anvil. `pnpm exec vitest run --project demos`: 32 passed, 1 skipped; its real-chain pipeline uses placeholder frontend fixtures and is not browser proof. `pnpm exec vitest run --project extension-unit`: 2 passed (pure privacy/policy tests).
+- A V2 orchestration rewrite is in progress and being exercised on a Sepolia fork. The public RPC returned Sepolia chain ID; that alone does not establish ENS compatibility, independence or a completed release.

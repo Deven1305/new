@@ -8,6 +8,7 @@ export default defineConfig({
       { test: { name: "verifier-core", root: "packages/verifier-core", include: ["test/**/*.test.ts"], testTimeout: 60_000 } },
       { test: { name: "release", root: "packages/release", include: ["test/**/*.test.ts"], testTimeout: 300_000, hookTimeout: 120_000 } },
       { test: { name: "engine", root: "packages/engine", include: ["test/**/*.test.ts"], testTimeout: 900_000, hookTimeout: 900_000 } },
+      { test: { name: "extension-unit", root: "apps/extension", include: ["test/**/*.unit.test.ts"] } },
       { test: { name: "server", root: "apps/server", include: ["test/**/*.test.ts"], testTimeout: 120_000 } },
       { test: { name: "cli", root: "apps/cli", include: ["test/**/*.test.ts"], testTimeout: 600_000 } },
       { test: { name: "demos", root: "apps/demos", include: ["test/**/*.test.ts"], testTimeout: 300_000 } },

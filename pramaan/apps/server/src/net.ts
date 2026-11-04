@@ -13,6 +13,13 @@ export function isPrivateAddress(ip: string): boolean {
     if (v === "::" || v === "::1") return true;
     const mapped = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/.exec(v);
     if (mapped) return isPrivateAddress(mapped[1]!);
+    // Node may expose IPv4-mapped addresses in hexadecimal form, including
+    // the fully expanded IPv6 spelling, rather than dotted decimal.
+    const mappedHex = /^(?:::ffff:|(?:0{1,4}:){5}ffff:)([0-9a-f]{1,4}):([0-9a-f]{1,4})$/.exec(v);
+    if (mappedHex) {
+      const hi = parseInt(mappedHex[1]!, 16), lo = parseInt(mappedHex[2]!, 16);
+      return isPrivateAddress(`${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`);
+    }
     return /^f[cd]/.test(v) || /^fe[89ab]/.test(v) || v.startsWith("ff");
   }
   return false;
