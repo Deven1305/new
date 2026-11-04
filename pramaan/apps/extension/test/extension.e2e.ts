@@ -1,6 +1,7 @@
 import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { chromium, expect, test, type BrowserContext, type Page, type Worker } from "@playwright/test";
 import { createPublicClient, createWalletClient, http, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -11,6 +12,7 @@ import { defineChain } from "viem";
  * The "wallet" is a minimal EIP-1193 provider injected into the page; it signs in Node with the demo user's
  * local-fork key, so Pramaan sees exactly what it would see in front of MetaMask.
  */
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../../..");
 const STATE = join(ROOT, ".pramaan", "demo", "state.json");
 const KEYS = join(ROOT, ".pramaan", "demo", "keys.json");
@@ -21,6 +23,7 @@ test.skip(!ready, "run `pnpm demo:up` and `pnpm build:extension` first");
 
 const state = ready ? JSON.parse(readFileSync(STATE, "utf8")) : null;
 const keys = ready ? JSON.parse(readFileSync(KEYS, "utf8")) : null;
+test.skip(state?.version === 2, "legacy single-app selectors and state; V2 coverage is in v2.e2e.ts");
 let context: BrowserContext;
 let sw: Worker;
 

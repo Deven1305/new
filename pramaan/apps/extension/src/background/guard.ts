@@ -88,6 +88,8 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
   const manifest = tab.release?.status === "verified" ? tab.release.manifest : null;
   const ctx: DecodeContext = {
     chainId: chainId ?? 0,
+    from: tab.accounts.length === 1 ? tab.accounts[0] as `0x${string}` : undefined,
+    release: manifest ? { ensName: manifest.app.ensName, chainIds: [...new Set(manifest.contracts.map((c) => c.chainId))], contracts: manifest.contracts } : undefined,
     origin: tab.origin ?? undefined,
     nativeSymbol: "ETH",
     tokenInfo: client && chainId !== null ? (a) => tokenInfo(client, chainId, a) : undefined,
@@ -96,9 +98,11 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
     labels: manifest ? Object.fromEntries(manifest.contracts.map((c) => [c.address.toLowerCase(), c.label])) : {},
   };
   let analysis: RequestAnalysis;
+  let analysisFailed = false;
   try {
     analysis = await analyzeRequest(req.method, req.params, ctx);
   } catch (err) {
+    analysisFailed = true;
     analysis = fallbackAnalysis(req.method, (err as Error).message);
   }
   const local = chainId !== null && Boolean(settings.chains[String(chainId)]?.local);
@@ -125,7 +129,7 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
   rows.push(privacyRow(leakList(tab)));
   const verdict = combine(rows);
   const policy = policyDecision(rows, analysis.assessment, { timedOut: !finished });
-  const blocked = verdict.blocked || policy.blocked || tab.status !== "done" || tab.release?.status !== "verified" || tab.site?.status !== "verified";
+  const blocked = analysisFailed || verdict.blocked || policy.blocked || tab.status !== "done" || tab.release?.status !== "verified" || tab.site?.status !== "verified" || rows.some((row) => row.id === "contract" && row.color === "amber");
 
   const pending: PendingView = {
     id: req.id,
@@ -165,7 +169,7 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
   if (entry?.windowId !== undefined) void chrome.windows.remove(entry.windowId).catch(() => undefined);
   reply(
     decision,
-    decision === "continue" ? "" : blocked ? "signing blocked: the website or contract does not match its published release" : "rejected in the Pramaan review window",
+    decision === "continue" ? "" : blocked ? "signing held: release or contract verification failed or is incomplete" : "rejected in the Pramaan review window",
   );
 }
 

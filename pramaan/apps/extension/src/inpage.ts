@@ -11,6 +11,7 @@ import type { ContentToInpage, InpageToContent } from "./shared/messages.js";
 (() => {
   const GUARDED = new Set([
     "eth_sendTransaction",
+    "eth_signTransaction",
     "eth_signTypedData_v4",
     "eth_signTypedData_v3",
     "eth_signTypedData",

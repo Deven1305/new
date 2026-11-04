@@ -5,7 +5,7 @@ export type ResourceType = "main_frame" | "sub_frame" | "script" | "stylesheet" 
 export interface ObservedResource {
   url: string;
   type: ResourceType;
-  /** sha256 hex of the bytes the browser loaded (or re-fetched from cache); null while still pending. */
+  /** sha256 hex supplied by the observer; extension observers re-fetch and cannot prove these are the executed bytes. Null while pending. */
   sha256: string | null;
 }
 
@@ -66,7 +66,7 @@ function hostOf(url: string): string | null {
 }
 
 /**
- * Compares what the page actually loaded with the release. Any same-origin document or script that is missing from
+ * Compares observed resource hashes with the release. The observer determines how those bytes were obtained. Any same-origin document or script that is missing from
  * the manifest or hashes differently is RED, and so is an undeclared third-party script: either one could be the
  * Bybit-style swap. Stylesheets and dynamically injected inline scripts are AMBER.
  */
