@@ -6,6 +6,7 @@ import { loadSettings } from "../shared/settings.js";
 import { chainConfig } from "./transport.js";
 import { awaitVerification, getTab } from "./state.js";
 import { leakList } from "./privacy.js";
+import { decide as policyDecision, timeoutRow } from "../shared/policy.js";
 
 const tokenAbi = parseAbi([
   "function symbol() view returns (string)",
@@ -58,6 +59,7 @@ function fallbackAnalysis(method: GuardRequest["method"], error: string): Reques
     assessment: { level: "medium", findings: [{ code: "UNKNOWN_ACTION", level: "medium", params: {} }] },
     explanations: { en: explanation("en"), hi: explanation("hi"), mr: explanation("mr") },
     target: null,
+    chainId: 0,
   };
 }
 
@@ -76,7 +78,8 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
     return;
   }
   const tab = await getTab(tabId);
-  await awaitVerification(tabId);
+  const finished = await awaitVerification(tabId, 30_000);
+  if ((await getTab(tabId)) !== tab) { reply("reject", "page navigated during verification"); return; }
   const settings = await loadSettings();
   const chainId = req.chainId ? Number(req.chainId) : tab.release?.chainId ?? null;
   const cfg = chainId !== null && Number.isFinite(chainId) ? await chainConfig(chainId, settings) : null;
@@ -99,7 +102,7 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
     analysis = fallbackAnalysis(req.method, (err as Error).message);
   }
   const local = chainId !== null && Boolean(settings.chains[String(chainId)]?.local);
-  const rows: VerdictRow[] = [siteRow(tab.release, tab.site, { acceptSingleSource: local })];
+  const rows: VerdictRow[] = [finished ? siteRow(tab.release, tab.site, { acceptSingleSource: local }) : timeoutRow(30_000)];
   if (analysis.target) {
     if (!cfg) rows.push(contractRow(null, `no RPC is configured for chain ${chainId ?? "unknown"}`));
     else {
@@ -121,6 +124,8 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
   rows.push(actionRow(analysis.assessment.level));
   rows.push(privacyRow(leakList(tab)));
   const verdict = combine(rows);
+  const policy = policyDecision(rows, analysis.assessment, { timedOut: !finished });
+  const blocked = verdict.blocked || policy.blocked || tab.status !== "done" || tab.release?.status !== "verified" || tab.site?.status !== "verified";
 
   const pending: PendingView = {
     id: req.id,
@@ -128,7 +133,10 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
     origin: tab.origin ?? "",
     method: req.method,
     createdAt: new Date().toISOString(),
-    blocked: verdict.blocked,
+    state: "ready",
+    blocked,
+    blockReasons: policy.reasons,
+    reads: tab.reads,
     verdictColor: verdict.color,
     rows,
     explanations: toJsonSafe(analysis.explanations),
@@ -141,7 +149,7 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
   await chrome.storage.session.set({ [`pending:${req.id}`]: pending });
 
   const decision = await new Promise<"continue" | "reject">((resolve) => {
-    const entry: Waiting = { resolve, blocked: verdict.blocked };
+    const entry: Waiting = { resolve, blocked };
     waiting.set(req.id, entry);
     port.onDisconnect.addListener(() => resolve("reject"));
     void chrome.windows
@@ -157,7 +165,7 @@ export async function handleGuard(port: chrome.runtime.Port, req: GuardRequest):
   if (entry?.windowId !== undefined) void chrome.windows.remove(entry.windowId).catch(() => undefined);
   reply(
     decision,
-    decision === "continue" ? "" : verdict.blocked ? "signing blocked: the website or contract does not match its published release" : "rejected in the Pramaan review window",
+    decision === "continue" ? "" : blocked ? "signing blocked: the website or contract does not match its published release" : "rejected in the Pramaan review window",
   );
 }
 

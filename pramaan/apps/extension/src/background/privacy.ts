@@ -1,6 +1,6 @@
 import type { ObservedLeak } from "@pramaan/verifier-core";
 import type { LeakRecord } from "../shared/messages.js";
-import { decodeBody, findAddress, hostOf, originOf } from "../shared/leaks.js";
+import { matchBody, matchHeaders, matchUrl, hostOf, originOf, type LeakMatch } from "../shared/leaks.js";
 import { peekTab, persist, type TabState } from "./state.js";
 
 /** Leaks as the verdict layer sees them (one per destination). */
@@ -15,7 +15,7 @@ function declaration(tab: TabState, host: string): { declared: boolean; purpose:
   return { declared: true, purpose: entry.purpose };
 }
 
-function record(tab: TabState, url: string, method: string, channel: LeakRecord["channel"], form: string): void {
+function record(tab: TabState, url: string, method: string, channel: LeakRecord["channel"], match: LeakMatch): void {
   const origin = originOf(url);
   const host = hostOf(url);
   if (!origin || !host) return;
@@ -25,7 +25,7 @@ function record(tab: TabState, url: string, method: string, channel: LeakRecord[
     return;
   }
   const { declared, purpose } = declaration(tab, host);
-  tab.leaks[origin] = { host, origin, url: url.slice(0, 300), method, channel, form, declared, purpose, blocked: tab.blocked.includes(origin), count: 1, firstSeen: new Date().toISOString() };
+  tab.leaks[origin] = { host, origin, url: url.slice(0, 300), method, channel, form: match.form, where: match.where, account: `${match.account.slice(0, 6)}...${match.account.slice(-4)}`, declared, purpose, blocked: tab.blocked.includes(origin), count: 1, firstSeen: new Date().toISOString() };
   persist(tab);
 }
 
@@ -38,21 +38,15 @@ export function onBeforeRequest(d: chrome.webRequest.OnBeforeRequestDetails, onC
   if (d.tabId < 0) return;
   const tab = peekTab(d.tabId);
   if (!tab || !tab.accounts.length || !isThirdParty(tab, d.url)) return;
-  let url = d.url;
-  try {
-    url = decodeURIComponent(d.url);
-  } catch {
-    // keep raw
-  }
-  const inUrl = findAddress(url, tab.accounts);
+  const inUrl = matchUrl(d.url, tab.accounts);
   if (inUrl) {
-    record(tab, d.url, d.method, "url", inUrl.form);
+    record(tab, d.url, d.method, "url", inUrl);
     onChange(tab);
     return;
   }
-  const inBody = findAddress(decodeBody(d.requestBody), tab.accounts);
+  const inBody = matchBody(d.requestBody, tab.accounts);
   if (inBody) {
-    record(tab, d.url, d.method, "body", inBody.form);
+    record(tab, d.url, d.method, "body", inBody);
     onChange(tab);
   }
 }
@@ -61,10 +55,9 @@ export function onBeforeSendHeaders(d: chrome.webRequest.OnBeforeSendHeadersDeta
   if (d.tabId < 0) return;
   const tab = peekTab(d.tabId);
   if (!tab || !tab.accounts.length || !isThirdParty(tab, d.url)) return;
-  const text = (d.requestHeaders ?? []).map((h) => `${h.name}: ${h.value ?? ""}`).join("\n");
-  const hit = findAddress(text, tab.accounts);
+  const hit = matchHeaders(d.requestHeaders, tab.accounts);
   if (hit) {
-    record(tab, d.url, d.method, "header", hit.form);
+    record(tab, d.url, d.method, "header", hit);
     onChange(tab);
   }
 }

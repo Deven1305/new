@@ -171,7 +171,7 @@ export function matchUrl(rawUrl: string, accounts: string[]): LeakMatch | null {
   return null;
 }
 
-export type RequestBody = { formData?: Record<string, string[]>; raw?: { bytes?: ArrayBuffer; file?: string }[]; error?: string } | null | undefined;
+export type RequestBody = { formData?: Record<string, (string | ArrayBuffer)[]>; raw?: { bytes?: ArrayBuffer; file?: string }[]; error?: string } | null | undefined;
 
 /** Bodies as webRequest exposes them: parsed form fields, or raw bytes (JSON, text, beacons). */
 export function matchBody(body: RequestBody, accounts: string[]): LeakMatch | null {
@@ -179,7 +179,7 @@ export function matchBody(body: RequestBody, accounts: string[]): LeakMatch | nu
   if (body.formData) {
     for (const [k, values] of Object.entries(body.formData)) {
       for (const v of values ?? []) {
-        const m = matchValue(String(v), accounts) ?? matchValue(k, accounts);
+        const m = matchValue(typeof v === "string" ? v : new TextDecoder().decode(v), accounts) ?? matchValue(k, accounts);
         if (m) return { ...m, where: `form field ${k.slice(0, 40)}` };
       }
     }

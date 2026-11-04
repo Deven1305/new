@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { zipSync } from "fflate";
@@ -97,13 +97,28 @@ describe("deterministic fixer", () => {
   it("adds onlyOwner to the Ownable vault's sweep and produces a reviewable diff", () => {
     const vv = contract("VulnerableVault");
     const fn = vv.functions.find((f) => f.name === "withdrawAll")!;
-    const r = proposeFix(CONTRACTS, vv, fn, "access-control");
+    const repo = mkdtempSync(join(tmpdir(), "pramaan-fix-"));
+    const file = join(repo, vv.source);
+    mkdirSync(join(file, ".."), { recursive: true });
+    writeFileSync(file, readFileSync(join(CONTRACTS, vv.source), "utf8").replace(/\r\n/g, "\n"));
+    const r = proposeFix(repo, vv, fn, "access-control");
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.fix.after).toContain("function withdrawAll() external onlyOwner {");
     expect(r.fix.diff).toContain("+    function withdrawAll() external onlyOwner {");
     expect(r.fix.diff).toContain("-    function withdrawAll() external {");
     expect(r.fix.after.length - r.fix.before.length).toBe(" onlyOwner".length);
+  });
+
+  it("rejects stale byte offsets instead of patching the wrong location", () => {
+    const vv = contract("VulnerableVault");
+    const fn = vv.functions.find((f) => f.name === "withdrawAll")!;
+    const repo = mkdtempSync(join(tmpdir(), "pramaan-stale-"));
+    const file = join(repo, vv.source);
+    mkdirSync(join(file, ".."), { recursive: true });
+    const source = readFileSync(join(CONTRACTS, vv.source), "utf8").replace(/\r\n/g, "\n");
+    writeFileSync(file, source.replace(/\n/g, "\r\n"));
+    expect(proposeFix(repo, vv, fn, "access-control")).toMatchObject({ ok: false, reason: expect.stringContaining("re-run analysis") });
   });
 
   it("refuses to invent a guard the contract cannot use", () => {

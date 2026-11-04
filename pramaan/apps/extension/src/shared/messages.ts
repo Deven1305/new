@@ -99,8 +99,8 @@ export interface PendingView {
 export type PageToBackground =
   | { type: "tab-view"; tabId: number }
   | { type: "reverify"; tabId: number }
-  | { type: "block-host"; tabId: number; host: string }
-  | { type: "unblock-host"; tabId: number; host: string }
+  | { type: "block-host"; tabId: number; origin: string }
+  | { type: "unblock-host"; tabId: number; origin: string }
   | { type: "set-strict"; tabId: number; strict: boolean }
   | { type: "pending"; id: string }
   | { type: "decide"; id: string; decision: "continue" | "reject"; override?: boolean };

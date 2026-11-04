@@ -1,0 +1,25 @@
+# Implementation status
+
+Updated 2026-11-05. Work in progress on `codex/project-start`; no deployment or publication.
+
+- `pnpm install --frozen-lockfile`: passed with pnpm 11.25.0; esbuild is the only allowed install script, consistent with existing pnpm 10 policy. Browser compatibility data pinned to 1.5.474 to satisfy the existing package-age policy.
+- Initial `pnpm test:unit`: 140 passed, 1 failed, 19 skipped; one additional suite failed before execution because Forge was not found. The failure exposed stale byte offsets in the deterministic fixer; its targeted suite now passes 14/14 including a stale-source regression.
+- Initial `pnpm typecheck`: failed on absent `DemoGuide`. After adding an explicitly provisional guide, extension typecheck exposed incompatible background/UI interfaces; integration is ongoing.
+- `pnpm --filter @pramaan/extension build`: passes after wiring privacy observation to existing matchers; this build is not evidence of a working guard, and typecheck remains failing.
+- Initial `pnpm build`: fails because demo builds require state that the existing `demo:up` does not generate in the required V2 format. Web build is being checked independently.
+- Backend `src/index.ts` and `src/worker-main.ts` are absent. The API in `docs/API_CONTRACT.md` is a contract, not evidence that routes exist. Full local startup and end-to-end trust flow are not yet verified.
+- No Foundry binaries were found on PATH or at the handoff's expected `~/.foundry/bin` location. Docker and CRE also not found on PATH. No live chain, sandbox reproduction, Sepolia deployment, or CRE simulation has been verified in this continuation.
+
+## Continuation results
+
+- `pnpm typecheck`: passed across the workspace after fixing the malformed archive-path regex, missing Fastify cookie type augmentation, absent web page and extension interface mismatches.
+- Selected isolated suites: 10 files, 143 tests passed (manifest, decoder, engine unit, verifier-core non-chain, server API). Command: `pnpm exec vitest run --project manifest --project decoder --project engine --project server --project cli --project verifier-core packages/verifier-core/test/site-and-verdict.test.ts packages/verifier-core/test/release.test.ts packages/verifier-core/test/release-states.test.ts packages/verifier-core/test/signature.test.ts packages/engine/test/unit.test.ts packages/manifest/test packages/decoder/test apps/server/test`.
+- `pnpm --filter @pramaan/web build` and `pnpm --filter @pramaan/extension build`: passed independently. Extension typecheck passed; browser E2E not run. The bundle alone is not verification evidence.
+- `pnpm server` and `pnpm dev:web --host 127.0.0.1` started on ports 8787 and 5173. Actual HTTP POST to `/v1/decode` for an unlimited approval returned `high` and `UNLIMITED_APPROVAL`; web root returned 200. The server intentionally reports 503 readiness and 501 for unimplemented routes.
+- Guard now rejects on timeout, navigation during verification, missing release or incomplete site check. Its browser enforcement, release-to-wallet path, and recovery after tampering remain untested; no claim of universal wallet enforcement. Resource hashes are obtained by re-fetching, not necessarily the actual executed response bytes; this TOCTOU limitation prevents a strong claim of loaded-byte integrity.
+- `demo:up` still uses removed `apps/demo-dapp` paths and writes old state while the three demos require DemoStateV2; no local ENS chain or full trust flow has been demonstrated. Existing CRE collector uses direct resolver text calls; ENSv2 Permissioned Resolver documentation specifies `resolve` and the SDK entrypoint/adapter are missing. WATCH is not a runnable workflow.
+- AI contributed implementation, testing and documentation in this continuation; earlier contribution history has not been independently reconstructed.
+
+## Event eligibility
+
+This checkout contains pre-event project code (base commit `6d30220`); this continuation is existing-project development. The team is registered From Scratch. Eligibility for using this work is unresolved and requires organizer guidance; do not present it as newly created during the event. See [ETHGlobal rules](https://ethglobal.com/rules).

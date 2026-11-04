@@ -49,7 +49,7 @@ export function inspectZip(buf: Buffer, limits: { maxEntries: number; maxExpande
     pos += 46 + nameLen + extraLen + commentLen;
     if (flags & 1) throw bad("encrypted archives are not supported");
     if (name.includes("\0")) throw bad(`unsafe path in archive: ${JSON.stringify(name)}`);
-    const normalized = name.replace(/\/g, "/");
+    const normalized = name.replace(/\\/g, "/");
     if (normalized.startsWith("/") || /^[A-Za-z]:/.test(normalized) || normalized.split("/").some((seg) => seg === "..")) {
       throw bad(`unsafe path in archive: ${JSON.stringify(name.slice(0, 120))}`);
     }

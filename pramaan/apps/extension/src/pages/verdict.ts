@@ -16,7 +16,7 @@ let showEnglish = false;
 const ROW_LABEL: Record<string, string> = { site: "row.site", contract: "row.contract", action: "row.action", privacy: "row.privacy" };
 
 function rowText(row: PendingView["rows"][number]): string {
-  if (row.id === "action" && pending) return pending.explanations[lang].headline;
+  if (row.id === "action" && pending?.explanations) return pending.explanations[lang].headline;
   return verifyText(lang, row.key, row.params);
 }
 
@@ -26,7 +26,7 @@ function render(): void {
   document.getElementById("title")!.textContent = ui(lang, "title.review");
   btnReject.textContent = ui(lang, "btn.reject");
   btnContinue.textContent = ui(lang, "btn.continue");
-  if (!pending) {
+  if (!pending || !pending.explanations || pending.state !== "ready") {
     root.append(h("p", { class: "muted" }, "This request is no longer pending."));
     btnContinue.disabled = true;
     return;

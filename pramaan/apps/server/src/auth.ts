@@ -194,3 +194,4 @@ export async function bootstrapAdmin(db: Db, cfg: Config, log: (msg: string) => 
 export async function audit(db: Db, userId: string | null, projectId: string | null, action: string, target: string | null, detail: Record<string, unknown> = {}): Promise<void> {
   await db.query("INSERT INTO audit_log (user_id, project_id, action, target, detail) VALUES ($1, $2, $3, $4, $5)", [userId, projectId, action, target, JSON.stringify(detail)]);
 }
+import "@fastify/cookie";

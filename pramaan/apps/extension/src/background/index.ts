@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener((msg: ContentToBackground | PageToBackgroun
   const fromTab = sender.tab?.id;
   void (async () => {
     if (fromTab !== undefined && sender.id === chrome.runtime.id && msg.type === "page") {
-      const tab = resetTab(fromTab, msg.url);
+      const tab = await resetTab(fromTab, msg.url);
       void verifyTab(tab);
       sendResponse({ ok: true });
       return;
@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener((msg: ContentToBackground | PageToBackgroun
       default:
         sendResponse(null);
     }
-  })();
+  })().catch(() => sendResponse({ error: "request failed" }));
   return true;
 });
 
@@ -87,6 +87,12 @@ async function view(tabId: number): Promise<TabView> {
   return {
     tabId,
     origin: tab.origin,
+    reason: r?.reason ?? null,
+    siteRow: r ? (await import("./verifier.js")).siteRow(r, tab.site, { acceptSingleSource: false }) : null,
+    pending: (r?.pending ?? []).map((p) => ({ tag: p.pointer?.tag ?? null, eta: new Date(p.eta * 1000).toISOString(), ready: p.eta * 1000 <= Date.now() })),
+    anon: { state: "unknown", detail: tab.transport },
+    reads: tab.reads,
+    unguarded: tab.unguarded,
     status: tab.status === "checking" ? "checking" : r?.status ?? "idle",
     color,
     ensName: r?.ensName ?? null,
@@ -114,7 +120,7 @@ async function view(tabId: number): Promise<TabView> {
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name !== "pramaan-guard" || port.sender?.id !== chrome.runtime.id) return;
   port.onMessage.addListener((msg: GuardRequest) => {
-    if (msg?.type === "guard") void handleGuard(port, msg);
+    if (msg?.type === "guard") void handleGuard(port, msg).catch(() => { try { port.postMessage({ type: "decision", id: msg.id, decision: "reject", reason: "verification failed" }); } catch {} });
   });
 });
 chrome.windows.onRemoved.addListener(onWindowRemoved);

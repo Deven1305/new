@@ -61,6 +61,13 @@ export function proposeFix(repoDir: string, contract: ContractInfo, fn: Contract
   } catch {
     return { ok: false, reason: `cannot read ${file}` };
   }
+  // Compiler offsets refer to the exact bytes analyzed, including line endings.
+  const { start, bodyStart } = fn.src;
+  const header = bodyStart === null ? "" : original.subarray(start, bodyStart).toString("utf8");
+  if (start < 0 || bodyStart === null || bodyStart <= start || bodyStart >= original.length ||
+      original[bodyStart] !== 0x7b || !new RegExp(`^function\\s+${fn.name}\\s*\\(`).test(header)) {
+    return { ok: false, reason: `source span for ${fn.name}() does not match the analyzed bytes; re-run analysis` };
+  }
   let patched: Buffer | null = null;
   let change = "";
   let explanation = "";
