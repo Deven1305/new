@@ -2,6 +2,13 @@ import { aiAvailable as engineAiAvailable, dockerStatus as engineDockerStatus, t
 import { verifySiteRelease } from "@pramaan/verifier-core";
 import type { Config } from "./config.js";
 import type { Db } from "./db.js";
+import type { AuthUser } from "./auth.js";
+
+declare module "fastify" {
+  interface FastifyRequest {
+    user: AuthUser | null;
+  }
+}
 
 export interface LogLike {
   info: (o: unknown, m?: string) => void;
