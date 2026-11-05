@@ -1,7 +1,7 @@
 # Gemini CRE Monitor Status & Implementation Record
 
-**Branch**: `codex/gemini-work`  
-**Execution Mode**: File tools only (zero terminal commands, no commits, no settings changes, no credential reads, no other workers)  
+**Branch**: `codex/gemini-work`
+**Execution Mode**: File tools only (zero terminal commands, no commits, no settings changes, no credential reads, no other workers)
 **Supervisor Stop Check**: Checked `.pramaan/supervisor-stop` before all edits; verified file was absent.
 
 ---
