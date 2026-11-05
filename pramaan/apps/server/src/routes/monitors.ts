@@ -1,0 +1,237 @@
+import type { FastifyInstance } from "fastify";
+import { z } from "zod";
+import type { AlertRow } from "../alerts.js";
+import { assertRole, audit, requireUser } from "../auth.js";
+import type { Ctx } from "../context.js";
+import { notConfigured, notFound, parse } from "../errors.js";
+
+const ProjectParamsSchema = z.object({
+  id: z.string().uuid("Invalid project ID"),
+});
+
+const AlertParamsSchema = z.object({
+  id: z.string().uuid("Invalid alert ID"),
+});
+
+const AlertsQuerySchema = z.object({
+  status: z.enum(["open", "acked", "all"]).optional(),
+  limit: z.coerce.number().int().positive().max(200).optional(),
+});
+
+const EventsQuerySchema = z.object({
+  limit: z.coerce.number().int().positive().max(200).optional(),
+});
+
+interface MonitorDbRow {
+  id: string;
+  project_id: string;
+  kind: string;
+  chain_id: number;
+  address: string;
+  rpc_url: string | null;
+  label: string;
+  status: string;
+  last_block: number | string | null;
+  last_checked_at: Date | null;
+  last_error: string | null;
+  created_at: Date;
+}
+
+interface MonitorEventDbRow {
+  id: string;
+  project_id: string;
+  monitor_id: string;
+  monitor_label: string | null;
+  monitor_kind: string | null;
+  chain_id: number;
+  block_number: number | string;
+  block_time: Date | null;
+  tx_hash: string;
+  log_index: number;
+  address: string;
+  event_name: string;
+  data: Record<string, unknown> | string;
+  assessment: string;
+  detail: string;
+  created_at: Date;
+}
+
+function formatAlert(r: AlertRow) {
+  return {
+    id: r.id,
+    projectId: r.project_id,
+    monitorEventId: r.monitor_event_id,
+    source: r.source,
+    severity: r.severity,
+    kind: r.kind,
+    title: r.title,
+    body: r.body,
+    data: typeof r.data === "string" ? JSON.parse(r.data) : r.data ?? {},
+    eta: r.eta ? new Date(r.eta).toISOString() : null,
+    status: r.status,
+    ackedAt: r.acked_at ? new Date(r.acked_at).toISOString() : null,
+    ackedBy: r.acked_by ?? null,
+    delivery: typeof r.delivery === "string" ? JSON.parse(r.delivery) : r.delivery ?? {},
+    createdAt: new Date(r.created_at).toISOString(),
+  };
+}
+
+function formatMonitor(m: MonitorDbRow) {
+  return {
+    id: m.id,
+    projectId: m.project_id,
+    kind: m.kind,
+    chainId: m.chain_id,
+    address: m.address,
+    rpcUrl: m.rpc_url,
+    label: m.label,
+    status: m.status,
+    lastBlock: m.last_block !== null ? Number(m.last_block) : null,
+    lastCheckedAt: m.last_checked_at ? new Date(m.last_checked_at).toISOString() : null,
+    lastError: m.last_error ?? null,
+    createdAt: new Date(m.created_at).toISOString(),
+  };
+}
+
+function formatEvent(e: MonitorEventDbRow) {
+  return {
+    id: e.id,
+    projectId: e.project_id,
+    monitorId: e.monitor_id,
+    monitorLabel: e.monitor_label ?? null,
+    monitorKind: e.monitor_kind ?? null,
+    chainId: e.chain_id,
+    blockNumber: Number(e.block_number),
+    blockTime: e.block_time ? new Date(e.block_time).toISOString() : null,
+    txHash: e.tx_hash,
+    logIndex: e.log_index,
+    address: e.address,
+    eventName: e.event_name,
+    data: typeof e.data === "string" ? JSON.parse(e.data) : e.data ?? {},
+    assessment: e.assessment,
+    detail: e.detail,
+    createdAt: new Date(e.created_at).toISOString(),
+  };
+}
+
+export function registerMonitorRoutes(app: FastifyInstance, ctx: Ctx): void {
+  // GET /v1/projects/:id/alerts?status=open|acked
+  app.get("/v1/projects/:id/alerts", async (req) => {
+    const user = requireUser(req.user);
+    const params = parse(ProjectParamsSchema, req.params, "project params");
+    await assertRole(ctx.db, user, params.id, "viewer");
+
+    const query = parse(AlertsQuerySchema, req.query, "alerts query");
+    const limit = query.limit ?? 100;
+
+    let sql = `SELECT * FROM alerts WHERE project_id = $1`;
+    const sqlParams: unknown[] = [params.id];
+
+    if (query.status === "open" || query.status === "acked") {
+      sql += ` AND status = $2`;
+      sqlParams.push(query.status);
+    }
+
+    sql += ` ORDER BY created_at DESC LIMIT $${sqlParams.length + 1}`;
+    sqlParams.push(limit);
+
+    const rows = await ctx.db.query<AlertRow>(sql, sqlParams);
+    return rows.map(formatAlert);
+  });
+
+  // POST /v1/alerts/:id/ack (maintainer)
+  app.post("/v1/alerts/:id/ack", async (req) => {
+    const user = requireUser(req.user);
+    const params = parse(AlertParamsSchema, req.params, "alert params");
+
+    const alert = await ctx.db.one<AlertRow>("SELECT * FROM alerts WHERE id = $1", [params.id]);
+    if (!alert) {
+      throw notFound("alert");
+    }
+
+    // Maintainer role check on the alert's project
+    await assertRole(ctx.db, user, alert.project_id, "maintainer");
+
+    const now = ctx.deps.now();
+    const updated = await ctx.db.one<AlertRow>(
+      `UPDATE alerts
+       SET status = 'acked', acked_at = $2, acked_by = $3
+       WHERE id = $1
+       RETURNING *`,
+      [alert.id, now, user.id],
+    );
+
+    if (!updated) {
+      throw notFound("alert");
+    }
+
+    await audit(ctx.db, user.id, alert.project_id, "alert.ack", alert.title, { alertId: alert.id });
+
+    return formatAlert(updated);
+  });
+
+  // GET /v1/projects/:id/monitors
+  app.get("/v1/projects/:id/monitors", async (req) => {
+    const user = requireUser(req.user);
+    const params = parse(ProjectParamsSchema, req.params, "project params");
+    await assertRole(ctx.db, user, params.id, "viewer");
+
+    const rows = await ctx.db.query<MonitorDbRow>(
+      `SELECT id, project_id, kind, chain_id, address, rpc_url, label, status, last_block, last_checked_at, last_error, created_at
+       FROM monitors
+       WHERE project_id = $1
+       ORDER BY created_at ASC`,
+      [params.id],
+    );
+
+    return rows.map(formatMonitor);
+  });
+
+  // GET /v1/projects/:id/events?limit=
+  app.get("/v1/projects/:id/events", async (req) => {
+    const user = requireUser(req.user);
+    const params = parse(ProjectParamsSchema, req.params, "project params");
+    await assertRole(ctx.db, user, params.id, "viewer");
+
+    const query = parse(EventsQuerySchema, req.query, "events query");
+    const limit = query.limit ?? 50;
+
+    const rows = await ctx.db.query<MonitorEventDbRow>(
+      `SELECT
+        me.id,
+        me.project_id,
+        me.monitor_id,
+        m.label AS monitor_label,
+        m.kind AS monitor_kind,
+        me.chain_id,
+        me.block_number,
+        me.block_time,
+        me.tx_hash,
+        me.log_index,
+        me.address,
+        me.event_name,
+        me.data,
+        me.assessment,
+        me.detail,
+        me.created_at
+       FROM monitor_events me
+       LEFT JOIN monitors m ON m.id = me.monitor_id
+       WHERE me.project_id = $1
+       ORDER BY me.block_number DESC, me.created_at DESC
+       LIMIT $2`,
+      [params.id, limit],
+    );
+
+    return rows.map(formatEvent);
+  });
+
+  // Keep POST monitor unimplemented 501 (do not invent active monitoring)
+  app.post("/v1/projects/:id/monitors", async () => {
+    throw notConfigured("NOT_IMPLEMENTED", "This API endpoint is not implemented yet");
+  });
+
+  // Keep POST test-telegram unimplemented 501
+  app.post("/v1/projects/:id/alerts/test-telegram", async () => {
+    throw notConfigured("NOT_IMPLEMENTED", "This API endpoint is not implemented yet");
+  });
+}

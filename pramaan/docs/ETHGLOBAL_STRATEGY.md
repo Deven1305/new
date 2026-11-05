@@ -1,6 +1,6 @@
 # Pramaan: ETHGlobal research and execution strategy
 
-Research checked 5 November 2026, Asia/Kolkata. This is a working strategy, not evidence of completed functionality or prize eligibility. The managing chat owns this file; Terra owns implementation and IMPLEMENTATION_STATUS.md. All repository work remains on `codex/project-start`.
+Research checked 5 November 2026, Asia/Kolkata. This is a working strategy, not evidence of completed functionality or prize eligibility. The managing chat owns research/review; Gemini CLI now implements on `codex/gemini-work`. Terra is stopped, with its checkpoint preserved on `codex/project-start`. Verified results live in IMPLEMENTATION_STATUS.md and docs/evidence.
 
 Latest human direction: the team will handle track/organizer questions. Engineering should continue toward complete functionality, with incremental branch commits. Section 1 preserves research context; it is not a reason to suspend authorized local work. The Claude-agent prompt reconciliation and functional completion sequence are in [COMPLETION_PLAN.md](COMPLETION_PLAN.md).
 

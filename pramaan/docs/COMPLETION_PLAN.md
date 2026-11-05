@@ -1,6 +1,6 @@
 # Pramaan functional completion plan
 
-Updated 5 November 2026. Managing chat research and integration guidance for the Terra worker. The team handles event eligibility; continue local engineering, preserve history, and commit validated increments on `codex/project-start`.
+Updated 5 November 2026. Gemini CLI is the implementation worker on `codex/gemini-work`; Terra is stopped and its checkpoint remains on `codex/project-start`. The coordinator reviews completed chunks and commits verified changes. The team handles event eligibility. Latest verified results are in IMPLEMENTATION_STATUS.md and docs/evidence; the steps below also retain historical planning context.
 
 ## What the Claude attachment tells us
 
@@ -46,13 +46,13 @@ When available, execute the vulnerable vault pipeline with candidate -> validate
 
 For every slice, test with Fastify injection and perform one actual HTTP/UI operation against persisted state. Update feature flags and enable the relevant dashboard action only when its route is implemented. Once the supported backend slice is ready, `/readyz` should reflect its real database/worker readiness; optional unconfigured integrations should not falsely make an otherwise supported service dead. Distinguish missing implementation from missing credentials.
 
-Before enabling server-side URL verification, fix a reproduced address-classification gap: `isPrivateAddress('::ffff:7f00:1')` and `isPrivateAddress('::ffff:a00:1')` currently return false, whereas equivalent dotted mapped forms return true. Normalize IPv4-mapped IPv6 and test alternate representations. Revalidate redirect destinations and bound response size/time. Existing source already documents DNS rebinding exposure; deployment egress policy and actual connection behavior must match the stated boundary.
+The reproduced IPv4-mapped IPv6 classification gap (`::ffff:7f00:1`, `::ffff:a00:1`) is fixed and tested in the Terra baseline; do not reopen it as an outstanding defect. Revalidate redirect destinations and bound response size/time when URL verification is wired. Existing source documents DNS rebinding exposure; deployment egress policy and actual connection behavior must match the stated boundary.
 
 For hosted sign-in, use a same-site frontend/API arrangement where possible. [Set-Cookie semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) mean `credentials: include` does not bypass SameSite restrictions. Avoid documenting unrelated static-host and API domains as a tested cookie-login setup; verify the actual browser topology or use the existing scoped-token mode.
 
 ## D. Complete a genuine CRE workflow
 
-The current official [simulation guide](https://docs.chain.link/cre/guides/operations/simulating-workflows) requires a CRE account and authenticated CLI. It describes real configured RPC/HTTP calls and a cron command of the form `cre workflow simulate <path> --non-interactive --trigger-index 0 --target <target>`. Read-only EVM simulation does not itself require an on-chain write key. Do not add `--broadcast` merely to make monitoring work. Verify actual installed CLI behavior and capture its exact blocker if credentials are unavailable.
+The official [simulation guide](https://docs.chain.link/cre/guides/operations/simulating-workflows) requires a CRE account and authenticated CLI. It describes real RPC/HTTP calls through `cre workflow simulate <path> --non-interactive --trigger-index 0 --target <target>`. The [TypeScript starter](https://docs.chain.link/cre/getting-started/part-1-project-setup-ts) also requires an owner private key for simulator initialization even without writes, differing from the generic guide's write-key note. Do not promise key-free simulation; actual CLI behavior beyond the missing-login blocker remains unverified. Offline source compilation has now succeeded with CLI1.39.0/SDK1.23.0; evidence is in docs/evidence/cre-workflow-build.json. No broadcast or deployment was performed.
 
 The [Windows installation guide](https://docs.chain.link/cre/getting-started/cli-installation/windows) currently recommends CLI 1.39.0, offers a Windows archive and describes SHA-256 verification. Prefer a workspace-local official release binary; compare the actual release checksum rather than blindly copying an example. Keep Bun/CRE dependencies separate from pnpm workspace packages as intended. Typecheck against SDK 1.23.0 before borrowing newer documentation examples.
 

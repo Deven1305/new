@@ -17,12 +17,21 @@ const SiweBodySchema = z.object({
 });
 
 export function registerAuthRoutes(app: FastifyInstance, ctx: Ctx): void {
-  app.get("/v1/auth/nonce", async () => {
+  const authRateLimit = {
+    config: {
+      rateLimit: {
+        max: ctx.cfg.RATE_LIMIT_AUTH_MAX,
+        timeWindow: ctx.cfg.RATE_LIMIT_WINDOW_MS,
+      },
+    },
+  };
+
+  app.get("/v1/auth/nonce", authRateLimit, async () => {
     const nonce = await issueNonce(ctx.db, ctx.deps.now());
     return { nonce };
   });
 
-  app.post("/v1/auth/siwe", async (req, reply) => {
+  app.post("/v1/auth/siwe", authRateLimit, async (req, reply) => {
     const body = parse(SiweBodySchema, req.body, "SIWE body");
     const { userId, address, isAdmin } = await verifySiwe(
       ctx.db,
@@ -56,7 +65,7 @@ export function registerAuthRoutes(app: FastifyInstance, ctx: Ctx): void {
     };
   });
 
-  app.post("/v1/auth/logout", async (req, reply) => {
+  app.post("/v1/auth/logout", authRateLimit, async (req, reply) => {
     if (req.user?.sessionId) {
       await revokeSession(ctx.db, req.user.sessionId);
     }

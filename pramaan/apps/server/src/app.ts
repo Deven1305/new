@@ -3,7 +3,7 @@ import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import { analyzeRequest, isGuardedMethod, toJsonSafe } from "@pramaan/decoder";
 import { SANDBOX_IMAGE } from "@pramaan/engine";
-import Fastify, { type FastifyInstance } from "fastify";
+import Fastify, { type FastifyInstance, type FastifyRequest } from "fastify";
 import { z } from "zod";
 import {
   bootstrapAdmin,
@@ -16,6 +16,8 @@ import { resolveDeps, type Ctx, type DepsInput } from "./context.js";
 import { openDb, type Db } from "./db.js";
 import { forbidden, HttpError, safeMessage } from "./errors.js";
 import { registerAuthRoutes } from "./routes/auth.js";
+import { registerIngestRoutes } from "./routes/ingest.js";
+import { registerMonitorRoutes } from "./routes/monitors.js";
 import { registerProjectRoutes } from "./routes/projects.js";
 import { registerStatsRoutes } from "./routes/stats.js";
 import { registerTokenRoutes } from "./routes/tokens.js";
@@ -66,11 +68,18 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
     allowedHeaders: ["authorization", "content-type", CSRF_HEADER],
   });
   await app.register(rateLimit, {
-    max: cfg.RATE_LIMIT_PUBLIC_MAX,
+    max: cfg.RATE_LIMIT_MAX,
     timeWindow: cfg.RATE_LIMIT_WINDOW_MS,
   });
 
+  const defaultJsonParser = app.getDefaultJsonParser("error", "error");
+  app.addContentTypeParser("application/json", { parseAs: "buffer" }, (req, body: Buffer, done) => {
+    req.rawBody = body;
+    defaultJsonParser(req, body.toString("utf8"), done);
+  });
+
   app.decorateRequest("user", null);
+  app.decorateRequest("rawBody", null);
 
   app.addHook("onClose", async () => {
     if (ownedDb) {
@@ -84,7 +93,7 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
     const mutating = ["POST", "PATCH", "DELETE", "PUT"].includes(req.method);
     if (req.user?.via === "session" && mutating) {
       const pathname = req.url.split("?")[0];
-      const isExempt = pathname === "/v1/auth/siwe" || pathname === "/v1/decode";
+      const isExempt = pathname === "/v1/auth/siwe" || pathname === "/v1/decode" || pathname === "/v1/ingest/cre";
       if (!isExempt) {
         const csrfHeader = req.headers[CSRF_HEADER];
         if (
@@ -193,29 +202,42 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
     chainId: z.number().int().nonnegative().optional(),
     origin: z.string().optional(),
   });
-  app.post("/v1/decode", async (req, reply) => {
-    const parsed = decodeSchema.safeParse(req.body);
-    if (!parsed.success || !isGuardedMethod(parsed.data.method)) {
-      return reply.code(400).send({
-        error: {
-          code: "VALIDATION_FAILED",
-          message: "Expected a supported wallet method and parameters",
+  app.post(
+    "/v1/decode",
+    {
+      config: {
+        rateLimit: {
+          max: cfg.RATE_LIMIT_PUBLIC_MAX,
+          timeWindow: cfg.RATE_LIMIT_WINDOW_MS,
         },
-      });
-    }
-    return toJsonSafe(
-      await analyzeRequest(parsed.data.method, parsed.data.params, {
-        chainId: parsed.data.chainId ?? 0,
-        origin: parsed.data.origin,
-      }),
-    );
-  });
+      },
+    },
+    async (req, reply) => {
+      const parsed = decodeSchema.safeParse(req.body);
+      if (!parsed.success || !isGuardedMethod(parsed.data.method)) {
+        return reply.code(400).send({
+          error: {
+            code: "VALIDATION_FAILED",
+            message: "Expected a supported wallet method and parameters",
+          },
+        });
+      }
+      return toJsonSafe(
+        await analyzeRequest(parsed.data.method, parsed.data.params, {
+          chainId: parsed.data.chainId ?? 0,
+          origin: parsed.data.origin,
+        }),
+      );
+    },
+  );
 
   // Feature routes
   registerAuthRoutes(app, ctx);
   registerTokenRoutes(app, ctx);
   registerProjectRoutes(app, ctx);
   registerStatsRoutes(app, ctx);
+  registerIngestRoutes(app, ctx);
+  registerMonitorRoutes(app, ctx);
 
   // Fallback for unimplemented endpoints
   app.setNotFoundHandler((_req, reply) =>

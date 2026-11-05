@@ -17,6 +17,7 @@ export interface AlertInput {
   eta?: Date | null;
   /** Identity of the thing being alerted about; the same key can never produce a second alert. */
   key: string;
+
 }
 
 export interface AlertRow {

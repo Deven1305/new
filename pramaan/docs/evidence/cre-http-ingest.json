@@ -1,0 +1,1 @@
+{"pass":true,"scope":"Actual local HTTP with real workflow serializer/HMAC and synthetic decision fixture; NOT CRE simulation","checks":["real workflow enum accepted","same signed body retry stable","tampered bytes401","changed receipt409","one real DB alert","authenticated list/ack"]}
