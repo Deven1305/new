@@ -35,7 +35,9 @@
     "demo:restore": "tsx apps/cli/src/demo-actions.ts restore",
     "demo:upgrade": "tsx apps/cli/src/demo-actions.ts upgrade",
     "doctor": "pnpm pramaan doctor",
-    "deploy:identities": "pnpm pramaan deploy identities"
+    "deploy:identities": "pnpm pramaan deploy identities",
+    "test:extension": "pnpm --filter @pramaan/extension test",
+    "test:e2e:local": "pnpm --filter @pramaan/extension test:e2e:local"
   },
   "devDependencies": {
     "@types/node": "20.19.43",

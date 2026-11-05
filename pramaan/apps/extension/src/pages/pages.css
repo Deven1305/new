@@ -407,3 +407,10 @@ textarea {
   min-height: 70px;
   width: 100%;
 }
+
+/* review window: fail-closed override and states */
+button.continue.danger { background: var(--red, #d93a3f); }
+.banner.amber { background: rgba(212, 160, 23, 0.15); border-color: #d4a017; color: inherit; }
+label.override { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0; }
+.privacy-reads li { display: grid; grid-template-columns: 110px 1fr; gap: 6px; }
+.pathtag { font-weight: 600; }

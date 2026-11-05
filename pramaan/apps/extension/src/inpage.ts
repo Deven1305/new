@@ -11,6 +11,7 @@ import type { ContentToInpage, InpageToContent } from "./shared/messages.js";
 (() => {
   const GUARDED = new Set([
     "eth_sendTransaction",
+    "eth_signTransaction",
     "eth_signTypedData_v4",
     "eth_signTypedData_v3",
     "eth_signTypedData",
@@ -78,6 +79,9 @@ import type { ContentToInpage, InpageToContent } from "./shared/messages.js";
 
   const originals = new WeakMap<object, Provider["request"]>();
   const wrapped = new WeakSet<object>();
+  const guardedFns = new WeakSet<object>();
+  const known = new Set<Provider>();
+  const names = new WeakMap<object, string | null>();
 
   async function ask(method: string, params: unknown, provider: object, walletName: string | null): Promise<void> {
     let chainId: string | null = null;
@@ -100,7 +104,11 @@ import type { ContentToInpage, InpageToContent } from "./shared/messages.js";
 
   function wrap(candidate: unknown, walletName: string | null): void {
     const provider = candidate as Provider | null;
-    if (!provider || typeof provider !== "object" || wrapped.has(provider) || typeof provider.request !== "function") return;
+    if (!provider || typeof provider !== "object" || typeof provider.request !== "function") return;
+    // Already guarded, unless the wallet replaced `request` since: then the new function is wrapped too.
+    if (guardedFns.has(provider.request)) return;
+    known.add(provider);
+    names.set(provider, walletName);
     const original = provider.request.bind(provider);
     originals.set(provider, original);
     const guarded = async function (args: { method: string; params?: unknown }) {
@@ -112,14 +120,19 @@ import type { ContentToInpage, InpageToContent } from "./shared/messages.js";
       }
       return result;
     };
+    guardedFns.add(guarded);
     try {
       defineProperty(provider, "request", { value: guarded, configurable: true, writable: true });
     } catch {
       try {
         (provider as { request: unknown }).request = guarded;
       } catch {
-        // Frozen provider: cannot be guarded (reported as a limitation).
+        // handled below
       }
+    }
+    if (provider.request !== guarded) {
+      // Frozen or proxied provider: Pramaan cannot pause its requests. Reported in the popup, never hidden.
+      post({ type: "unguarded", walletName: walletName ?? "wallet", reason: "the provider object is frozen or refuses changes" });
     }
     for (const legacy of ["send", "sendAsync"] as const) {
       const fn = provider[legacy];
@@ -179,6 +192,45 @@ import type { ContentToInpage, InpageToContent } from "./shared/messages.js";
   } catch {
     // The page or a wallet locked the property; wrapping on events below still applies.
   }
+  // A wallet that (re)defines window.ethereum with Object.defineProperty / Reflect.defineProperty replaces our
+  // accessor: the defined value (or the getter's result) is wrapped as it is installed.
+  const wrapDescriptor = (desc: PropertyDescriptor | undefined): PropertyDescriptor | undefined => {
+    if (!desc) return desc;
+    if ("value" in desc) wrap(desc.value, "window.ethereum");
+    if (typeof desc.get === "function") {
+      const get = desc.get;
+      return { ...desc, get(this: unknown) {
+        const v = get.call(this);
+        wrap(v, "window.ethereum");
+        return v;
+      } };
+    }
+    return desc;
+  };
+  try {
+    const realDefine = Object.defineProperty;
+    const patched = function <T>(o: T, p: PropertyKey, d: PropertyDescriptor & ThisType<unknown>): T {
+      return realDefine(o, p, o === (window as unknown) && p === "ethereum" ? (wrapDescriptor(d) ?? d) : d);
+    };
+    defineProperty(Object, "defineProperty", { value: patched, configurable: true, writable: true });
+    const realReflect = Reflect.defineProperty;
+    defineProperty(Reflect, "defineProperty", {
+      value: (o: object, p: PropertyKey, d: PropertyDescriptor) => realReflect(o, p, o === (window as unknown) && p === "ethereum" ? (wrapDescriptor(d) ?? d) : d),
+      configurable: true,
+      writable: true,
+    });
+  } catch {
+    // locked down by the page; the periodic re-check below still applies
+  }
+  // Belt and braces: re-check window.ethereum and every provider seen so far (wallets that swap `request` later).
+  let ticks = 0;
+  const recheck = () => {
+    wrapInjected();
+    for (const p of known) if (!guardedFns.has(p.request)) wrap(p, names.get(p) ?? "wallet");
+    ticks += 1;
+    setTimer(recheck, ticks < 40 ? 250 : 3_000);
+  };
+  setTimer(recheck, 250);
   addListener("ethereum#initialized", wrapInjected);
   addListener("DOMContentLoaded", wrapInjected);
   addListener("load", wrapInjected);
