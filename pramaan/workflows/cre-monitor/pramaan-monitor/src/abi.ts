@@ -1,7 +1,87 @@
-import { decodeAbiParameters, getAddress, parseAbi, toEventSelector } from "viem";
+import { decodeAbiParameters, decodeFunctionResult, encodeFunctionData, getAddress, parseAbi, toEventSelector } from "viem";
+import { namehash, normalize } from "viem/ens";
 import type { Address, Hex, OpState, ScheduledUpgrade } from "./types";
 
-export const resolverAbi = parseAbi(["function text(bytes32 node, string key) view returns (string)"]);
+/**
+ * ENS resolver ABI supporting both ENSv2 PermissionedResolver (via resolve(bytes,bytes))
+ * and ENSv1 (via direct text(bytes32,string)).
+ */
+export const resolverAbi = parseAbi([
+  "function resolve(bytes name, bytes data) view returns (bytes)",
+  "function text(bytes32 node, string key) view returns (string)",
+]);
+
+/** DNS wire-format encoding of an ENS name, as ENSv2 resolvers take it (e.g. `\x07example\x03eth\x00`). */
+export function dnsEncode(ensName: string): Hex {
+  const name = normalize(ensName);
+  const bytes: number[] = [];
+  for (const label of name.split(".")) {
+    const encoded = new TextEncoder().encode(label);
+    if (encoded.length === 0 || encoded.length > 255) throw new Error(`invalid label length in ${ensName}`);
+    bytes.push(encoded.length, ...encoded);
+  }
+  bytes.push(0);
+  return `0x${bytes.map((b) => b.toString(16).padStart(2, "0")).join("")}` as Hex;
+}
+
+/**
+ * Encodes an ENSv2 PermissionedResolver profile read via resolve(dnsName, text(bytes32(0), key)).
+ */
+export function encodeResolveText(ensName: string, key: string): Hex {
+  const dnsName = dnsEncode(ensName);
+  const textCall = encodeFunctionData({
+    abi: resolverAbi,
+    functionName: "text",
+    args: ["0x0000000000000000000000000000000000000000000000000000000000000000", key],
+  });
+  return encodeFunctionData({
+    abi: resolverAbi,
+    functionName: "resolve",
+    args: [dnsName, textCall],
+  });
+}
+
+/**
+ * Decodes the returned bytes from an ENSv2 resolve(...) call, then decodes the profile text.
+ * Throws if nested profile bytes are empty (valid absent text is ABI-encoded empty string).
+ */
+export function decodeResolveTextResult(data: Hex): string {
+  const profileBytes = decodeFunctionResult({
+    abi: resolverAbi,
+    functionName: "resolve",
+    data,
+  });
+  if (!profileBytes || profileBytes === "0x") {
+    throw new Error("Resolver returned empty profile bytes");
+  }
+  return decodeFunctionResult({
+    abi: resolverAbi,
+    functionName: "text",
+    data: profileBytes,
+  });
+}
+
+/**
+ * Encodes an ENSv1 direct text record read via text(namehash(ensName), key).
+ */
+export function encodeEnsV1Text(ensName: string, key: string): Hex {
+  return encodeFunctionData({
+    abi: resolverAbi,
+    functionName: "text",
+    args: [namehash(ensName), key],
+  });
+}
+
+/**
+ * Decodes an ENSv1 direct text record read.
+ */
+export function decodeEnsV1TextResult(data: Hex): string {
+  return decodeFunctionResult({
+    abi: resolverAbi,
+    functionName: "text",
+    data,
+  });
+}
 
 export const pramaanTimelockAbi = parseAbi([
   "function operationCount() view returns (uint256)",

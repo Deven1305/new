@@ -1,14 +1,16 @@
 import { decodeFunctionResult, encodeFunctionData, getAddress } from "viem";
-import { namehash } from "viem/ens";
 import {
   CALL_SCHEDULED_TOPIC,
   controllerAbi,
   decodeCallScheduled,
+  decodeEnsV1TextResult,
+  decodeResolveTextResult,
   decodeUpgraded,
+  encodeEnsV1Text,
+  encodeResolveText,
   OP_STATES,
   pendingEta,
   pramaanTimelockAbi,
-  resolverAbi,
   toScheduledUpgrade,
   UPGRADED_TOPIC,
   type RawLog,
@@ -74,8 +76,14 @@ export function collectObservation(config: Config, app: AppConfig, port: ChainPo
   const gaps: string[] = [];
   const text = (key: string): string | null => {
     try {
-      const out = chain.call(app.resolver as Address, encodeFunctionData({ abi: resolverAbi, functionName: "text", args: [namehash(app.ensName), key] }));
-      return decodeFunctionResult({ abi: resolverAbi, functionName: "text", data: out });
+      const callData =
+        app.resolverMode === "ensv1"
+          ? encodeEnsV1Text(app.ensName, key)
+          : encodeResolveText(app.ensName, key);
+      const out = chain.call(app.resolver as Address, callData);
+      return app.resolverMode === "ensv1"
+        ? decodeEnsV1TextResult(out)
+        : decodeResolveTextResult(out);
     } catch (e) {
       gaps.push(`${key} could not be read from the resolver`);
       void e;

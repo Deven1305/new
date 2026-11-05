@@ -8,6 +8,8 @@ export const appConfigSchema = z.object({
   ensName: z.string().min(3).max(255),
   /** Resolver that stores pramaan.record / pramaan.revoked. */
   resolver: address,
+  /** Resolver mode: "ensv2" (PermissionedResolver resolve(dnsName, textCalldata)) or "ensv1" (direct text(namehash, key)). Default: ensv2. */
+  resolverMode: z.enum(["ensv2", "ensv1"]).default("ensv2"),
   /** PramaanTimelock (release-pointer queue). null = the app has none. */
   timelock: address.nullable(),
   /** OpenZeppelin TimelockController that owns the proxies' upgrade right. null = none. */

@@ -1,0 +1,43 @@
+{
+  "observedAt": "2026-11-05T01:47:16.3735885Z",
+  "scope": "Local Sepolia fork, chain31337, single RPC; fresh Chromium injected test wallet; backend off",
+  "sourceCommit": "d1cfc2f",
+  "browser": {
+    "evidence": "local-fork-browser",
+    "manifest": "dc5012803557fc7f81f1cf02d8c84df2370f0174a12f8bf8c3143ca53649722f",
+    "acceptedTx": "0x7f8aa3dd89d5ccd818c1ba12190bc69b28bb4f63a6f537f326b4c6286778365e",
+    "nonceBeforeTamper": 4,
+    "nonceAfterReject": 4,
+    "providerCallsAfterTamper": 1,
+    "providerCallsAfterRestore": 2
+  },
+  "apps": [
+    {
+      "id": "vaultlab",
+      "ensName": "pramaan-vaultlab-f3984c.eth",
+      "manifest": "4528a9bcb385e0449229a70858f60992099044fdb3af42e97d2559a256ec13d5",
+      "queueTx": "0xeb59cb16515afc5d09f6c38da78323a383d7fb2479b10a69dfe1bf5a842549a3",
+      "executeTx": "0x83c0303f0a0fd7915b1d5317f828e74ee2dfc0336e240082bac207b631a4f2fb",
+      "status": "active"
+    },
+    {
+      "id": "mirroryield",
+      "ensName": "pramaan-mirroryield-f3984c.eth",
+      "manifest": "dc5012803557fc7f81f1cf02d8c84df2370f0174a12f8bf8c3143ca53649722f",
+      "queueTx": "0x516f212880a7ab2ff04ae5244efbebf2cc8f998e299adab1ed72e6e07976b546",
+      "executeTx": "0x805952822b15651218cb1745d4d09e3af146b6c288e55666cdb24b96365623f5",
+      "status": "active"
+    },
+    {
+      "id": "permitmarket",
+      "ensName": "pramaan-permitmarket-f3984c.eth",
+      "manifest": "9decd68d0b16325ea5fee58ba6550ff0b6e89bfc17d3dd1e4ce999012ac13c28",
+      "queueTx": "0x6f1461248a3bee81340d62e3c8c5a9f329bef179da8ca08ca35356bde9fccb78",
+      "executeTx": "0x847bb1a075e1fc2b6535603d429cf91c1389dacf64ff1f23c38c25658ed38a81",
+      "status": "active"
+    }
+  ],
+  "pendingRevocation": "skipped; not verified",
+  "prove": "not run; Docker unavailable",
+  "limitation": "MV3 re-fetch checks do not prove which bytes executed against an adversarial server"
+}
