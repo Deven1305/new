@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-11-05T03:31:23.2101631Z",
+  "baseCommit": "5a95e00",
+  "cli": "1.39.0",
+  "sdk": "1.23.0",
+  "bun": "1.4.4",
+  "javy": "8.1.0",
+  "command": "cre workflow build ./pramaan-monitor -R . -T local-simulation -o ./pramaan-monitor/dist/pramaan-monitor.wasm --non-interactive (from workflows/cre-monitor; output directory created first)",
+  "unitTests": 65,
+  "typecheck": "passed",
+  "build": "passed",
+  "wasmBytes": 2815001,
+  "wasmSha256": "5b9a164e16c7df289e844528ed0fb3ddb79f155321f8429421e4bcbed725ff8c",
+  "cliBinaryHash": "5b9a164e16c7df289e844528ed0fb3ddb79f155321f8429421e4bcbed725ff8c",
+  "simulation": "NOT RUN: CLI login absent; owner-key and local-chain selector compatibility unverified",
+  "deployment": "NOT RUN"
+}

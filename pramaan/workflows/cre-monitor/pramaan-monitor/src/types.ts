@@ -23,6 +23,84 @@ export const appConfigSchema = z.object({
 });
 export type AppConfig = z.infer<typeof appConfigSchema>;
 
+/**
+ * Validates that a cron schedule is a 6-field cron string (seconds first)
+ * within the documented safe supported subset:
+ * - Second field must be:
+ *   - Exactly every 30 seconds: a 30-second step, "0,30", or "30,0"
+ *   - A single integer 0-59 (e.g. "0", "15"): executed at most once per minute (interval >= 60s)
+ *   Steps of 45 or 59 seconds are rejected due to rollover gaps (e.g. 15s or 1s).
+ * - Minute, hour, dom, mon, dow fields are validated to ensure only valid cron characters/ranges.
+ */
+export function validateCronSchedule(schedule: string): boolean {
+  if (typeof schedule !== "string") return false;
+  const parts = schedule.trim().split(/\s+/);
+  if (parts.length !== 6) return false;
+
+  const [sec, min, hour, dom, mon, dow] = parts;
+  if (!sec || !min || !hour || !dom || !mon || !dow) return false;
+
+  // Field 0: Seconds - Documented safe supported subset:
+  // 1) Exactly every 30s: "*/30", "0,30", "30,0"
+  // 2) Once per minute (or multiple minutes): a single integer 0-59 (e.g. "0", "15")
+  const is30Sec = sec === "*/30" || sec === "0,30" || sec === "30,0";
+  const secNum = Number(sec);
+  const isSingleSecond =
+    /^\d+$/.test(sec) && Number.isInteger(secNum) && secNum >= 0 && secNum <= 59;
+
+  if (!is30Sec && !isSingleSecond) {
+    return false;
+  }
+
+  // Helper to validate standard cron field patterns
+  const isValidCronField = (
+    field: string,
+    minVal: number,
+    maxVal: number,
+    allowQuestion = false,
+  ): boolean => {
+    if (allowQuestion && field === "?") return true;
+    if (field === "*") return true;
+
+    if (field.startsWith("*/")) {
+      const stepStr = field.slice(2);
+      if (!/^\d+$/.test(stepStr)) return false;
+      const step = Number(stepStr);
+      return Number.isInteger(step) && step >= 1 && step <= maxVal;
+    }
+
+    const items = field.split(",");
+    for (const item of items) {
+      if (item.includes("-")) {
+        const [startStr, endStr] = item.split("-");
+        if (!startStr || !endStr || !/^\d+$/.test(startStr) || !/^\d+$/.test(endStr)) {
+          return false;
+        }
+        const start = Number(startStr);
+        const end = Number(endStr);
+        if (start < minVal || end > maxVal || start > end) {
+          return false;
+        }
+      } else {
+        if (!/^\d+$/.test(item)) return false;
+        const val = Number(item);
+        if (val < minVal || val > maxVal) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  if (!isValidCronField(min, 0, 59)) return false;
+  if (!isValidCronField(hour, 0, 23)) return false;
+  if (!isValidCronField(dom, 1, 31, true)) return false;
+  if (!isValidCronField(mon, 1, 12)) return false;
+  if (!isValidCronField(dow, 0, 7, true)) return false;
+
+  return true;
+}
+
 export const limitsSchema = z.object({
   /** CRE production quota: PerWorkflow.ChainRead.CallLimit = 15 per execution. */
   evmCalls: z.number().int().min(4).max(15).default(15),
@@ -36,7 +114,9 @@ export const limitsSchema = z.object({
 
 export const configSchema = z.object({
   /** 6-field cron (seconds first). CRE minimum interval is 30 s. */
-  schedule: z.string(),
+  schedule: z.string().refine(validateCronSchedule, {
+    message: "Cron schedule must be a 6-field expression with an interval of at least 30 seconds",
+  }),
   workflowName: z.string().default("pramaan-monitor"),
   /** CRE chain selector name used for every EVM read, e.g. ethereum-testnet-sepolia. */
   chainSelectorName: z.string(),
@@ -46,7 +126,7 @@ export const configSchema = z.object({
   /** Base URL of the Pramaan server (`PRAMAAN_INGEST_URL`). "" = decide and log only, never POST. */
   ingestUrl: z.string(),
   limits: limitsSchema.default({}),
-  apps: z.array(appConfigSchema).min(1).max(10),
+  apps: z.array(appConfigSchema).length(1, "Workflow execution supports exactly one app per config"),
 });
 export type Config = z.infer<typeof configSchema>;
 

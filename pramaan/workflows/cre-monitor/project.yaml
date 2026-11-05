@@ -1,0 +1,16 @@
+# Canonical CRE Project Configuration (CRE CLI 1.39+)
+# RPC targets define RPC endpoints per chain for each target environment.
+staging:
+  rpcs:
+    - chain-name: "ethereum-testnet-sepolia"
+      url: "${SEPOLIA_RPC_URL}"
+
+local-simulation:
+  rpcs:
+    - chain-name: "ethereum-testnet-sepolia"
+      url: "http://127.0.0.1:8545"
+
+local-simulation-ingest:
+  rpcs:
+    - chain-name: "ethereum-testnet-sepolia"
+      url: "http://127.0.0.1:8545"

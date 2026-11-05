@@ -23,3 +23,11 @@ Implement a real, buildable read-only workflow using the **installed SDK1.23.0 t
 - CLI help confirms `cre workflow build <workflow-folder> -R <project-root> -T <target> -o <wasm>` supports compilation without upload/register/simulate. Compilation feasibility on Windows depends on SDK Javy setup; record actual failure if unavailable, do not weaken typechecks.
 
 Scope this goal to workflows/cre-monitor/** and docs/GEMINI_CRE_STATUS.md. Do not implement backend ingest in this goal (currently501); record as next interface. No other writer active. Remain on codex/gemini-work. No terminal tools, git commits, settings, deployment or other workers. Check `.pramaan/supervisor-stop` via file tools before each edit group; checkpoint/stop if present. Finish bounded slice and stop for coordinator checks.
+
+## Updated official TypeScript references (5 November)
+
+Use URLs ending -ts: the unsuffixed pages may render only navigation. Official TS starter https://docs.chain.link/cre/getting-started/part-1-project-setup-ts confirms exported async main(), Runner.newRunner<Config>({configSchema}), runner.run(initWorkflow), CronCapability and handler. SDK auto-executes main during compilation; no extra top-level call. Pinned installed SDK1.23 types remain authoritative.
+
+https://docs.chain.link/cre/reference/project-configuration-ts uses same target key in project.yaml and workflow.yaml. Project target.rpcs entries have chain-name/url, supporting environment interpolation; workflow target.user-workflow.workflow-name and workflow-artifacts.workflow-path/config-path/secrets-path identify source/config. https://docs.chain.link/cre/guides/workflow/secrets/using-secrets-simulation-ts maps logical secret IDs to environment-variable names under secretsNames; runtime.getSecret({id}).result().value retrieves a secret. Never copy the guide example that logs its secret value.
+
+Correction/uncertainty: the generic simulation guide describes private keys for on-chain writes, but TS starter explicitly requires CRE_ETH_PRIVATE_KEY for simulator environment initialization even without blockchain actions. Do not assert that read-only simulation never needs an owner key. Login is already absent, so actual CLI1.39 behavior beyond that first blocker remains unverified. No private key is needed merely to author/build source, and no broadcast/deployment is authorized.

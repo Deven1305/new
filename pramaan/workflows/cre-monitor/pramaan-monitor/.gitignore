@@ -1,0 +1,4 @@
+# CRE CLI compilation temporaries and generated outputs
+.cre_build_tmp.*
+dist/
+*.wasm

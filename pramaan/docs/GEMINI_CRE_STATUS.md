@@ -6,32 +6,43 @@
 
 ---
 
-## 1. CRE Adapter Status & Coordinator Run Results
+## 1. CRE Runtime & Real CLI 1.39 Build Fixes
 
-The coordinator verified that **TypeScript typecheck PASSED** and **35/36 unit tests passed** after the previous patch. The remaining 1 failing test and accompanying SDK review items have been resolved:
+Coordinator verified:
+- **63/63 unit tests PASSED**.
+- **TypeScript typecheck PASSED**.
+- Coordinator fixed only a JSDoc containing a star-slash that prematurely closed a comment block.
 
-### A. Base64 Encoding for `filterLogs` Query Bytes (`src/sdk-chain.ts`)
-- **Review Finding**: In the CRE SDK, `EVMClient.prototype.filterLogs` deserializes the JSON filter query via `fromJson(FilterLogsRequestSchema, input)`. In protobuf JSON format, `bytes` fields (`FilterQuery.addresses` and `Topics.topic`) must be base64-encoded strings, not raw `0x` hex strings.
+When coordinator executed the real CRE CLI 1.39 offline compilation (`cre workflow build . -R .. -T local-simulation -o dist/pramaan-monitor.wasm`), the Javy compiler emitted:
+> `Exported functions with parameters are not supported.`
+
+In addition, runtime serialization inspection identified that `WorkflowExecutionSummary.ingestDelivery.reason` was `undefined` on successful ingest, which causes the SDK's `Value.from` to throw because `null` and `undefined` are rejected by `CreSerializable`.
+
+The following bounded corrections were applied:
+
+### A. Javy Zero-Arg Entrypoint Isolation (`main.ts` & `src/workflow.ts`)
+- **Root Cause**: `main.ts` exported `executeWorkflow(runtime: Runtime<Config>)` and `initWorkflow(config: Config)`. The Javy compiler inspects exports of the workflow entrypoint and rejects any exported function with parameters.
 - **Fix**:
-  - Imported `hexToBase64` from `@chainlink/cre-sdk`.
-  - In `SdkChainPort.logs()`, converted both `addresses` (`addresses.map((a) => hexToBase64(getAddress(a)))`) and `topics` (`topics: [{ topic: topic0.map((t) => hexToBase64(t)) }]`) to base64 strings.
-  - Updated mock test expectations to match base64 values.
+  - Created `src/workflow.ts` containing the testable workflow logic:
+    - `WorkflowExecutionSummary`
+    - `executeWorkflow`
+    - `initWorkflow`
+  - Reduced `main.ts` to export **ONLY** zero-argument `export async function main(): Promise<void>`.
+  - Updated all test imports in `test/unit/sdk-http.test.ts` to import `executeWorkflow`, `initWorkflow`, and `WorkflowExecutionSummary` from `src/workflow.ts`.
 
-### B. Real SDK `EVMClient` Protobuf Deserialization Test (`test/unit/sdk-chain.test.ts`)
-- **Requirement**: Verify actual SDK conversion pipeline end-to-end instead of only mirroring implementation with a mock capability.
+### B. Serialization Fix: Required Reason with Stable Success Fallback (`src/workflow.ts`)
+- **Root Cause**: `WorkflowExecutionSummary.ingestDelivery.reason` was optional (`reason?: string`). On successful delivery, `reason` was `undefined`, which violates `CreSerializable` and causes `Value.from` to throw.
 - **Fix**:
-  - Added a test instantiating the real SDK `EVMClient` via `createEvmClient("ethereum-testnet-sepolia")` with a fake `Runtime.callCapability`.
-  - Captured the deserialized protobuf `FilterLogsRequest` payload produced by SDK `fromJson`.
-  - Asserted that `payload.filterQuery.addresses[0]` decodes to a 20-byte `Uint8Array` matching `hexToBytes(contractAddr)`, and `payload.filterQuery.topics[0].topic[0]` decodes to a 32-byte `Uint8Array` matching `hexToBytes(topic0)`.
+  - Updated `WorkflowExecutionSummary` to make `reason` a required `string`.
+  - Set `reason: "delivered"` on successful delivery as a stable success fallback.
+  - Added unit tests in `test/unit/sdk-http.test.ts` passing successful-ingest handler summary directly through actual SDK `Value.from(summary)` with zero `any`-casts, verifying clean protobuf conversion.
 
-### C. Strict Block Pinning & Rejection Without Successful Header (`src/sdk-chain.ts`)
-- **Requirement**: `call()` must never fall back to moving `latest` when `header()` has not succeeded. Calls require a successful header first, otherwise throw without invoking `callContract`. In addition, `pinnedBlockNumber` must reset to `null` at the start of `header()` so a failed second refresh cannot reuse a stale pin.
-- **Fix**:
-  - `header()` resets `this.pinnedBlockNumber = null` at entry.
-  - `call()` checks `if (this.pinnedBlockNumber === null)` and throws immediately without calling `callContract`.
-  - Replaced the test expecting fallback to `LATEST` with a test asserting immediate error throw and zero `callContract` invocations.
-  - Added a test verifying that a failed second header refresh clears the pin and causes subsequent `call()` invocations to reject without invoking `callContract`.
-  - Updated the ordinary `call()` test to invoke `port.header()` first with `mockHeaderReply`.
+### C. Workflow-Local Compiler Output Ignore (`.gitignore`)
+- Added `workflows/cre-monitor/pramaan-monitor/.gitignore` ignoring `.cre_build_tmp.*`, `dist/`, and `*.wasm` to prevent compiler temporaries and generated WASM from entering commits.
+
+### D. Canonical Project Configuration
+- Confirmed canonical parent `workflows/cre-monitor/project.yaml` with explicit `http://127.0.0.1:8545` for local targets and `${SEPOLIA_RPC_URL}` for staging.
+- Coordinator removed the duplicate empty inner file (`workflows/cre-monitor/pramaan-monitor/project.yaml`), and it was not recreated.
 
 ---
 
@@ -39,24 +50,41 @@ The coordinator verified that **TypeScript typecheck PASSED** and **35/36 unit t
 
 | Action | Executed by Gemini? | Status / Evidence |
 |---|---|---|
-| Patch edits (`src/sdk-chain.ts`, `test/unit/sdk-chain.test.ts`) | YES | Written using built-in file tools |
-| Supervisor stop check (`.pramaan/supervisor-stop`) | YES | Verified absent prior to each edit group |
+| Patch edits (`main.ts`, `src/workflow.ts`, `.gitignore`, `test/unit/sdk-http.test.ts`) | **YES** | Written using repository file tools only |
+| Supervisor stop checks (`.pramaan/supervisor-stop`) | **YES** | Verified absent prior to each edit group |
 | Terminal commands / Shell execution | **NO** | Strictly not executed (file tools only constraint) |
 | Git commits / branches / push | **NO** | Strictly not executed (branch remains `codex/gemini-work`) |
-| Bun typecheck (`bun run typecheck`) | **NOT RUN** | Previous run: PASSED; awaiting coordinator re-verification |
-| Bun unit tests (`bun test test/unit`) | **NOT RUN** | Previous run: 35 pass, 1 fail out of 36; awaiting coordinator re-verification |
-| CRE CLI build (`cre workflow build`) | **NOT RUN** | Awaiting coordinator verification |
-| CRE simulation (`cre workflow simulate`) | **BLOCKED / NOT RUN** | Requires CRE API credentials |
+| Bun typecheck (`bun run typecheck`) | **NOT RUN** | Previous coordinator run: PASSED; awaiting re-verification |
+| Bun unit tests (`bun test test/unit`) | **NOT RUN** | Previous coordinator run: 63 passed; awaiting re-verification |
+| CRE CLI build (`cre workflow build`) | **NOT RUN** | Previous coordinator run failed at Javy; now patched and awaiting rebuild |
+| CRE simulation (`cre workflow simulate`) | **BLOCKED / NOT RUN** | Requires CRE API credentials and unverified owner-key setup |
 
 ---
 
-## 3. Next Bounded Slice (Upon Coordinator Sign-Off)
+## 3. Blockers & Uncertainties
 
-Once the coordinator confirms that all 36+ unit tests pass:
-1. Implement `workflows/cre-monitor/pramaan-monitor/main.ts` with CRE `Runner`, `CronCapability` trigger, and HTTP node-mode manifest fetcher.
-2. Implement workflow configuration files: `project.yaml`, `workflow.yaml`, and sample non-secret config enforcing exactly one app per execution.
-3. Implement `scripts/config-from-demo.ts` generating single-app configuration from public `DemoStateV2` (`packages/release/src/demo-state.ts`).
+1. **Simulator Login Absent**:
+   - `cre whoami` reports no login and no `CRE_API_KEY`. CRE simulation requires active account credentials according to official documentation.
+2. **Owner-Key Requirement Uncertainty**:
+   - Official TypeScript starter documentation explicitly requires `CRE_ETH_PRIVATE_KEY` for simulator environment initialization even without blockchain actions, differing from generic simulation docs that describe keys only for on-chain writes.
+   - Because login is unavailable, actual CLI 1.39 behavior beyond the first blocker remains unverified. No private key was generated, read, or stored.
+3. **Local Fork Chain Selector Compatibility**:
+   - Local fork chain selector compatibility remains unverified until authenticated simulation is possible.
+4. **Config-From-Demo Generator**:
+   - Generator implementation (`scripts/config-from-demo.ts`) is deferred to the next bounded slice after build/runtime verification.
 
-## Coordinator verified chain slice, 2026-11-05
+---
 
-Bun1.4.4 frozen install (scripts disabled), explicit checksum-verified Javy8.1.0 setup, `bun run typecheck` and `bun test test/unit` passed:38tests across5files. Tests exercise real SDK filterLogs JSON-to-protobuf marshalling (20/32byte request fields), typed response mocks, block pinning/header failure, malformed profile gaps, budget and deterministic signatures. Coordinator also called the new ENSv2 codec against all three actual local-fork PermissionedResolvers: active pointers matched generated manifests and absent revocations decoded correctly. Public evidence docs/evidence/cre-ensv2-rpc.json. This is direct RPC validation, NOT a CRE workflow simulation. Main/HTTP/config/build remain the next slice; CLI login is unavailable. No deployment/broadcast.
+## 4. Next Steps for Coordinator
+
+The corrected build slice is ready for coordinator verification:
+1. Run `bun run typecheck` in `workflows/cre-monitor/pramaan-monitor`.
+2. Run `bun test test/unit` in `workflows/cre-monitor/pramaan-monitor`.
+3. Run `cre workflow build . -R .. -T local-simulation -o dist/pramaan-monitor.wasm` (using installed Javy).
+4. After build succeeds, proceed to generator slice (`scripts/config-from-demo.ts` from `DemoStateV2`).
+
+## Coordinator verified runtime and real WASM build
+
+`bun run typecheck` passed;65unit tests passed across6files, including real SDK HTTP JSON/protobuf marshalling, serialized consensus bounds, DON timestamp freshness, secret-error redaction and actual SDK Value.from serialization of successful handler summary. Coordinator corrected a JSDoc containing literal comment terminator; no behavior change.
+
+Actual CRE CLI1.39.0 offline build PASSED after exported parameter helpers were moved out of main.ts and output directory was created. Binary hash printed by CLI:5b9a164e16c7df289e844528ed0fb3ddb79f155321f8429421e4bcbed725ff8c. Public tool/size/file-SHA256 evidence in docs/evidence/cre-workflow-build.json; binary/compiler temporaries ignored. Build does not establish successful simulation, DON execution or backend ingest (still501). CLI authentication remains absent. Build script should create dist on fresh checkout; config generator is the next bounded slice. No key/secret/deployment/broadcast used.

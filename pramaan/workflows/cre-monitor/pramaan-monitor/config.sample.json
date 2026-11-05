@@ -1,0 +1,32 @@
+{
+  "schedule": "0 */5 * * * *",
+  "workflowName": "pramaan-monitor",
+  "chainSelectorName": "ethereum-testnet-sepolia",
+  "chainId": 11155111,
+  "blockTag": "latest",
+  "ingestUrl": "",
+  "limits": {
+    "evmCalls": 15,
+    "maxPendingOps": 3,
+    "maxLogWindows": 4,
+    "windowBlocks": 99
+  },
+  "apps": [
+    {
+      "app": "vaultlab",
+      "ensName": "vaultlab.pramaan.eth",
+      "resolver": "0x1111111111111111111111111111111111111111",
+      "resolverMode": "ensv2",
+      "timelock": "0x2222222222222222222222222222222222222222",
+      "upgradeTimelock": "0x3333333333333333333333333333333333333333",
+      "proxies": [
+        {
+          "label": "VaultProxy",
+          "address": "0x4444444444444444444444444444444444444444"
+        }
+      ],
+      "manifestUrlTemplate": "https://manifests.pramaan.dev/{sha256}.json",
+      "logsFromBlock": 5000000
+    }
+  ]
+}
