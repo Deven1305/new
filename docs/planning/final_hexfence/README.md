@@ -1,8 +1,11 @@
 # final_hexfence: one plan for HexFence + Pramaan
 
+> **Update 7 Nov 2026:** the merged codebase now exists in [hexfence_merged/](hexfence_merged/) (a local git repo, branch `merge/pramaan-import`, nothing pushed). Start at [hexfence_merged/docs/merged/00_INDEX.md](hexfence_merged/docs/merged/00_INDEX.md). The plan below is unchanged; its eligibility warning still applies: submit HexFence alone, publish the merge after payout.
+
+
 Written Fri 6 Nov 2026, about 23:00 IST. The ETHGlobal Mumbai deadline is **Sat 7 Nov, 09:00 IST** (about 10 hours away).
 
-This folder is a **plan only**. It holds no code from either project, on purpose (see [02](02_RULES_AND_ELIGIBILITY.md)). Nothing in `../hexfence` or `../Pramaan` was changed.
+The plan files (01-09) hold no code. The merged code lives in `hexfence_merged/`. Nothing in `../hexfence` or `../Pramaan` was changed.
 
 ## The answer in one minute
 
