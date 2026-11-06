@@ -17,6 +17,8 @@
     "pramaan:test": "pnpm --dir pramaan test",
     "pramaan:build:extension": "pnpm --dir pramaan build:extension",
     "pramaan:demo": "pnpm --dir pramaan demo:up --fixtures",
-    "test:all": "pnpm test && pnpm merged:test && pnpm pramaan:test"
+    "test:all": "pnpm test && pnpm merged:test && pnpm pramaan:test",
+    "merged:up": "node scripts/merged-up.mjs",
+    "smoke:pramaan-server": "node scripts/smoke-pramaan-server.mjs"
   }
 }
