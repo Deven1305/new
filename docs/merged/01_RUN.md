@@ -12,7 +12,7 @@
 | Chrome | 120+ | extensions | |
 | Bun + CRE CLI 1.39 | optional | Chainlink workflows | `cre --version` |
 
-Install Foundry yourself from https://book.getfoundry.sh/getting-started/installation (`foundryup`, or the GitHub release zip). The merge tooling did not install it for you.
+Foundry 1.8.7 is already installed on this laptop in `%USERPROFILE%\.foundryin` but not on PATH. `pnpm merged:up` adds it for you; for other commands run `$env:PATH = "$HOME\.foundryin;$env:PATH"` (PowerShell) or `export PATH="$HOME/.foundry/bin:$PATH"` (Git Bash). On another machine install it from https://book.getfoundry.sh/getting-started/installation.
 
 **If your Node is 20** (as on the laptop this was built on): run the Hardhat contract tests in Docker:
 
@@ -34,7 +34,7 @@ pnpm -r build                # builds pay, explorer, site, extension, detector, 
 
 # Pramaan side (its own workspace)
 pnpm pramaan:install         # = pnpm --dir pramaan install --frozen-lockfile
-pnpm pramaan:test            # 221 pass, 46 skipped; 2 files need Foundry (see below)
+pnpm pramaan:test            # 258 pass, 9 skipped (with Foundry on PATH)
 
 # the merge itself
 pnpm merged:test             # 5 scenarios, exit code 1 on any failure
@@ -77,7 +77,7 @@ pnpm build:web           # -> apps/web/dist
 pnpm dev:web             # dashboard on http://localhost:5173 (pages: /verify, /demo, /dashboard)
 ```
 
-Backend (decoder API, dashboard accounts, monitors): `pnpm server` on http://127.0.0.1:8787. It wants **Node 22**: on Node 20.20 `tsx src/index.ts` exited silently in the merge test, while the same app started fine when created directly, so use Node 22.
+Backend (decoder API, dashboard accounts, monitors): `pnpm server` on http://127.0.0.1:8787. Verified on Node 20.20: `pnpm smoke:pramaan-server` starts it, decodes an unlimited approval and stops it. (An early first run exited silently once; it started normally on every later run.)
 
 **The full 3-app demo** (needs Foundry; PROVE additionally needs Docker):
 

@@ -20,6 +20,8 @@
     "test:all": "pnpm test && pnpm merged:test && pnpm pramaan:test",
     "merged:up": "node scripts/merged-up.mjs",
     "smoke:pramaan-server": "node scripts/smoke-pramaan-server.mjs",
-    "merged:verify": "pnpm --filter @hexfence/integration verify"
+    "merged:verify": "pnpm --filter @hexfence/integration verify",
+    "smoke:browser": "node scripts/browser-smoke.mjs",
+    "smoke:pay-live": "node scripts/pay-live-check.mjs ."
   }
 }

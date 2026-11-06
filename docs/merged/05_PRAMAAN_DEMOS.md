@@ -54,4 +54,4 @@ Then load the extension (`pnpm build:extension`, Chrome → Load unpacked → `p
 - Wallet interception works by wrapping the page's provider (EIP-6963 and `window.ethereum`); it is not universal wallet enforcement.
 - A matching release is **not an audit** and not a guarantee of safety.
 - Not run by the Pramaan team: `cre workflow simulate`, Telegram delivery, the GitHub Action/attestation, a manual MetaMask/Rabby run.
-- On this merge laptop Foundry was not installed, so I did not run `demo:up` here. The Pramaan team recorded it passing on their Docker laptop (`pramaan/docs/NEXT_LAPTOP.md`).
+- Run in this merge on 7 Nov 2026 (Foundry 1.8.7, Docker, real PROVE): `demo:up --fixtures` brought up all three apps VERIFIED; PROVE reproduced 1 finding and verified its fix. See `08_VERIFICATION_REPORT.md` for the live results.

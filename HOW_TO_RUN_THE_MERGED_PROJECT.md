@@ -1,6 +1,6 @@
 # HexFence + Pramaan merged: run, deploy, tools, agent, demos (all in one)
 
-Everything on this page was run on 7 Nov 2026 on Windows 11 (Node 20.20.2, Docker, Foundry 1.8.7) unless it says **not run**. Details of every check: `docs/merged/08_VERIFICATION_REPORT.md`. Longer guides per topic: `docs/merged/00_INDEX.md`.
+Everything on this page was run on 7 Nov 2026 on Windows 11 (Node 20.20.2, Docker, Foundry 1.8.7) unless it says **not run**. Live results: `docs/merged/08_VERIFICATION_REPORT.md` (second pass). Details of every check: `docs/merged/08_VERIFICATION_REPORT.md`. Longer guides per topic: `docs/merged/00_INDEX.md`.
 
 > The merged tree contains pre-event Pramaan code. For ETHGlobal Mumbai Classic, submit HexFence alone from its public `main`; publish this merge only after the prizes are paid (`docs/planning/final_hexfence/02_RULES_AND_ELIGIBILITY.md`).
 
@@ -15,6 +15,7 @@ Everything on this page was run on 7 Nov 2026 on Windows 11 (Node 20.20.2, Docke
 | Chrome | | extensions are loaded unpacked |
 
 ```bash
+cp .env.public.example .env          # public Sepolia values; Pay and Explorer need them at build time
 pnpm install                         # HexFence workspace (+ packages/core, integration)
 pnpm pramaan:install                 # Pramaan workspace
 # compile the Guard contracts once (needed by the shared parity test). Node 22, or Docker:
@@ -31,6 +32,9 @@ PowerShell: replace `$PWD` with `${PWD}`. Put Foundry on PATH for the session: `
 | Start the whole Pramaan demo | `pnpm merged:up` | local Sepolia fork + PROVE + 3 dApps + attack fixture. Leave it running. Ctrl+C stops it |
 | Merged check on a live site | `pnpm merged:verify http://localhost:5182 --to 0x… --payee 0x…` | app + contract + action + recipient rows, one verdict |
 | Pramaan API smoke test | `pnpm smoke:pramaan-server` | starts the API, decodes an unlimited approval, stops it |
+| Real-browser smoke | `pnpm smoke:browser` | opens site, demo, explorer, Pay in Chromium and loads BOTH extensions |
+| Pay against the live Safe | `pnpm smoke:pay-live` | needs internet; lookalike → RED "Possible address poisoning" |
+| Pramaan extension E2E | `cd pramaan && pnpm --filter @pramaan/extension exec playwright test -c playwright.config.ts` (demo must be running) | 13 real-Chromium tests |
 | HexFence website | `pnpm --filter @hexfence/pay dev` (and `explorer`, `site`) | Pay, evidence explorer, landing |
 | Everything's tests | `pnpm test:all` | HexFence + merged + Pramaan |
 
@@ -101,4 +105,4 @@ More: `docs/merged/04_AGENT_USE.md`.
 
 ## 7. Known limits (say them out loud)
 
-Local fork only for Pramaan, no live Sepolia deployment. Extension compares re-fetched files, not executed bytes. A match is not an audit. HexFence extension never tested on the real Safe site; Pay inside Safe{Wallet} untested; no real Chainlink CRE simulation yet. One workspace / one extension / one CRE project (merge phases 2-6) are not done; the two projects share `@hexfence/core` and `integration/`.
+Local fork only for Pramaan, no live Sepolia deployment. Extension compares re-fetched files, not executed bytes. A match is not an audit. HexFence extension: loads in Chromium, but never tested on the real app.safe.global (needs a human with MetaMask); Pay inside Safe{Wallet} untested; no real Chainlink CRE simulation yet (`cre login`). One workspace / one extension / one CRE project (merge phases 2-6) are not done; the two projects share `@hexfence/core` and `integration/`.

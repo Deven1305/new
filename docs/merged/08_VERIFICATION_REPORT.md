@@ -35,3 +35,28 @@
 
 ## Eligibility reminder
 The ETHGlobal Mumbai Classic rules ban prior project-specific code and designs, one project per hacker, and no work after submission before payout. This merged tree contains pre-event code. Submit HexFence alone (public `main`, untouched) and publish this merge only after payout, as `docs/planning/final_hexfence/` recommends.
+
+---
+
+# Update: second pass, Foundry found, full demo run live (7 Nov 2026)
+
+Foundry 1.8.7 was already installed at `%USERPROFILE%\.foundry\bin` (just not on PATH), so the earlier "Foundry missing" gaps are closed.
+
+| Check | Result |
+|---|---|
+| `forge build` + `forge test` in `pramaan/contracts` | **108 passed**, 0 failed, 1 skipped |
+| Pramaan `pnpm test` (Foundry on PATH) | **258 passed**, 9 skipped, 0 failed (the 2 earlier failures are fixed) |
+| `pnpm demo:up --fixtures` | all three apps **verified**; PROVE ran in the Docker sandbox: 52 candidates, 8 exploit tests, **1 reproduced**, fix re-proved, suite 106 pass / 0 fail; VaultLab release carries 1 published finding |
+| `pramaan verify` on :5180, :5182, :5184 | `VERIFIED` and `files: verified (green)` |
+| `pnpm merged:verify` genuine MirrorYield | app GREEN, files GREEN, contract GREEN → **GREEN / pass** |
+| after `demo:tamper` (real bytes changed) | files **RED** (`/assets/index-….js does not match the release`) |
+| tampered + payment to a lookalike of an approved payee | app-files RED + recipient RED → **RED / confirm** |
+| after `demo:restore` | `VERIFIED` again |
+| lookalike origin :5183 | `MISMATCH` (`pramaan.domain is http://localhost:5182, page is http://127.0.0.1:5183`) |
+| VaultLab upgrade watch: `demo:upgrade schedule` then `execute --advance` | proxy moved to the unaudited V3; merged contract row turned **RED** (`VaultV2: impl-mismatch`) |
+| Pramaan extension in real Chromium (Playwright, backend off): `playwright test` | **13 passed**, 1 skipped (live Sepolia Anon-RPC): genuine green, tamper red + signing blocked + restore green, lookalike origin red, unlimited approval high risk in EN/HI/MR, leak shown + blocked, backend-down still verifies, stopped worker fails closed, pending pointer + revocation read from the fork |
+| `pnpm smoke:browser` | site, guided demo, explorer and Pay render in Chromium; **both extensions load** (service workers running; manifests "Pramaan" and "HexFence interception spike") |
+| `pnpm smoke:pay-live` (real Sepolia Safe) | Pay showed "Nox reads active" and "v1.4.1 · 1/2 · Guard active"; lookalike recipient → **RED "Possible address poisoning"** |
+| `pnpm smoke:pramaan-server` (Node 20) | `/healthz` 200; `/v1/decode` flagged the unlimited approval |
+
+Still **not** done: HexFence extension on the real `app.safe.global` (needs a human with MetaMask); Pay inside Safe{Wallet}; `cre login` + a real CRE simulation; Pramaan on live Sepolia; Telegram; a manual MetaMask/Rabby run of the demo; the merge phases 2-6 (one workspace, one extension, one CRE project). The Pay web build needs the public `VITE_*` values: `cp .env.public.example .env` before `pnpm -r build`.
