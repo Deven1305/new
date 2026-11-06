@@ -19,6 +19,7 @@
     "pramaan:demo": "pnpm --dir pramaan demo:up --fixtures",
     "test:all": "pnpm test && pnpm merged:test && pnpm pramaan:test",
     "merged:up": "node scripts/merged-up.mjs",
-    "smoke:pramaan-server": "node scripts/smoke-pramaan-server.mjs"
+    "smoke:pramaan-server": "node scripts/smoke-pramaan-server.mjs",
+    "merged:verify": "pnpm --filter @hexfence/integration verify"
   }
 }

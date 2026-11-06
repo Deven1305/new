@@ -64,4 +64,5 @@ async function main() {
   console.log(failed ? `\n${failed} scenario(s) FAILED` : `\nAll ${scenarios.length} merged scenarios passed.`);
   if (assertMode && failed) process.exit(1);
 }
-main();
+import { pathToFileURL } from "node:url";
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();

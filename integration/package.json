@@ -7,7 +7,8 @@
   "type": "module",
   "scripts": {
     "check": "tsx src/merged-check.ts",
-    "test": "tsx src/merged-check.ts --assert"
+    "test": "tsx src/merged-check.ts --assert",
+    "verify": "tsx src/merged-verify.ts"
   },
   "dependencies": {
     "@hexfence/core": "workspace:*",
