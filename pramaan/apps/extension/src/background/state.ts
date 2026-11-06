@@ -123,11 +123,18 @@ export function addRead(tab: TabState, r: ReadRecord): void {
 }
 
 export function persist(tab: TabState): void {
+  // Only the tab object that is current for this tab id may be written. A navigation replaces the object (resetTab);
+  // delayed work still holding the old one (hashing a leftover file, a finished read) must not overwrite the new
+  // record with stale state, and a closed tab must not be written back after forgetTab removed it.
+  if (tabs.get(tab.tabId) !== tab) return;
   tab.updatedAt = new Date().toISOString();
   clearTimeout(writes.get(tab.tabId));
   writes.set(
     tab.tabId,
-    setTimeout(() => void chrome.storage.session.set({ [`tab:${tab.tabId}`]: tab }).catch(() => undefined), 150),
+    setTimeout(() => {
+      if (tabs.get(tab.tabId) !== tab) return;
+      void chrome.storage.session.set({ [`tab:${tab.tabId}`]: tab }).catch(() => undefined);
+    }, 150),
   );
 }
 
