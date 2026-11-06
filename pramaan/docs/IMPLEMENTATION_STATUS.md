@@ -52,3 +52,18 @@ Pending/revocation browser test is now enabled and passed alongside the other2V2
 - Web footer: `/readyz` answering 503 with a readiness body now shows "Backend degraded" (worker/Docker reason), not "unreachable"; only transport failures stay offline. Web typecheck passes; no new web unit test was added.
 - Production bootstrap: new `ADMIN_ADDRESS` makes that wallet the first admin (SIWE sign-in, no token minted or logged). Production without it now fails fast instead of minting an unretrievable token. 2 new tests; server typecheck and all 21 server tests pass.
 - Still unfinished (large, not started here): jobs/findings backend routes, release queue/execute, GitHub webhook, active monitor poller, CRE `config-from-demo` generator and CRE simulation (needs CLI login), Docker PROVE run, Sepolia/mainnet deployment, ETHGlobal eligibility confirmation.
+
+## Docker-laptop pass (6 November 2026)
+
+Run on the Windows laptop with Docker, Foundry 1.8.7, Node 20.20.2, Bun 1.4.4 and CRE CLI 1.39.0 (checksum verified). Details, commands
+and the list of what is still not done: [NEXT_LAPTOP.md](NEXT_LAPTOP.md); evidence files in [evidence/](evidence/).
+
+- PROVE ran for real in the sandbox (7 e2e tests, 4 example projects). New: oracle-maths template (detector, exploit template, deterministic fixer, `examples/oracle-lending`).
+- `demo:up` now runs PROVE and records the verified finding in the VaultLab release; `--fixtures` builds and serves the attack fixture and tracker.
+- Browser: 13 Playwright tests pass on a clean demo. Two extension bugs fixed (tab-ordering race; stale tab object persisted).
+- Server: monitors implemented (POST/DELETE + poller) and RPC URLs are returned as origin only; the server reads `.env` like the CLI.
+- Bundle scan now flags undeclared IP-address endpoints (the tracker fixture fails the scan; the three apps pass).
+- Anon-RPC measured live on Sepolia (18 reads via the Nox mixnet). Public record page (`pramaan record-page`) added.
+- CRE: workflow builds and passes its 65 unit tests; a live-decision harness (explicitly NOT `cre workflow simulate`) ran four cases against the fork and the signed posts produced alerts.
+- Sepolia: three fresh testnet keys were generated into the gitignored `.env`; they hold **0 ETH on the real chain**. The deployment flow was rehearsed on a fork only. No live deployment, no claim of one.
+- Not run: `cre workflow simulate`, Telegram delivery, the GitHub Action/attestation, PR creation, manual MetaMask/Rabby run.
