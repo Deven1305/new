@@ -10,3 +10,4 @@ export * from "./pipeline.js";
 export * from "./evidence.js";
 export * from "./report.js";
 export * from "./ai.js";
+export * from "./bundle-scan.js";

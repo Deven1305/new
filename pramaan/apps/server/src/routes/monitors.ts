@@ -1,9 +1,9 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import type { AlertRow } from "../alerts.js";
+import { formatAlertText, sendTelegram, telegramConfigured, type AlertRow } from "../alerts.js";
 import { assertRole, audit, requireUser } from "../auth.js";
 import type { Ctx } from "../context.js";
-import { notConfigured, notFound, parse } from "../errors.js";
+import { HttpError, notConfigured, notFound, parse } from "../errors.js";
 
 const ProjectParamsSchema = z.object({
   id: z.string().uuid("Invalid project ID"),
@@ -230,8 +230,16 @@ export function registerMonitorRoutes(app: FastifyInstance, ctx: Ctx): void {
     throw notConfigured("NOT_IMPLEMENTED", "This API endpoint is not implemented yet");
   });
 
-  // Keep POST test-telegram unimplemented 501
-  app.post("/v1/projects/:id/alerts/test-telegram", async () => {
-    throw notConfigured("NOT_IMPLEMENTED", "This API endpoint is not implemented yet");
+  /** Sends one clearly-labelled test message. Nothing is stored; the result is Telegram's real answer. */
+  app.post("/v1/projects/:id/alerts/test-telegram", async (req) => {
+    const user = requireUser(req.user);
+    const params = parse(ProjectParamsSchema, req.params, "project params");
+    await assertRole(ctx.db, user, params.id, "maintainer");
+    if (!telegramConfigured(ctx.cfg)) throw notConfigured("TELEGRAM_NOT_CONFIGURED", "TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are not set on this server");
+    const project = await ctx.db.one<{ name: string }>("SELECT name FROM projects WHERE id = $1", [params.id]);
+    const result = await sendTelegram(ctx, formatAlertText(project?.name ?? "project", { severity: "info", title: "Pramaan test message", body: "Telegram delivery for this project works. No action needed.", eta: null }));
+    await audit(ctx.db, user.id, params.id, "alerts.test-telegram", null, { status: result.status });
+    if (result.status !== "sent") throw new HttpError(502, "TELEGRAM_FAILED", `Telegram did not accept the message: ${result.error ?? result.status}`);
+    return { ok: true, delivery: { telegram: result } };
   });
 }

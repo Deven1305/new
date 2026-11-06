@@ -95,7 +95,14 @@ async function main() {
     save();
   }
   start(process.execPath, [join(REPO_ROOT, "apps/demos/server/serve.mjs"), "--state", statePath]);
-  await new Promise((r) => setTimeout(r, 1500));
+  // wait until every host actually answers (a cold tsx start can take several seconds) instead of guessing a delay
+  for (const id of ids) {
+    let up = false;
+    for (let i = 0; i < 100 && !up; i++) {
+      try { up = (await fetch(`${state.apps[id].origin}/.well-known/pramaan.json`, { signal: AbortSignal.timeout(2000) })).status < 500; } catch { await new Promise((r) => setTimeout(r, 300)); }
+    }
+    if (!up) throw new Error(`${id}: static host did not come up at ${state.apps[id].origin}`);
+  }
   for (const id of ids) {
     const check = await verifySiteRelease({ origin: state.apps[id].origin, chains: { 31337: { chainId: 31337, rpcUrls: [rpc], universalResolver: ens.universalResolver, minAgreement: 1 } }, ipfsGateways: [] });
     console.log(`${id}: ${check.status}, manifest ${state.apps[id].release?.sha256}`);

@@ -29,12 +29,12 @@ function readConfig(dir: string): ProjectConfig | undefined {
   return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as ProjectConfig) : undefined;
 }
 
-async function storeFinding(db: Db, job: JobRow, report: AnalysisReport, f: FindingResult): Promise<string> {
+export async function storeFinding(db: Db, job: JobRow, report: AnalysisReport, f: FindingResult): Promise<string> {
   const contract = report.contracts.find((c) => c.name === f.candidate.contract) ?? null;
   const row = await db.one<{ id: string }>(
     `INSERT INTO findings (project_id, job_id, label, finding_key, vuln_class, title, severity, confidence, status, contract, function_sig, file, lines,
-       sources, template_id, plan, plan_error, contract_info, gates, vulnerable_run, pairs)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING id`,
+       sources, template_id, plan, plan_error, contract_info, gates, vulnerable_run, pairs, engine_result)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22) RETURNING id`,
     [
       job.project_id,
       job.id,
@@ -57,6 +57,7 @@ async function storeFinding(db: Db, job: JobRow, report: AnalysisReport, f: Find
       JSON.stringify(f.gates),
       JSON.stringify(f.vulnerableRun),
       JSON.stringify(f.pairs),
+      JSON.stringify(f),
     ],
   );
   if (f.test) {
@@ -86,8 +87,8 @@ async function runFix(
   }
   const fix: FixProposal = proposal.fix;
   const fp = await db.one<{ id: string }>(
-    "INSERT INTO fix_proposals (finding_id, generator, file, diff, explanation, status, job_id) VALUES ($1,$2,$3,$4,$5,'verifying',$6) RETURNING id",
-    [args.findingRowId, fix.generator, fix.file, fix.diff, fix.explanation, args.jobId],
+    "INSERT INTO fix_proposals (finding_id, generator, file, diff, after_source, change, explanation, status, job_id) VALUES ($1,$2,$3,$4,$5,$6,$7,'verifying',$8) RETURNING id",
+    [args.findingRowId, fix.generator, fix.file, fix.diff, fix.after, fix.change, fix.explanation, args.jobId],
   );
   const v = await verifyFix({
     repoDir: args.repoDir,

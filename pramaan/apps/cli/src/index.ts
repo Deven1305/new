@@ -13,7 +13,7 @@ import {
   type ThirdPartyEntry,
 } from "@pramaan/manifest/node";
 import { analyzeRequest, isGuardedMethod } from "@pramaan/decoder";
-import { buildSandboxImage, dockerStatus } from "@pramaan/engine";
+import { buildSandboxImage, dockerStatus, renderBundleReport, scanBundle } from "@pramaan/engine";
 import {
   assembleRelease,
   cancelOp,
@@ -122,6 +122,23 @@ program
     log(`private key: ${resolve(o.out)} (keep it secret; never commit it)`);
     log(`key id:      ${key.keyId}`);
     log(`ENS record   pramaan.signer = ${key.signerRecord}`);
+  });
+
+program
+  .command("scan")
+  .description("Scan a built frontend for shipped secrets and for trackers that could receive the wallet address (build-time leak check)")
+  .requiredOption("--site <dir>", "built site directory (the one `pramaan manifest` hashes)")
+  .option("--declared <host...>", "third-party hosts the app declares (same as --third-party in `manifest`)")
+  .option("--own <host...>", "the app's own hosts, e.g. vault.example")
+  .option("--json <file>", "also write the full result as JSON")
+  .action((o) => {
+    const r = scanBundle(resolve(o.site), { declaredHosts: o.declared, ownHosts: o.own });
+    log(renderBundleReport(r));
+    if (o.json) {
+      mkdirSync(dirname(resolve(o.json)), { recursive: true });
+      writeFileSync(resolve(o.json), JSON.stringify(r, null, 2));
+    }
+    if (!r.ok) process.exitCode = 1;
   });
 
 program

@@ -16,6 +16,11 @@ import { resolveDeps, type Ctx, type DepsInput } from "./context.js";
 import { openDb, type Db } from "./db.js";
 import { forbidden, HttpError, safeMessage } from "./errors.js";
 import { registerAuthRoutes } from "./routes/auth.js";
+import { registerFindingRoutes } from "./routes/findings.js";
+import { registerJobRoutes } from "./routes/jobs.js";
+import { registerPublicRoutes } from "./routes/public.js";
+import { registerReleaseRoutes } from "./routes/releases.js";
+import { startWorker } from "./worker.js";
 import { registerIngestRoutes } from "./routes/ingest.js";
 import { registerMonitorRoutes } from "./routes/monitors.js";
 import { registerProjectRoutes } from "./routes/projects.js";
@@ -27,6 +32,8 @@ export interface AppOptions {
   db?: Db;
   deps?: DepsInput;
   skipBootstrap?: boolean;
+  /** Run the analysis job worker inside this process (the dev server does; tests do not). */
+  worker?: boolean;
   logger?: boolean;
 }
 
@@ -51,6 +58,8 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
     deps,
     log: app.log,
   };
+
+  let worker: { stop: () => Promise<void> } | null = null;
 
   const secretList = [
     cfg.TELEGRAM_BOT_TOKEN,
@@ -82,6 +91,7 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
   app.decorateRequest("rawBody", null);
 
   app.addHook("onClose", async () => {
+    await worker?.stop();
     if (ownedDb) {
       await db.close();
     }
@@ -93,7 +103,7 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
     const mutating = ["POST", "PATCH", "DELETE", "PUT"].includes(req.method);
     if (req.user?.via === "session" && mutating) {
       const pathname = req.url.split("?")[0];
-      const isExempt = pathname === "/v1/auth/siwe" || pathname === "/v1/decode" || pathname === "/v1/ingest/cre";
+      const isExempt = pathname === "/v1/auth/siwe" || pathname === "/v1/decode" || pathname === "/v1/ingest/cre" || pathname === "/v1/webhooks/github";
       if (!isExempt) {
         const csrfHeader = req.headers[CSRF_HEADER];
         if (
@@ -165,6 +175,8 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
     });
   }
 
+  if (opts.worker) worker = startWorker(db, cfg, app.log);
+
   // Health and readiness endpoints
   app.get("/healthz", async () => ({ ok: true }));
 
@@ -177,7 +189,7 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
       dbOk = false;
     }
     const docker = await deps.dockerStatus();
-    const workerOk = false;
+    const workerOk = worker !== null;
     const ok = dbOk && workerOk;
     return reply.code(ok ? 200 : 503).send({
       ok,
@@ -238,6 +250,10 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
   registerStatsRoutes(app, ctx);
   registerIngestRoutes(app, ctx);
   registerMonitorRoutes(app, ctx);
+  registerJobRoutes(app, ctx);
+  registerFindingRoutes(app, ctx);
+  registerReleaseRoutes(app, ctx);
+  registerPublicRoutes(app, ctx);
 
   // Fallback for unimplemented endpoints
   app.setNotFoundHandler((_req, reply) =>
