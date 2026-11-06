@@ -32,7 +32,8 @@ async function run(cmd: string, args: string[]) {
 }
 async function main() {
   if (!existsSync(join(REPO_ROOT, "contracts/out/VaultV2.sol/VaultV2.json"))) throw new Error("build contracts first: cd contracts && forge build");
-  for (const port of [8545, 5180, 5182, 5183, 5184, 5189]) {
+  const withFixtures = process.argv.includes("--fixtures");
+  for (const port of [8545, 5180, 5182, 5183, 5184, 5189, ...(withFixtures ? [5190] : [])]) {
     await new Promise<void>((resolve, reject) => {
       const probe = createServer();
       probe.once("error", () => reject(new Error(`port ${port} is already in use; refusing to use an existing service`)));
@@ -76,7 +77,7 @@ async function main() {
     negativeTests.push(...negative);
     apps[id] = { id, name: id === "vaultlab" ? "VaultLab" : id === "mirroryield" ? "MirrorYield" : "PermitMarket", ensName, origin, distDir: `apps/demos/dist/${id}`, resolver, timelock, ...suite.apps[id], release: null };
   }
-  const state: DemoStateV2 = { version: 2, createdAt: new Date().toISOString(), network: { kind: "anvil-fork", chainId: 31337, chainName: "Local Sepolia fork", rpcUrl: rpc, forkUrl: null, explorer: null }, ens: { parent: "eth", parentTokenId: null, subregistry: null, registrationTxs: registrations, negativeTests }, accounts: { owner: owner.account.address, proposer: proposer.account.address, guardian: guardian.account.address, user: user.account.address, attacker: attacker.account.address }, shared: suite.shared, apps, hosts: { adminUrl: "http://127.0.0.1:5189", trackerUrl: null, lookalikeOrigin: "http://127.0.0.1:5183" }, prove: null, signer: { spki: Buffer.from(key.publicKeySpki).toString("base64"), record: key.signerRecord }, fixturesEnabled: false };
+  const state: DemoStateV2 = { version: 2, createdAt: new Date().toISOString(), network: { kind: "anvil-fork", chainId: 31337, chainName: "Local Sepolia fork", rpcUrl: rpc, forkUrl: null, explorer: null }, ens: { parent: "eth", parentTokenId: null, subregistry: null, registrationTxs: registrations, negativeTests }, accounts: { owner: owner.account.address, proposer: proposer.account.address, guardian: guardian.account.address, user: user.account.address, attacker: attacker.account.address }, shared: suite.shared, apps, hosts: { adminUrl: "http://127.0.0.1:5189", trackerUrl: withFixtures ? "http://127.0.0.1:5190" : null, lookalikeOrigin: "http://127.0.0.1:5183" }, prove: null, signer: { spki: Buffer.from(key.publicKeySpki).toString("base64"), record: key.signerRecord }, fixturesEnabled: withFixtures };
   const save = () => writeFileSync(statePath, JSON.stringify(state, null, 2));
   save();
   writeFileSync(join(dir, "keys.json"), JSON.stringify({ note: "LOCAL FORK ONLY", owner: owner.privateKey, proposer: proposer.privateKey, guardian: guardian.privateKey, user: user.privateKey }, null, 2), { mode: 0o600 });
@@ -94,7 +95,7 @@ async function main() {
   } else {
     console.log(sandbox ? "PROVE not run: the sandbox image is missing (pnpm pramaan sandbox build); releases will not claim findings." : "PROVE skipped (--skip-prove); releases will not claim findings.");
   }
-  await run(process.execPath, [join(REPO_ROOT, "apps/demos/scripts/build.mjs"), "--state", statePath, "--no-fixtures"]);
+  await run(process.execPath, [join(REPO_ROOT, "apps/demos/scripts/build.mjs"), "--state", statePath, ...(withFixtures ? [] : ["--no-fixtures"])]);
   for (const id of ids) {
     const release = await assembleDemoApp({ ctx, state, appId: id });
     const releaseDir = join(dir, "release", id); mkdirSync(releaseDir, { recursive: true });
@@ -108,7 +109,7 @@ async function main() {
     state.apps[id].release = { tag: "v1.0.0", sha256: release.sha256, pointer: release.pointer, manifestPath, signaturePath, cid: release.cid, timelockOpId: q.id.toString(), queueTx: q.txHash, executeTx, eta: Number(q.eta), status: "active" };
     save();
   }
-  start(process.execPath, [join(REPO_ROOT, "apps/demos/server/serve.mjs"), "--state", statePath]);
+  start(process.execPath, [join(REPO_ROOT, "apps/demos/server/serve.mjs"), "--state", statePath, ...(withFixtures ? ["--fixtures"] : [])]);
   // wait until every host actually answers (a cold tsx start can take several seconds) instead of guessing a delay
   for (const id of ids) {
     let up = false;

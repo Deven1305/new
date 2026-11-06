@@ -193,6 +193,9 @@ test("leak fixture: undeclared tracker shown, Block, next request blocked", asyn
   const page = await open(`${app.origin}/__fixtures/leak.html`);
   await page.evaluate(() => (window as unknown as { ethereum: { request: (a: unknown) => Promise<unknown> } }).ethereum.request({ method: "eth_requestAccounts" }));
   const sendAll = page.getByRole("button", { name: /send all/i });
+  // The fixture enables its attack buttons only after its own Connect button succeeds, like a real page would.
+  await page.getByRole("button", { name: /connect wallet/i }).click();
+  await expect(sendAll).toBeEnabled({ timeout: 15_000 });
   const fire = async () => {
     if (await sendAll.count()) await sendAll.click();
     else await page.evaluate(([t]) => void fetch(`${t}/collect?addr=${(window as unknown as { __a?: string }).__a ?? ""}`, { mode: "no-cors" }), [state!.hosts.trackerUrl!] as const);
@@ -200,7 +203,14 @@ test("leak fixture: undeclared tracker shown, Block, next request blocked", asyn
   const before = await count();
   await fire();
   await expect.poll(count, { timeout: 15_000 }).toBeGreaterThan(before);
-  const tabId = (await tab(`${app.origin}/__fixtures/leak.html`))!.tabId;
+  // the background worker persists a tab record shortly after the first events, so wait for it instead of assuming it exists
+  let record = await tab(`${app.origin}/__fixtures/leak.html`);
+  for (let i = 0; i < 30 && !record; i++) {
+    await page.waitForTimeout(500);
+    record = await tab(`${app.origin}/__fixtures/leak.html`);
+  }
+  expect(record, "the extension has a record of the leak fixture tab").not.toBeNull();
+  const tabId = record!.tabId;
   const popup = await context.newPage();
   await popup.goto(`chrome-extension://${new URL(sw.url()).host}/popup.html?tab=${tabId}`);
   const leak = popup.locator(`.leak[data-host="${trackerHost}"]`);

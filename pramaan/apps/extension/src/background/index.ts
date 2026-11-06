@@ -16,7 +16,19 @@ void hydrate().then(async () => {
   for (const t of interruptedTabs()) void verifyTab(t);
 });
 
-const isAddressList = (a: unknown): a is string[] => Array.isArray(a) && a.every((x) => typeof x === "string");
+const tabQueues = new Map<number, Promise<unknown>>();
+/** Runs `fn` after every earlier job for the same tab has finished (a failed job never blocks the next one). */
+function inTabOrder<T>(tabId: number, fn: () => Promise<T>): Promise<T> {
+  const run = (tabQueues.get(tabId) ?? Promise.resolve()).catch(() => undefined).then(fn);
+  tabQueues.set(tabId, run);
+  const clear = () => {
+    if (tabQueues.get(tabId) === run) tabQueues.delete(tabId);
+  };
+  run.then(clear, clear);
+  return run;
+}
+
+const isAddressList =(a: unknown): a is string[] => Array.isArray(a) && a.every((x) => typeof x === "string");
 
 chrome.runtime.onMessage.addListener((msg: ContentToBackground | PageToBackground, sender, sendResponse) => {
   const fromTab = sender.tab?.id;
@@ -25,6 +37,9 @@ chrome.runtime.onMessage.addListener((msg: ContentToBackground | PageToBackgroun
     if (sender.id !== chrome.runtime.id) return sendResponse({ error: "not allowed" });
     if (fromTab !== undefined && !fromExtensionPage) {
       // --- content scripts: only these four messages, about their own tab ---
+      // Handled strictly in arrival order per tab: "page" resets the tab's state asynchronously, and a "resources"
+      // message handled before that reset finished would be thrown away with the old state (site check stuck amber).
+      return inTabOrder(fromTab, async () => {
       if (msg.type === "page" && typeof msg.url === "string") {
         const tab = await resetTab(fromTab, msg.url);
         forgetRecent(fromTab);
@@ -53,6 +68,7 @@ chrome.runtime.onMessage.addListener((msg: ContentToBackground | PageToBackgroun
         persist(tab);
       }
       return sendResponse({ ok: true });
+      });
     }
     if (!fromExtensionPage) return sendResponse({ error: "not allowed" });
     // --- extension pages (popup, review window, options) ---
@@ -141,7 +157,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     if (d.tabId < 0) return undefined;
     // A top-level navigation: apply the destination origin's saved blocks before the page's requests start.
     if (d.type === "main_frame") {
-      void (async () => {
+      void inTabOrder(d.tabId, async () => {
         const tab = await getTab(d.tabId);
         let origin: string | null = null;
         try {
@@ -153,7 +169,7 @@ chrome.webRequest.onBeforeRequest.addListener(
           const next = await resetTab(d.tabId, d.url);
           await syncTabRules(next).catch(() => undefined);
         }
-      })();
+      });
       return undefined;
     }
     const tab = peekTab(d.tabId);

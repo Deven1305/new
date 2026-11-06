@@ -91,9 +91,10 @@ test.afterAll(async () => {
   await fetch("http://127.0.0.1:5189/restore?app=mirroryield", { method: "POST" }).catch(() => undefined);
   await context?.close();
 });
-async function openAndWait(expected: string): Promise<Page> {
+async function openAndWait(expected: string, afterGoto?: () => Promise<void>): Promise<Page> {
   const page = await context.newPage();
   await page.goto(origin);
+  await afterGoto?.();
   await expect
     .poll(
       async () =>
@@ -106,6 +107,15 @@ async function openAndWait(expected: string): Promise<Page> {
     )
     .toBe(expected);
   return page;
+}
+/** The user pressing "Re-check": the extension caches a release for 60 s, so after an on-chain change ask it to verify again. */
+async function recheck(): Promise<void> {
+  const tabId = await sw.evaluate(async (url) => (await chrome.tabs.query({ url: url + "*" }))[0]?.id ?? null, origin + "/");
+  expect(tabId).not.toBeNull();
+  const extPage = await context.newPage();
+  await extPage.goto(`${sw.url().split("/").slice(0, 3).join("/")}/popup.html`);
+  await extPage.evaluate((id) => chrome.runtime.sendMessage({ type: "reverify", tabId: id }), tabId);
+  await extPage.close();
 }
 async function request(page: Page) {
   const popup = context.waitForEvent("page", { predicate: (p) => p.url().includes("verdict.html"), timeout: 90_000 });
@@ -306,6 +316,7 @@ test("pending pointer and revocation are read from the real fork resolver", asyn
   let pendingCountWhileQueued = 0;
   try {
     const page = await openAndWait("verified");
+    await recheck();
     await expect
       .poll(
         async () =>
@@ -352,6 +363,7 @@ test("pending pointer and revocation are read from the real fork resolver", asyn
 
   // Guardian cancellation clears pending state
   let page = await openAndWait("verified");
+  await recheck();
   await expect
     .poll(
       async () =>
@@ -373,6 +385,7 @@ test("pending pointer and revocation are read from the real fork resolver", asyn
     await setRevocation(app.release.sha256);
     page = await context.newPage();
     await page.goto(origin);
+    await recheck();
     await expect
       .poll(
         async () =>
@@ -401,7 +414,7 @@ test("pending pointer and revocation are read from the real fork resolver", asyn
   }
 
   // Restore prior revocation record exactly and ensure restoration allows signing path again
-  page = await openAndWait("verified");
+  page = await openAndWait("verified", recheck);
   await expect
     .poll(
       async () =>

@@ -1,0 +1,30 @@
+{
+  "note": "Playwright v2.e2e.ts against a real anvil fork of Sepolia with the real extension build; run on 2026-11-06 after demo:up with PROVE",
+  "results": [
+    {
+      "evidence": "local-fork-browser",
+      "manifest": "6d9b3aaf2fc2cf15a9a3f2ed8eabbf653cb8cf11457b9a354dd37ca0f4323cea",
+      "acceptedTx": "0xb8ecf1d51324a82299a01164d907720ecde16c402c222b6c5f4adf56615ab234",
+      "nonceBeforeTamper": 20,
+      "nonceAfterReject": 20,
+      "providerCallsAfterTamper": 1,
+      "providerCallsAfterRestore": 2
+    },
+    {
+      "evidence": "pending-pointer-and-revocation",
+      "localMining": "manual-anvil-testclient",
+      "timelockOpId": 12,
+      "queuedEta": 1793983758,
+      "queueBlockTimestamp": 1793983638,
+      "activeManifest": "6d9b3aaf2fc2cf15a9a3f2ed8eabbf653cb8cf11457b9a354dd37ca0f4323cea",
+      "statusWhileQueued": "verified",
+      "pendingCountWhileQueued": 1,
+      "pendingCountAfterCancel": 0,
+      "statusWhileRevoked": "revoked",
+      "providerCallsWhileRevoked": 2,
+      "statusAfterRestore": "verified",
+      "providerCallsAfterRestore": 3,
+      "restoredTx": "0x10db4b15f4e86006af8d1c2df354b1a7294ae2631cd08692963bc951cf8af8df"
+    }
+  ]
+}

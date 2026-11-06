@@ -86,6 +86,8 @@ export const TRACKER_HOSTS = [
 ];
 
 const HOST_RE = /(?:https?:)?\/\/((?:[a-z0-9-]+\.)+[a-z]{2,24})(?::\d{1,5})?(?=[/"'`\s)?#,;]|$)/gi;
+/** URLs whose host is an IPv4 literal, port kept: `http://127.0.0.1:5190/collect` is a different endpoint from `http://127.0.0.1:8545`. */
+const IP_URL_RE = /(?:https?:)?\/\/((?:\d{1,3}\.){3}\d{1,3})(?::(\d{1,5}))?(?=[/"'`\s)?#,;]|$)/g;
 /** Namespace/documentation URIs that appear in nearly every bundle and are never fetched. */
 const IGNORED_HOSTS = new Set([
   "www.w3.org",
@@ -145,9 +147,11 @@ function lineOf(text: string, index: number): number {
 export function scanBundle(dir: string, options: BundleScanOptions = {}): BundleScanResult {
   const maxBytes = options.maxFileBytes ?? 8 * 1024 * 1024;
   const declared = (options.declaredHosts ?? []).map((h) => h.toLowerCase().replace(/:\d+$/, ""));
+  const declaredRaw = (options.declaredHosts ?? []).map((h) => h.toLowerCase());
   const own = (options.ownHosts ?? []).map((h) => h.toLowerCase().replace(/:\d+$/, ""));
   const result: BundleScanResult = { filesScanned: 0, skipped: [], findings: [], hosts: [], undeclared: [], ok: true };
   const hosts = new Set<string>();
+  const ipHosts = new Map<string, { file: string; line: number }>();
 
   for (const { full, rel } of walk(dir, options.maxFiles ?? 20_000)) {
     if (BINARY.has(extname(full).toLowerCase())) continue;
@@ -165,6 +169,13 @@ export function scanBundle(dir: string, options: BundleScanOptions = {}): Bundle
     }
     for (const m of text.matchAll(RPC_KEY_RE)) {
       result.findings.push({ kind: "rpc-key", severity: "medium", rule: "rpc-provider-key", file: rel, line: lineOf(text, m.index ?? 0), detail: redact(m[0]) });
+    }
+    for (const m of text.matchAll(IP_URL_RE)) {
+      const ip = m[1]!;
+      if (ip === "0.0.0.0" || hostMatchesList(ip, own)) continue;
+      const host = m[2] ? `${ip}:${m[2]}` : ip;
+      hosts.add(host);
+      if (!ipHosts.has(host)) ipHosts.set(host, { file: rel, line: lineOf(text, m.index ?? 0) });
     }
     const seenInFile = new Set<string>();
     for (const m of text.matchAll(HOST_RE)) {
@@ -189,14 +200,22 @@ export function scanBundle(dir: string, options: BundleScanOptions = {}): Bundle
 
   result.hosts = [...hosts].sort();
   if (options.declaredHosts) {
-    result.undeclared = result.hosts.filter((h) => !hostMatchesList(h, declared));
+    const isIp = (h: string) => /^\d{1,3}(\.\d{1,3}){3}(:\d+)?$/.test(h);
+    // An IP endpoint is declared only by its exact host:port (or by the bare IP, which accepts any port).
+    const ipDeclared = (h: string) => declaredRaw.includes(h) || (!h.includes(":") ? false : declaredRaw.includes(h.replace(/:\d+$/, "")));
+    result.undeclared = result.hosts.filter((h) => (isIp(h) ? !ipDeclared(h) : !hostMatchesList(h, declared)));
     for (const h of result.undeclared) {
+      if (isIp(h)) {
+        const at = ipHosts.get(h);
+        result.findings.push({ kind: "undeclared-host", severity: "high", rule: "undeclared-ip-endpoint", file: at?.file ?? "(bundle)", line: at?.line ?? 0, detail: `${h} is an IP-address endpoint the bundle talks to and the release does not declare; an undeclared endpoint can receive the wallet address`, host: h });
+        continue;
+      }
       if (hostMatchesList(h, TRACKER_HOSTS)) continue; // already reported, with higher severity
       result.findings.push({ kind: "undeclared-host", severity: "info", rule: "undeclared-third-party", file: "(bundle)", line: 0, detail: `${h} is referenced but not listed in the release's thirdParties[]`, host: h });
     }
   }
   result.findings.sort((a, b) => SEV_RANK[a.severity] - SEV_RANK[b.severity] || (a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line));
-  result.ok = !result.findings.some((f) => (f.kind === "secret" && (f.severity === "critical" || f.severity === "high")) || (f.kind === "tracker" && f.severity === "high"));
+  result.ok = !result.findings.some((f) => (f.kind === "secret" && (f.severity === "critical" || f.severity === "high")) || (f.kind === "tracker" && f.severity === "high") || (f.kind === "undeclared-host" && f.severity === "high"));
   return result;
 }
 

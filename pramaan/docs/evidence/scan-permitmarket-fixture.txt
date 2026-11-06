@@ -1,0 +1,7 @@
+Scanned 4 files; 5 finding(s); 6 external host(s).
+HIGH     undeclared-ip-endpoint   /assets/leak-BKX8pjfU.js:40  127.0.0.1:5190 is an IP-address endpoint the bundle talks to and the release does not declare; an undeclared endpoint can receive the wallet address
+INFO     undeclared-third-party   (bundle)  4byte.sourcify.dev is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  docs.soliditylang.org is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  oxlib.sh is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  viem.sh is referenced but not listed in the release's thirdParties[]
+Result: FAILED - a secret or an undeclared tracker is in the bundle.

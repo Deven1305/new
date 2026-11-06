@@ -77,6 +77,17 @@ describe("bundle scan", () => {
     expect(r.ok).toBe(true);
   });
 
+  it("treats an undeclared IP-address endpoint as high severity and tells apart ports on the same IP", () => {
+    const dir = site({ "a.js": 'fetch("http://127.0.0.1:8545"); fetch("http://127.0.0.1:5190/collect?addr=" + a);' });
+    expect(scanBundle(dir).undeclared).toEqual([]); // nothing to compare against without a declaration list
+    const r = scanBundle(dir, { declaredHosts: ["127.0.0.1:8545"] });
+    expect(r.undeclared).toEqual(["127.0.0.1:5190"]);
+    expect(r.findings).toMatchObject([{ kind: "undeclared-host", severity: "high", rule: "undeclared-ip-endpoint", host: "127.0.0.1:5190" }]);
+    expect(r.ok).toBe(false);
+    expect(scanBundle(dir, { declaredHosts: ["127.0.0.1:8545", "127.0.0.1:5190"] }).ok).toBe(true);
+    expect(scanBundle(dir, { declaredHosts: ["127.0.0.1"] }).undeclared).toEqual([]); // a bare IP accepts any port
+  });
+
   it("flags an RPC provider key embedded in a URL as a medium finding", () => {
     const dir = site({ "a.js": 'const rpc = "https://eth-sepolia.g.alchemy.com/v2/AbCdEfGhIjKlMnOpQrStUvWxYz012345";' });
     const r = scanBundle(dir);
