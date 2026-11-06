@@ -25,6 +25,7 @@
     "smoke:pay-live": "node scripts/pay-live-check.mjs .",
     "extension:build": "pnpm --dir pramaan build:extension",
     "extension:package": "node scripts/package-extension.mjs",
-    "extension:test": "pnpm --dir pramaan --filter @pramaan/extension exec vitest run"
+    "extension:test": "pnpm --dir pramaan --filter @pramaan/extension exec vitest run",
+    "chainlink:simulate": "node scripts/chainlink-simulate.mjs"
   }
 }
