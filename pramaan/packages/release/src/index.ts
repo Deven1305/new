@@ -8,3 +8,4 @@ export * from "./ipfs.js";
 export * from "./demo-state.js";
 export * from "./identity.js";
 export * from "./sepolia.js";
+export * from "./record-page.js";

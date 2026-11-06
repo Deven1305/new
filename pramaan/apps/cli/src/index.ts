@@ -47,6 +47,7 @@ import {
   runDoctor,
   type AppIdentityInput,
   type DoctorReport,
+  renderRecordPage,
 } from "@pramaan/release";
 import { publicSpkiFromPrivatePem, signerRecordForSpki } from "@pramaan/manifest/node";
 import { checkSite, readPramaanRecords, verifySiteRelease, type ObservedResource } from "@pramaan/verifier-core";
@@ -139,6 +140,24 @@ program
       writeFileSync(resolve(o.json), JSON.stringify(r, null, 2));
     }
     if (!r.ok) process.exitCode = 1;
+  });
+
+program
+  .command("record-page")
+  .description("Render a static, self-contained public record page (HTML, no scripts) for a release manifest; pin it on IPFS or host it anywhere")
+  .requiredOption("--manifest <file>", "the canonical manifest, e.g. .pramaan/release/pramaan-manifest.json")
+  .option("--signature <file>", "the DSSE envelope that signs it (shown on the page)")
+  .option("--manifest-href <url>", "where the raw manifest can be fetched, linked from the page")
+  .option("--out <file>", "output HTML file", ".pramaan/release/record.html")
+  .action((o) => {
+    const manifestPath = resolve(o.manifest);
+    const html = renderRecordPage(readFileSync(manifestPath), {
+      signatureEnvelope: o.signature ? readFileSync(resolve(o.signature), "utf8") : null,
+      manifestHref: o.manifestHref,
+    });
+    mkdirSync(dirname(resolve(o.out)), { recursive: true });
+    writeFileSync(resolve(o.out), html);
+    log(`record page written to ${resolve(o.out)} (${html.length} bytes); it states the manifest sha256 and tells readers to check it against ENS`);
   });
 
 program
