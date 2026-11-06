@@ -42,8 +42,7 @@ PowerShell: replace `$PWD` with `${PWD}`. Put Foundry on PATH for the session: `
 
 ### Load the extensions in Chrome
 1. `chrome://extensions` → Developer mode → **Load unpacked**.
-2. Pramaan: `pramaan/apps/extension/dist` (built by `merged:up`, or `pnpm pramaan:build:extension`).
-3. HexFence: `pnpm --filter @hexfence/extension build`, then `apps/extension/dist`.
+2. The single extension (HexFence + Pramaan): `pramaan/apps/extension/dist` (built by `merged:up`, or `pnpm extension:package`, which also writes `release/hexfence-extension-0.1.0.zip`). The old standalone HexFence extension (`apps/extension`) is superseded: do not load both. Details: `docs/merged/11_UNIFIED_EXTENSION.md`.
 4. Add the local chain to MetaMask/Rabby: RPC `http://127.0.0.1:8545`, chain id `31337`. Test wallet only.
 
 ## 2. Which demo app to use

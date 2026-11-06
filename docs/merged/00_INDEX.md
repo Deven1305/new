@@ -47,6 +47,7 @@ Pramaan stays its own workspace on purpose: it pins different tool versions (vit
 | [08_VERIFICATION_REPORT.md](08_VERIFICATION_REPORT.md) | What was actually run here, and what was not? |
 | [09_STEP_BY_STEP_RUN.md](09_STEP_BY_STEP_RUN.md) | Detailed run guide: project, both extensions, MCP |
 | [10_REMAINING_WORK_HOWTO.md](10_REMAINING_WORK_HOWTO.md) | How to finish the 4 "not done" items |
+| [11_UNIFIED_EXTENSION.md](11_UNIFIED_EXTENSION.md) | The single extension: what it checks, install, tests, limits, distribution |
 
 ## One-minute proof that the merge works
 
