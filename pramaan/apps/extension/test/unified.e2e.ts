@@ -136,6 +136,8 @@ const results = (page: Page) => page.evaluate(() => (window as unknown as { __re
 test("a payment from a Safe to a lookalike of an approved payee shows a RED Recipient row and is held", async () => {
   const { page, review: r } = await review(L);
   const text = await rowText(r, "red");
+  // Set SHOT_DIR to keep a picture of the merged review window (used for the demo material).
+  if (process.env.SHOT_DIR) await r.screenshot({ path: join(process.env.SHOT_DIR, "review-lookalike-red.png") });
   expect(text).toMatch(/Possible address poisoning/);
   expect(text).toContain(P);
   await expect(r.getByRole("button", { name: /Reject/ })).toBeVisible();

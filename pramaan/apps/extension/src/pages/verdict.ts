@@ -42,6 +42,11 @@ function render(): void {
   const ex = pending.explanations?.[lang] ?? null;
   const en = pending.explanations?.en ?? null;
   const checking = pending.state === "checking";
+  // Held only because the recipient is a lookalike of an approved payee (not a site / contract mismatch): say so.
+  const recipientOnly =
+    pending.rows.some((r) => r.id === "recipient" && r.blocking && r.color === "red") &&
+    !pending.rows.some((r) => r.id !== "recipient" && r.blocking && r.color === "red") &&
+    pending.blockReasons.every((b) => b === "verification-red");
   btnContinue.textContent = pending.blocked ? ui(lang, "btn.override") : ui(lang, "btn.continue");
   btnContinue.classList.toggle("danger", pending.blocked);
   btnContinue.disabled = pending.blocked && !overrideAck;
@@ -54,8 +59,8 @@ function render(): void {
   put(
     root,
     checking ? h("div", { class: "banner amber" }, ui(lang, "verdict.checking")) : null,
-    !checking && pending.blocked ? h("div", { class: "banner" }, ui(lang, "blocked")) : null,
-    pending.blocked ? h("label", { class: "override small" }, ack, ui(lang, "verdict.override-ack")) : null,
+    !checking && pending.blocked ? h("div", { class: "banner" }, ui(lang, recipientOnly ? "blocked.recipient" : "blocked")) : null,
+    pending.blocked ? h("label", { class: "override small" }, ack, ui(lang, recipientOnly ? "verdict.override-ack.recipient" : "verdict.override-ack")) : null,
     h("p", { class: "muted small" }, `${pending.origin} → ${pending.method}${pending.chainId ? ` (chain ${pending.chainId})` : ""}`),
     ex ? h("div", { class: "headline" }, ex.headline) : null,
     ex && lang !== "en" && showEnglish && en ? h("p", { class: "muted" }, `EN: ${en.headline}`) : null,

@@ -64,25 +64,42 @@ cpSync(join(root, "manifest.json"), join(out, "manifest.json"));
 const harness = dirname(require.resolve("@anon-rpc/browser-extension-harness/package.json"));
 cpSync(join(harness, "dist", "static", "anon-rpc"), join(out, "anon-rpc"), { recursive: true });
 
-// Icons: generated (a shield-green tile with a check mark) so the repo carries no binary assets.
+// Icons: generated (a HexFence hexagon in teal-to-indigo with a white check mark, 3x3 supersampled) so the repo carries no binary assets.
+function pixel(size, px, py) {
+  // centred, normalised coordinates: the hexagon's circumradius is 0.94 of half the tile
+  const x = ((px / size) - 0.5) * 2;
+  const y = ((py / size) - 0.5) * 2;
+  const R = 0.94;
+  const apothem = R * Math.sqrt(3) / 2;
+  let hex = 0;
+  for (let k = 0; k < 3; k++) hex = Math.max(hex, Math.abs(x * Math.cos((k * Math.PI) / 3) + y * Math.sin((k * Math.PI) / 3)));
+  const inside = hex <= apothem;
+  const t = (x + y + 2) / 4;
+  let rgb = [Math.round(20 * (1 - t) + 79 * t), Math.round(184 * (1 - t) + 70 * t), Math.round(166 * (1 - t) + 229 * t)];
+  // inner hexagon ring (visible from 48 px up)
+  if (size >= 48 && Math.abs(hex - apothem * 0.8) < 0.025) rgb = rgb.map((c) => Math.round(c * 0.55 + 255 * 0.45));
+  // check mark: two thick round-capped segments
+  const seg = (ax, ay, bx, by) => {
+    const dx = bx - ax, dy = by - ay;
+    const u = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(x - (ax + u * dx), y - (ay + u * dy));
+  };
+  const w = size <= 16 ? 0.17 : 0.12;
+  if (Math.min(seg(-0.34, 0.02, -0.1, 0.27), seg(-0.1, 0.27, 0.38, -0.27)) < w) rgb = [255, 255, 255];
+  return { rgb, inside };
+}
 function png(size) {
   const rows = [];
-  const r = size * 0.22;
+  const S = 3;
   for (let y = 0; y < size; y++) {
     const row = [0];
     for (let x = 0; x < size; x++) {
-      const dx = Math.max(0, Math.abs(x + 0.5 - size / 2) - (size / 2 - r));
-      const dy = Math.max(0, Math.abs(y + 0.5 - size / 2) - (size / 2 - r));
-      const inside = dx * dx + dy * dy <= r * r;
-      const t = (x + y) / (2 * size);
-      let [R, G, B] = [Math.round(122 * (1 - t) + 47 * t), Math.round(162 * (1 - t) + 158 * t), Math.round(255 * (1 - t) + 102 * t)];
-      // check mark: two thick segments
-      const u = x / size;
-      const v = y / size;
-      const d1 = Math.abs(v - (0.52 + (u - 0.28) * 0.9)) < 0.07 && u > 0.24 && u < 0.45;
-      const d2 = Math.abs(v - (0.71 - (u - 0.43) * 1.25)) < 0.07 && u > 0.41 && u < 0.78;
-      if (d1 || d2) [R, G, B] = [255, 255, 255];
-      row.push(R, G, B, inside ? 255 : 0);
+      let r = 0, g = 0, bl = 0, cover = 0;
+      for (let sy = 0; sy < S; sy++) for (let sx = 0; sx < S; sx++) {
+        const q = pixel(size, x + (sx + 0.5) / S, y + (sy + 0.5) / S);
+        if (q.inside) { r += q.rgb[0]; g += q.rgb[1]; bl += q.rgb[2]; cover++; }
+      }
+      row.push(cover ? Math.round(r / cover) : 0, cover ? Math.round(g / cover) : 0, cover ? Math.round(bl / cover) : 0, Math.round((255 * cover) / (S * S)));
     }
     rows.push(Buffer.from(row));
   }

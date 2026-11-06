@@ -57,11 +57,32 @@ header.bar {
   font-weight: 700;
 }
 
+/* The HexFence mark: a hexagon (the fence) with the Pramaan check inside, drawn in CSS so no binary asset is needed. */
 .logo .mark {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #7aa2ff, #2f9e66);
+  position: relative;
+  width: 24px;
+  height: 26px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: linear-gradient(135deg, #14b8a6, #4f46e5);
+}
+.logo .mark::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  width: 9px;
+  height: 5px;
+  border-left: 2.5px solid #fff;
+  border-bottom: 2.5px solid #fff;
+  transform: rotate(-45deg);
+}
+.logo .tag {
+  margin-left: 2px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  text-transform: uppercase;
 }
 
 select,
