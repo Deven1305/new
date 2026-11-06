@@ -6,7 +6,7 @@ export type Color = "green" | "amber" | "red" | "neutral";
 
 /** One line of the verdict window. `key`/`params` are looked up in the decoder's en/hi/mr catalog. */
 export interface VerdictRow {
-  id: "site" | "contract" | "action" | "privacy";
+  id: "site" | "contract" | "recipient" | "action" | "privacy";
   color: Color;
   key: string;
   params: Record<string, string>;

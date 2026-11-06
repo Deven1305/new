@@ -14,8 +14,11 @@ const require = createRequire(import.meta.url);
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
+// HexFence's pure decision logic (fingerprint, Safe decoder, verdicts) is bundled straight from the root workspace.
+const hexfenceShared = resolve(root, "../../../packages/shared/src/index.ts");
 const common = {
   configFile: false,
+  resolve: { alias: { "@hexfence/shared": hexfenceShared } },
   logLevel: "warn",
   define: { "process.env.NODE_ENV": JSON.stringify("production") },
   build: { outDir: out, emptyOutDir: false, target: "chrome120", minify: false, sourcemap: false, modulePreload: false },

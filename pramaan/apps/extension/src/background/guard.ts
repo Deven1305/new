@@ -1,4 +1,5 @@
-import { parseAbi, type PublicClient } from "viem";
+import { isAddress, parseAbi, type Address, type PublicClient } from "viem";
+import { recipientRow, type RecipientClient } from "./recipient.js";
 import { analyzeRequest, isGuardedMethod, toJsonSafe, type DecodeContext, type RequestAnalysis, type TokenInfo } from "@pramaan/decoder";
 import { actionRow, combine, compareContract, contractRow, inspectAgreed, makeClients, privacyRow, type VerdictRow } from "./verifier.js";
 import type { GuardRequest, PendingView } from "../shared/messages.js";
@@ -90,6 +91,15 @@ async function evaluate(tab: TabState, req: GuardRequest, timedOut: boolean, bas
         );
     }
   }
+  // HexFence: a Safe payment also gets the Recipient row (lookalike of an approved payee, read from the Guard).
+  const guardAddress = chainId !== null ? settings.hexfenceGuards[String(chainId)] : undefined;
+  const recipient = await recipientRow({
+    method: req.method,
+    params: req.params,
+    guard: guardAddress && isAddress(guardAddress) ? (guardAddress as Address) : undefined,
+    client: client as unknown as RecipientClient | undefined,
+  });
+  if (recipient) rows.push(recipient);
   rows.push(actionRow(analysis.assessment.level));
   rows.push(privacyRow(leakList(tab)));
   const verdict = combine(rows);

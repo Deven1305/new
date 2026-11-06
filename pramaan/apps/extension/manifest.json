@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Pramaan",
-  "short_name": "Pramaan",
+  "name": "HexFence",
+  "short_name": "HexFence",
   "version": "0.1.0",
-  "description": "Checks a dApp's website and contracts against its signed release and explains each transaction before you sign (English, हिन्दी, मराठी).",
+  "description": "One check before you sign: is this the real app, the real contract and the real recipient? Verifies the page against its signed release (Pramaan), explains the request in English, हिन्दी, मराठी, and catches lookalike payees from a Safe (HexFence).",
   "minimum_chrome_version": "120",
   "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
   "action": { "default_popup": "popup.html", "default_title": "Pramaan", "default_icon": { "16": "icons/16.png", "32": "icons/32.png" } },

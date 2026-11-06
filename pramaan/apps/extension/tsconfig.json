@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["chrome", "node"]
+    "types": ["chrome", "node"],
+    "paths": { "@hexfence/shared": ["../../../packages/shared/src/index.ts"] }
   },
   "include": ["src", "test", "playwright.config.ts"]
 }

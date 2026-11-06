@@ -25,6 +25,8 @@ export interface Settings {
   verificationWaitMs: number;
   /** Only opened when the user clicks "Dashboard"; verification never contacts it. */
   dashboardUrl: string;
+  /** HexFence Guard per chain id. A Safe payment on a chain listed here gets the Recipient row (lookalike check). */
+  hexfenceGuards: Record<string, string>;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -51,6 +53,8 @@ export const DEFAULT_SETTINGS: Settings = {
   anonRpcFallback: true,
   verificationWaitMs: 30_000,
   dashboardUrl: "http://localhost:5173",
+  // HexFenceGuard v1 on Sepolia (Sourcify-verified). Add other chains / a local deployment in the options page.
+  hexfenceGuards: { "11155111": "0xA061fB511D69e5c92E50E3BE5c789472d6f19748" },
 };
 
 export async function loadSettings(): Promise<Settings> {

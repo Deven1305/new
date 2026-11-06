@@ -10,6 +10,16 @@ function urls(text: string): string[] {
     .filter((s) => /^https?:\/\//.test(s));
 }
 
+/** "11155111=0xGuard" per line; anything that is not a chain id plus a 20-byte hex address is dropped. */
+function parseGuards(text: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const line of text.split(/\r?\n/)) {
+    const m = /^\s*(\d+)\s*=\s*(0x[0-9a-fA-F]{40})\s*$/.exec(line);
+    if (m) out[m[1]!] = m[2]!;
+  }
+  return out;
+}
+
 async function render(): Promise<void> {
   const s = await loadSettings();
   clear(root);
@@ -29,6 +39,8 @@ async function render(): Promise<void> {
       h("label", { style: "display:flex;gap:6px;align-items:center" }, anon, "Route verification reads through Anon-RPC (Nox mixnet; Sepolia only today)"),
     );
   });
+  const guards = h("textarea", { "data-guards": "1" });
+  guards.value = Object.entries(s.hexfenceGuards).map(([id, a]) => `${id}=${a}`).join("\n");
   const gateways = h("textarea", {});
   gateways.value = s.ipfsGateways.join("\n");
   const strict = h("input", { type: "checkbox" });
@@ -41,6 +53,12 @@ async function render(): Promise<void> {
     h("p", { class: "muted" }, "Pramaan reads ENS records and contract code directly from these RPC endpoints. It never sends your browsing to a Pramaan server."),
     h("div", { class: "field" }, h("label", {}, "Language"), lang),
     ...chainFields,
+    h(
+      "div",
+      { class: "field" },
+      h("label", {}, "HexFence Guard per chain, one chainId=0xGuardAddress per line. A Safe payment on these chains gets the Recipient row (lookalike of an approved payee)."),
+      guards,
+    ),
     h("div", { class: "field" }, h("label", {}, "IPFS gateways used to fetch release manifests (bytes are checked against the ENS pointer)"), gateways),
     h("label", { style: "display:flex;gap:6px;align-items:center;margin:10px 0" }, strict, "Block undeclared third parties on every site with a verified release"),
     h(
@@ -57,7 +75,7 @@ async function render(): Promise<void> {
         "button",
         {
           onclick: async () => {
-            const next: Settings = { ...s, language: lang.value as Settings["language"], ipfsGateways: urls(gateways.value), strictPrivacy: strict.checked, anonRpcFallback: fallback.checked, dashboardUrl: dashboard.value };
+            const next: Settings = { ...s, language: lang.value as Settings["language"], ipfsGateways: urls(gateways.value), strictPrivacy: strict.checked, anonRpcFallback: fallback.checked, dashboardUrl: dashboard.value, hexfenceGuards: parseGuards(guards.value) };
             next.chains = { ...s.chains };
             for (const area of root.querySelectorAll<HTMLTextAreaElement>("textarea[data-chain]")) {
               const id = area.dataset["chain"]!;

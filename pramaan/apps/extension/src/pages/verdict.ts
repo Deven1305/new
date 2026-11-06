@@ -14,7 +14,7 @@ let lang: Lang = "en";
 let showEnglish = false;
 let overrideAck = false;
 
-const ROW_LABEL: Record<string, string> = { site: "row.site", contract: "row.contract", action: "row.action", privacy: "row.privacy" };
+const ROW_LABEL: Record<string, string> = { site: "row.site", contract: "row.contract", recipient: "row.recipient", action: "row.action", privacy: "row.privacy" };
 const PATH_LABEL: Record<string, string> = { "anon-rpc": "Anon-RPC", direct: "direct", "direct-local": "direct (local chain)", "direct-fallback": "direct (fallback)" };
 
 function rowText(row: PendingView["rows"][number]): string {
