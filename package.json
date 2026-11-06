@@ -10,6 +10,13 @@
   "scripts": {
     "test": "pnpm -r test",
     "build": "pnpm -r build",
-    "test:contracts": "cd contracts && npx hardhat test"
+    "test:contracts": "cd contracts && npx hardhat test",
+    "merged:check": "pnpm --filter @hexfence/integration check",
+    "merged:test": "pnpm --filter @hexfence/integration test",
+    "pramaan:install": "pnpm --dir pramaan install --frozen-lockfile",
+    "pramaan:test": "pnpm --dir pramaan test",
+    "pramaan:build:extension": "pnpm --dir pramaan build:extension",
+    "pramaan:demo": "pnpm --dir pramaan demo:up --fixtures",
+    "test:all": "pnpm test && pnpm merged:test && pnpm pramaan:test"
   }
 }
