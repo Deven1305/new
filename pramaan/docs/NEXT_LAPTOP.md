@@ -12,13 +12,13 @@ Updated 2026-11-06. Compared against `Four_Ideas_Priority.pdf`, Priority 1 (Pram
 ## Added in this push
 
 Server routes (jobs, uploads, findings, fixes, PR creation, releases, mirror, verify/site, GitHub webhook, Telegram test),
-worker wiring + `engine_result` bug fix, `pramaan scan` (build-time secret/tracker scan), `.github/workflows/pramaan-release.yml`,
+worker wiring + `engine_result` bug fix, `pramaan scan` (build-time secret/tracker scan), `docs/templates/pramaan-release.yml`,
 `demo:up` host-readiness fix.
 
 ## Installing the release workflow
 
 The GitHub token used on the first laptop lacks the `workflow` scope, so the workflow is stored as a template at
-`docs/templates/pramaan-release.yml`. Install it with: `mkdir .github/workflows; copy docs	emplates\pramaan-release.yml .github\workflows\`
+`docs/templates/pramaan-release.yml`. Install it with: `mkdir .github/workflows` then `cp docs/templates/pramaan-release.yml .github/workflows/`
 (or run `gh auth refresh -s workflow` once and commit it). In an app repo it must live at `.github/workflows/pramaan-release.yml`.
 
 ## NOT done (needs the Docker laptop or more work)
