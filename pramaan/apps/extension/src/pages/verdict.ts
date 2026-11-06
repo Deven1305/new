@@ -12,8 +12,10 @@ const btnContinue = document.getElementById("continue") as HTMLButtonElement;
 let pending: PendingView | null = null;
 let lang: Lang = "en";
 let showEnglish = false;
+let overrideAck = false;
 
 const ROW_LABEL: Record<string, string> = { site: "row.site", contract: "row.contract", action: "row.action", privacy: "row.privacy" };
+const PATH_LABEL: Record<string, string> = { "anon-rpc": "Anon-RPC", direct: "direct", "direct-local": "direct (local chain)", "direct-fallback": "direct (fallback)" };
 
 function rowText(row: PendingView["rows"][number]): string {
   if (row.id === "action" && pending?.explanations) return pending.explanations[lang].headline;
@@ -25,31 +27,48 @@ function render(): void {
   document.documentElement.lang = lang;
   document.getElementById("title")!.textContent = ui(lang, "title.review");
   btnReject.textContent = ui(lang, "btn.reject");
-  btnContinue.textContent = ui(lang, "btn.continue");
-  if (!pending || !pending.explanations || pending.state !== "ready") {
-    root.append(h("p", { class: "muted" }, "This request is no longer pending."));
+  if (!pending) {
+    root.append(h("p", { class: "muted" }, ui(lang, "verdict.gone")));
     btnContinue.disabled = true;
+    btnContinue.textContent = ui(lang, "btn.continue");
     return;
   }
-  const ex = pending.explanations[lang];
-  const en = pending.explanations.en;
-  btnContinue.disabled = pending.blocked;
+  if (pending.state === "interrupted") {
+    root.append(h("div", { class: "banner" }, ui(lang, "verdict.interrupted")));
+    btnContinue.disabled = true;
+    btnContinue.textContent = ui(lang, "btn.continue");
+    return;
+  }
+  const ex = pending.explanations?.[lang] ?? null;
+  const en = pending.explanations?.en ?? null;
+  const checking = pending.state === "checking";
+  btnContinue.textContent = pending.blocked ? ui(lang, "btn.override") : ui(lang, "btn.continue");
+  btnContinue.classList.toggle("danger", pending.blocked);
+  btnContinue.disabled = pending.blocked && !overrideAck;
+  const ack = h("input", { type: "checkbox", id: "override-ack" });
+  ack.checked = overrideAck;
+  ack.addEventListener("change", () => {
+    overrideAck = ack.checked;
+    render();
+  });
   put(
     root,
-    pending.blocked ? h("div", { class: "banner" }, ui(lang, "blocked")) : null,
+    checking ? h("div", { class: "banner amber" }, ui(lang, "verdict.checking")) : null,
+    !checking && pending.blocked ? h("div", { class: "banner" }, ui(lang, "blocked")) : null,
+    pending.blocked ? h("label", { class: "override small" }, ack, ui(lang, "verdict.override-ack")) : null,
     h("p", { class: "muted small" }, `${pending.origin} → ${pending.method}${pending.chainId ? ` (chain ${pending.chainId})` : ""}`),
-    h("div", { class: "headline" }, ex.headline),
-    lang !== "en" && showEnglish ? h("p", { class: "muted" }, `EN: ${en.headline}`) : null,
-    ...ex.risks.map((r, i) =>
+    ex ? h("div", { class: "headline" }, ex.headline) : null,
+    ex && lang !== "en" && showEnglish && en ? h("p", { class: "muted" }, `EN: ${en.headline}`) : null,
+    ...(ex?.risks ?? []).map((r, i) =>
       h(
         "div",
         { class: `risk ${r.level}` },
         h("span", { class: `tag ${r.level}` }, ui(lang, `risk.${r.level}`)),
         r.text,
-        lang !== "en" && showEnglish ? h("div", { class: "muted small" }, `EN: ${en.risks[i]?.text ?? ""}`) : null,
+        lang !== "en" && showEnglish ? h("div", { class: "muted small" }, `EN: ${en?.risks[i]?.text ?? ""}`) : null,
       ),
     ),
-    ex.details.length ? h("section", {}, h("h2", {}, ui(lang, "decoded.details")), h("ul", { class: "checks" }, ...ex.details.map((d) => h("li", {}, h("span", {}, "·"), h("span", {}, d))))) : null,
+    ex?.details.length ? h("section", {}, h("h2", {}, ui(lang, "decoded.details")), h("ul", { class: "checks" }, ...ex.details.map((d) => h("li", {}, h("span", {}, "·"), h("span", {}, d))))) : null,
     pending.descriptorIntent ? h("p", { class: "small muted" }, `${ui(lang, "descriptor")}: ${pending.descriptorIntent}`) : null,
     h(
       "section",
@@ -63,6 +82,9 @@ function render(): void {
         ),
       ),
     ),
+    pending.reads.length
+      ? h("details", {}, h("summary", { class: "small muted" }, `${ui(lang, "popup.transport")} (${pending.reads.length})`), h("ul", { class: "checks small" }, ...pending.reads.map((r) => h("li", {}, h("span", {}, PATH_LABEL[r.path] ?? r.path), h("span", {}, `${r.what} · ${r.endpoint}${r.note ? ` · ${r.note}` : ""}`)))))
+      : null,
     lang !== "en" ? h("button", { class: "small", onclick: () => ((showEnglish = !showEnglish), render()) }, ui(lang, "btn.english")) : null,
     h("details", {}, h("summary", { class: "small muted" }, ui(lang, "decoded.raw")), h("pre", {}, pending.raw)),
     h("p", { class: "muted small" }, ui(lang, "never.safe")),
@@ -72,22 +94,30 @@ function render(): void {
 async function decide(decision: "continue" | "reject"): Promise<void> {
   btnReject.disabled = true;
   btnContinue.disabled = true;
-  await chrome.runtime.sendMessage({ type: "decide", id, decision });
+  await chrome.runtime.sendMessage({ type: "decide", id, decision, override: decision === "continue" && !!pending?.blocked && overrideAck });
   window.close();
 }
 
 btnReject.addEventListener("click", () => void decide("reject"));
 btnContinue.addEventListener("click", () => {
-  if (!pending?.blocked) void decide("continue");
+  if (!pending || pending.state === "interrupted") return;
+  if (pending.blocked && !overrideAck) return;
+  void decide("continue");
 });
 langSelect.addEventListener("change", async () => {
   lang = langSelect.value as Lang;
-  const s = await loadSettings();
-  await saveSettings({ ...s, language: lang });
+  await saveSettings({ ...(await loadSettings()), language: lang });
   render();
 });
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") void decide("reject");
+});
+// Live updates: the background rewrites the pending entry when verification finishes (or Pramaan restarts).
+chrome.storage.onChanged.addListener((changes, area) => {
+  const c = changes[`pending:${id}`];
+  if (area !== "session" || !c) return;
+  pending = (c.newValue as PendingView | undefined) ?? null;
+  render();
 });
 
 void (async () => {

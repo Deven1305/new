@@ -7,7 +7,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc -p tsconfig.json",
-    "test:e2e": "playwright test -c playwright.config.ts"
+    "test:e2e": "playwright test -c playwright.config.ts",
+    "test": "vitest run -c vitest.config.ts",
+    "test:e2e:local": "playwright test -c playwright.config.ts local.e2e.ts"
   },
   "dependencies": {
     "@anon-rpc/browser-extension-harness": "0.4.0",

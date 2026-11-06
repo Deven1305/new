@@ -1,8 +1,10 @@
 import type { Lang } from "@pramaan/decoder";
 import type { TabView } from "../shared/messages.js";
+import { MV3_BLIND_SPOTS } from "../shared/leaks.js";
+import { OBSERVES, type ReadPath } from "../shared/rpc-log.js";
 import { loadSettings, saveSettings } from "../shared/settings.js";
-import { ui } from "../shared/ui-i18n.js";
-import { clear, h, put, short } from "./dom.js";
+import { ui, verifyText } from "../shared/ui-i18n.js";
+import { clear, h, short } from "./dom.js";
 
 const root = document.getElementById("root")!;
 const langSelect = document.getElementById("lang") as HTMLSelectElement;
@@ -11,11 +13,44 @@ let tabId = -1;
 let view: TabView | null = null;
 
 const MARK = { pass: "✓", fail: "✗", warn: "!", skip: "–" } as const;
+const PATH_LABEL: Record<ReadPath, string> = { "anon-rpc": "Anon-RPC (Nox)", direct: "direct RPC", "direct-local": "direct (local chain)", "direct-fallback": "direct (fallback)" };
 
 function statusColor(v: TabView): string {
   if (v.status === "checking" || v.status === "idle") return "neutral";
   if (v.status === "missing") return "amber";
-  return v.color;
+  return v.siteRow?.color === "red" ? "red" : v.color;
+}
+
+function statusTitle(v: TabView): string {
+  if (v.siteRow?.key === "verify.site.pending") return ui(lang, "popup.pending");
+  return ui(lang, `popup.${v.status}`);
+}
+
+function privacyPanel(v: TabView): HTMLElement {
+  const sec = h("section", {}, h("h2", {}, ui(lang, "popup.privacy")));
+  sec.append(h("p", { class: "muted small" }, `${ui(lang, "popup.transport")}: ${v.transport}${v.singleSource ? " · single RPC" : ""} · ${ui(lang, "popup.anon")}: ${v.anon.state} (${v.anon.detail})`));
+  const rpcReads = v.reads.filter((r) => r.method !== "GET");
+  if (!v.reads.length) sec.append(h("p", { class: "muted small" }, ui(lang, "popup.noreads")));
+  const paths = [...new Set(rpcReads.map((r) => r.path))];
+  for (const p of paths) {
+    const reads = rpcReads.filter((r) => r.path === p);
+    sec.append(
+      h(
+        "details",
+        {},
+        h("summary", { class: "small" }, `${PATH_LABEL[p]}: ${reads.length} read(s) via ${[...new Set(reads.map((r) => r.endpoint))].join(", ")}`),
+        h("ul", { class: "checks small privacy-reads" }, ...reads.map((r) => h("li", {}, h("span", { class: r.ok ? "mark-pass" : "mark-fail" }, r.method), h("span", {}, `${r.what}${r.note ? ` — ${r.note}` : ""} (${r.ms} ms)`)))),
+        h("p", { class: "small" }, h("strong", {}, `${ui(lang, "popup.sees")}: `), OBSERVES[p].sees.join("; ")),
+        h("p", { class: "small" }, h("strong", {}, `${ui(lang, "popup.notsees")}: `), OBSERVES[p].doesNotSee.join("; ")),
+      ),
+    );
+  }
+  const fetches = v.reads.filter((r) => r.method === "GET");
+  if (fetches.length) {
+    sec.append(h("details", {}, h("summary", { class: "small" }, `HTTP: ${fetches.length} file(s) from ${[...new Set(fetches.map((r) => r.endpoint))].join(", ")}`), h("ul", { class: "checks small" }, ...fetches.map((r) => h("li", {}, h("span", { class: r.ok ? "mark-pass" : "mark-fail" }, "•"), h("span", {}, r.what))))));
+  }
+  sec.append(h("p", { class: "muted small" }, "Pramaan sends nothing to a Pramaan server: these are the only requests it made to verify this page."));
+  return sec;
 }
 
 function render(): void {
@@ -31,18 +66,12 @@ function render(): void {
       "div",
       { class: `status ${statusColor(v)}` },
       h("span", { class: "dot" }),
-      h("div", {}, h("h1", {}, ui(lang, `popup.${v.status}`)), h("p", {}, sub), v.site ? h("p", {}, v.site.summary) : null),
+      h("div", {}, h("h1", {}, statusTitle(v)), h("p", {}, sub), v.siteRow ? h("p", {}, verifyText(lang, v.siteRow.key, v.siteRow.params)) : null, v.siteRow?.detail ? h("p", { class: "small" }, v.siteRow.detail) : null),
     ),
   );
+  for (const u of v.unguarded) root.append(h("div", { class: "banner" }, `${ui(lang, "popup.unguarded")}: ${u.walletName} (${u.reason})`));
   if (v.checks.length) {
-    root.append(
-      h(
-        "section",
-        {},
-        h("h2", {}, ui(lang, "popup.checks")),
-        h("ul", { class: "checks" }, ...v.checks.map((c) => h("li", {}, h("span", { class: `mark-${c.status}` }, MARK[c.status]), h("span", {}, c.detail)))),
-      ),
-    );
+    root.append(h("section", {}, h("h2", {}, ui(lang, "popup.checks")), h("ul", { class: "checks" }, ...v.checks.map((c) => h("li", {}, h("span", { class: `mark-${c.status}` }, MARK[c.status]), h("span", {}, c.detail))))));
   }
   const issues = v.site?.resources.filter((r) => r.status !== "match" && r.status !== "ignored") ?? [];
   if (v.site) {
@@ -58,9 +87,7 @@ function render(): void {
     );
   }
   if (v.contracts.length) {
-    root.append(
-      h("section", {}, h("h2", {}, ui(lang, "popup.contracts")), h("dl", { class: "kv" }, ...v.contracts.flatMap((c) => [h("dt", {}, c.label), h("dd", {}, `${short(c.address)}${c.proxy ? ` (${c.proxy})` : ""} · chain ${c.chainId}`)]))),
-    );
+    root.append(h("section", {}, h("h2", {}, ui(lang, "popup.contracts")), h("dl", { class: "kv" }, ...v.contracts.flatMap((c) => [h("dt", {}, c.label), h("dd", {}, `${short(c.address)}${c.proxy ? ` (${c.proxy})` : ""} · chain ${c.chainId}`)]))));
   }
   if (v.findings.length) {
     root.append(h("section", {}, h("h2", {}, ui(lang, "popup.findings")), h("ul", { class: "checks" }, ...v.findings.map((f) => h("li", {}, h("span", { class: f.status === "fixed-verified" ? "mark-pass" : "mark-warn" }, "•"), h("span", {}, `${f.id} ${f.title}: ${f.status}`))))));
@@ -71,9 +98,15 @@ function render(): void {
     leaks.append(
       h(
         "div",
-        { class: "leak" },
-        h("span", {}, h("span", { class: `dot ${l.blocked ? "green" : l.declared ? "amber" : "red"}`, style: "display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px" }), `${l.host}: ${l.form} in ${l.channel} (${l.declared ? "declared" : "NOT declared"}${l.blocked ? ", blocked" : ""}) ×${l.count}`),
-        h("button", { class: "small", onclick: () => void act(l.blocked ? { type: "unblock-host", tabId, origin: l.origin } : { type: "block-host", tabId, origin: l.origin }) }, l.blocked ? ui(lang, "popup.unblock") : ui(lang, "popup.block")),
+        { class: "leak", "data-host": l.host },
+        h(
+          "div",
+          {},
+          h("strong", {}, l.host),
+          h("span", { class: `tag ${l.blocked ? "low" : l.declared ? "medium" : "high"}` }, l.blocked ? "blocked" : l.declared ? `declared: ${l.purpose ?? ""}` : "NOT declared in the release"),
+          h("div", { class: "small" }, `${l.method} · ${l.channel} · ${l.where} · ${l.form} (${l.account}) ×${l.count}`),
+        ),
+        h("button", { class: "small", onclick: () => void act(l.blocked ? { type: "unblock-host", tabId, host: l.host } : { type: "block-host", tabId, host: l.host }) }, l.blocked ? ui(lang, "popup.unblock") : ui(lang, "popup.block")),
       ),
     );
   }
@@ -83,8 +116,9 @@ function render(): void {
     box.addEventListener("change", () => void act({ type: "set-strict", tabId, strict: box.checked }));
     leaks.append(h("label", { class: "small", style: "display:flex;gap:6px;align-items:center;margin-top:8px" }, box, ui(lang, "popup.strict")));
   }
+  leaks.append(h("details", {}, h("summary", { class: "small muted" }, ui(lang, "popup.blind")), h("ul", { class: "small" }, ...MV3_BLIND_SPOTS.map((s) => h("li", {}, s)))));
   root.append(leaks);
-  root.append(h("p", { class: "muted small" }, `${ui(lang, "popup.transport")}: ${v.transport}${v.singleSource ? " · single RPC" : ""}`));
+  root.append(privacyPanel(v));
 }
 
 async function act(msg: object): Promise<void> {
@@ -109,15 +143,15 @@ document.getElementById("dashboard")!.addEventListener("click", async (e) => {
 void (async () => {
   lang = (await loadSettings()).language;
   langSelect.value = lang;
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const forced = Number(new URLSearchParams(location.search).get("tab") ?? "NaN");
+  const [tab] = Number.isFinite(forced) ? [{ id: forced }] : await chrome.tabs.query({ active: true, currentWindow: true });
   tabId = tab?.id ?? -1;
   view = tabId >= 0 ? ((await chrome.runtime.sendMessage({ type: "tab-view", tabId })) as TabView) : null;
   render();
-  // Keep the popup current while verification finishes.
-  const timer = setInterval(async () => {
+  // Keep the popup current while verification finishes or leaks arrive.
+  setInterval(async () => {
     if (tabId < 0) return;
     view = (await chrome.runtime.sendMessage({ type: "tab-view", tabId })) as TabView;
     render();
-    if (view.status !== "checking") clearInterval(timer);
   }, 1500);
 })();

@@ -22,21 +22,49 @@ inpage.onmessage = (event: MessageEvent<InpageToContent>) => {
     send({ type: "accounts", accounts: msg.accounts });
     return;
   }
+  if (msg?.type === "unguarded") {
+    send({ type: "unguarded", walletName: msg.walletName, reason: msg.reason });
+    return;
+  }
   if (msg?.type !== "request") return;
-  const port = chrome.runtime.connect({ name: "pramaan-guard" });
+  const rejectNow = (reason: string) => inpage.postMessage({ type: "decision", id: msg.id, decision: "reject", reason } satisfies ContentToInpage);
+  let port: chrome.runtime.Port;
+  try {
+    port = chrome.runtime.connect({ name: "pramaan-guard" });
+  } catch {
+    // The extension was updated or reloaded: this page's script is orphaned. Fail closed.
+    rejectNow("Pramaan was restarted; reload the page to sign");
+    return;
+  }
   let answered = false;
+  // A message every 20 s keeps the MV3 service worker alive while the user reads the review window.
+  const keepalive = setInterval(() => {
+    try {
+      port.postMessage({ type: "keepalive" });
+    } catch {
+      clearInterval(keepalive);
+    }
+  }, 20_000);
   port.onMessage.addListener((m: ContentToInpage) => {
     if (m.type === "decision" && m.id === msg.id) {
       answered = true;
+      clearInterval(keepalive);
       inpage.postMessage(m);
       port.disconnect();
     }
   });
   port.onDisconnect.addListener(() => {
-    if (!answered) inpage.postMessage({ type: "decision", id: msg.id, decision: "reject", reason: "Pramaan could not complete the review, so the request was rejected" } satisfies ContentToInpage);
+    clearInterval(keepalive);
+    // Service worker stopped or restarted mid-request: never silently allowed.
+    if (!answered) rejectNow("Pramaan could not complete the review (it restarted), so the request was rejected");
   });
   const req: GuardRequest = { type: "guard", id: msg.id, method: msg.method, params: msg.params, chainId: msg.chainId, walletName: msg.walletName };
-  port.postMessage(req);
+  try {
+    port.postMessage(req);
+  } catch {
+    clearInterval(keepalive);
+    rejectNow("Pramaan was restarted; reload the page to sign");
+  }
 };
 
 send({ type: "page", url: location.href });
