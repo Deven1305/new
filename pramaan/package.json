@@ -1,0 +1,49 @@
+{
+  "name": "pramaan",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pramaan: proven before you ship, verified before you sign. Release integrity and signing safety for Ethereum dApps.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "vitest run",
+    "test:unit": "vitest run --project manifest --project decoder --project verifier-core --project engine --project server --project cli",
+    "test:contracts": "cd contracts && forge test",
+    "test:contracts:fork": "cd contracts && forge test --match-path test/fork/* --fork-url %SEPOLIA_RPC_URL_A%",
+    "test:e2e": "pnpm --filter @pramaan/extension test:e2e",
+    "build": "pnpm -r --if-present build",
+    "build:extension": "pnpm --filter @pramaan/extension build",
+    "build:demo": "node apps/demos/scripts/build.mjs",
+    "build:web": "pnpm --filter @pramaan/web build",
+    "sandbox:build": "pnpm pramaan sandbox build",
+    "pramaan": "tsx apps/cli/src/index.ts",
+    "server": "pnpm --filter @pramaan/server start",
+    "dev:server": "pnpm --filter @pramaan/server dev",
+    "dev:web": "pnpm --filter @pramaan/web dev",
+    "demo:up": "tsx apps/cli/src/demo-up.ts",
+    "ens:check": "pnpm pramaan ens check",
+    "ens:setup": "pnpm pramaan ens setup",
+    "ens:execute": "pnpm pramaan ens execute",
+    "build:demos": "node apps/demos/scripts/build.mjs",
+    "demo:serve": "node apps/demos/server/serve.mjs",
+    "demo:tamper": "tsx apps/cli/src/demo-actions.ts tamper",
+    "demo:restore": "tsx apps/cli/src/demo-actions.ts restore",
+    "demo:upgrade": "tsx apps/cli/src/demo-actions.ts upgrade",
+    "demo:release": "tsx apps/cli/src/demo-actions.ts release",
+    "doctor": "pnpm pramaan doctor",
+    "deploy:identities": "pnpm pramaan deploy identities",
+    "test:extension": "pnpm --filter @pramaan/extension test",
+    "test:e2e:local": "pnpm --filter @pramaan/extension test:e2e:local"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}

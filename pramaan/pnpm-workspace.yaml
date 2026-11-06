@@ -1,0 +1,14 @@
+packages:
+  - packages/*
+  - apps/*
+
+allowBuilds:
+  esbuild: true
+
+# pnpm 10 blocks dependency install scripts by default; only these may run them.
+onlyBuiltDependencies:
+  - esbuild
+
+# Keep browser compatibility data reproducible and outside the package-age quarantine.
+overrides:
+  electron-to-chromium: 1.5.474

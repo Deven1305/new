@@ -1,0 +1,184 @@
+# Pramaan release pipeline: build -> leak scan -> manifest (file hashes + SRI + contract code hashes) -> Sigstore
+# attestation -> GitHub release assets -> IPFS pin -> timelocked ENSv2 pointer.
+#
+# Copy this one file (stored here as a template) into an app repository as .github/workflows/pramaan-release.yml and set the repository
+# variables below. The attestation is made with this workflow's own GitHub build identity; the extension accepts it only
+# when the app's ENS name declares `pramaan.attestation = github:.github/workflows/pramaan-release.yml` and
+# `pramaan.repo = https://github.com/<owner>/<repo>` (see docs/ENS.md). The workflow never writes ENS directly: it can
+# only QUEUE a pointer in the PramaanTimelock, and only when PROPOSER_PRIVATE_KEY is set. Publishing is a release, so
+# it runs on version tags or by hand, never on a pull request.
+#
+# Repository variables (Settings -> Secrets and variables -> Actions -> Variables):
+#   PRAMAAN_BUILD_CMD     build command, e.g. "npm ci && npm run build"              (required)
+#   PRAMAAN_SITE_DIR      directory the build produces, e.g. "dist"                  (required)
+#   PRAMAAN_DEPLOYMENT    deployment record, e.g. "contracts/deployments/11155111.json" (required)
+#   PRAMAAN_ENS_NAME      the app's ENS name, e.g. "vault.eth"                       (required)
+#   PRAMAAN_DOMAIN        origin the site is served from, e.g. "https://vault.example" (required)
+#   PRAMAAN_APP_NAME      display name                                               (optional)
+#   PRAMAAN_THIRD_PARTIES space-separated "host|purpose|receivesAddress" entries     (optional)
+#   PRAMAAN_TIMELOCK      PramaanTimelock address to queue the pointer in            (optional)
+#   PRAMAAN_TOOL_REPO / PRAMAAN_TOOL_REF  where the pramaan CLI comes from; pin a commit SHA (default: Deven1305/eth_pramaan @ main)
+# Secrets: RPC_URL (read-only RPC for the code-hash check), IPFS_API_URL or PINATA_JWT (optional), PROPOSER_PRIVATE_KEY (optional, testnet,
+# proposer role only), PRAMAAN_TOOL_TOKEN (only if the tool repository is private).
+name: pramaan-release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (must already exist)"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pramaan-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write # upload the manifest + attestation as release assets
+      id-token: write # Sigstore keyless signing (OIDC)
+      attestations: write # store the attestation with GitHub
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+      SITE_DIR: ${{ vars.PRAMAAN_SITE_DIR }}
+    steps:
+      - name: Check configuration
+        env:
+          BUILD_CMD: ${{ vars.PRAMAAN_BUILD_CMD }}
+          DEPLOYMENT: ${{ vars.PRAMAAN_DEPLOYMENT }}
+          ENS_NAME: ${{ vars.PRAMAAN_ENS_NAME }}
+          DOMAIN: ${{ vars.PRAMAAN_DOMAIN }}
+          RPC_URL: ${{ secrets.RPC_URL }}
+        run: |
+          missing=""
+          for v in BUILD_CMD SITE_DIR DEPLOYMENT ENS_NAME DOMAIN RPC_URL; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then echo "::error::missing configuration:$missing (see the header of this workflow)"; exit 1; fi
+          case "$TAG" in v[0-9A-Za-z]*) ;; *) echo "::error::tag '$TAG' must start with v"; exit 1;; esac
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+          path: app
+          persist-credentials: false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ vars.PRAMAAN_TOOL_REPO || 'Deven1305/eth_pramaan' }}
+          ref: ${{ vars.PRAMAAN_TOOL_REF || 'main' }}
+          token: ${{ secrets.PRAMAAN_TOOL_TOKEN || github.token }}
+          path: pramaan
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@9bbca1e9dc2902adb87e8780fe5c98796985a62d # v6.1.1
+        with:
+          package_json_file: pramaan/package.json
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: pramaan/.nvmrc
+
+      - name: Install the pramaan CLI
+        working-directory: pramaan
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the site
+        working-directory: app
+        env:
+          BUILD_CMD: ${{ vars.PRAMAAN_BUILD_CMD }}
+        run: bash -euo pipefail -c "$BUILD_CMD"
+
+      - name: Scan the build for shipped secrets and undeclared trackers
+        env:
+          THIRD_PARTIES: ${{ vars.PRAMAAN_THIRD_PARTIES }}
+          DOMAIN: ${{ vars.PRAMAAN_DOMAIN }}
+        run: |
+          declared=""
+          for tp in $THIRD_PARTIES; do declared="$declared ${tp%%|*}"; done
+          own="${DOMAIN#*://}"
+          # shellcheck disable=SC2086
+          pnpm --dir pramaan pramaan scan --site "$GITHUB_WORKSPACE/app/$SITE_DIR" --own "$own" ${declared:+--declared $declared} --json "$RUNNER_TEMP/bundle-scan.json"
+
+      - name: Build the release manifest
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
+          DEPLOYMENT: ${{ vars.PRAMAAN_DEPLOYMENT }}
+          ENS_NAME: ${{ vars.PRAMAAN_ENS_NAME }}
+          DOMAIN: ${{ vars.PRAMAAN_DOMAIN }}
+          APP_NAME: ${{ vars.PRAMAAN_APP_NAME || github.event.repository.name }}
+          THIRD_PARTIES: ${{ vars.PRAMAAN_THIRD_PARTIES }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/release"
+          tp_args=()
+          for tp in $THIRD_PARTIES; do tp_args+=(--third-party "$tp"); done
+          pnpm --dir pramaan pramaan manifest \
+            --site "$GITHUB_WORKSPACE/app/$SITE_DIR" \
+            --deployment "$GITHUB_WORKSPACE/app/$DEPLOYMENT" \
+            --ens "$ENS_NAME" --domain "$DOMAIN" --tag "$TAG" --name "$APP_NAME" \
+            --repo "https://github.com/$GITHUB_REPOSITORY" \
+            --commit "$(git -C app rev-parse HEAD)" \
+            --workflow ".github/workflows/pramaan-release.yml" \
+            --rpc "$RPC_URL" --sourcify \
+            "${tp_args[@]}" \
+            --out "$RUNNER_TEMP/release"
+
+      - name: Attest the manifest (Sigstore, GitHub build identity)
+        id: attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: ${{ runner.temp }}/release/pramaan-manifest.json
+
+      - name: Name the Sigstore bundle the way the verifier looks for it
+        env:
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
+        run: cp "$BUNDLE" "$RUNNER_TEMP/release/pramaan-manifest.sigstore.json"
+
+      - name: Publish the manifest and attestation as release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TAG" --notes "Pramaan release $TAG" --verify-tag
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber "$RUNNER_TEMP/release/pramaan-manifest.json" "$RUNNER_TEMP/release/pramaan-manifest.sigstore.json"
+
+      - name: Decide which optional publishing steps are configured
+        id: optional
+        env:
+          IPFS_API_URL: ${{ secrets.IPFS_API_URL }}
+          PINATA_JWT: ${{ secrets.PINATA_JWT }}
+          PROPOSER_PRIVATE_KEY: ${{ secrets.PROPOSER_PRIVATE_KEY }}
+        run: |
+          # Secrets are only given to the steps that need them (never to the build step above).
+          { [ -n "$IPFS_API_URL" ] || [ -n "$PINATA_JWT" ]; } && echo "ipfs=true" >> "$GITHUB_OUTPUT" || echo "ipfs=false" >> "$GITHUB_OUTPUT"
+          [ -n "$PROPOSER_PRIVATE_KEY" ] && echo "queue=true" >> "$GITHUB_OUTPUT" || echo "queue=false" >> "$GITHUB_OUTPUT"
+
+      - name: Pin the manifest to IPFS (availability only; trust comes from the ENS pointer)
+        if: ${{ steps.optional.outputs.ipfs == 'true' }}
+        env:
+          IPFS_API_URL: ${{ secrets.IPFS_API_URL }}
+          PINATA_JWT: ${{ secrets.PINATA_JWT }}
+        run: pnpm --dir pramaan pramaan publish ipfs --manifest "$RUNNER_TEMP/release/pramaan-manifest.json"
+
+      - name: Queue the pointer in the timelock (delayed, cancellable, never writes the address record)
+        if: ${{ steps.optional.outputs.queue == 'true' && vars.PRAMAAN_TIMELOCK != '' }}
+        env:
+          PROPOSER_PRIVATE_KEY: ${{ secrets.PROPOSER_PRIVATE_KEY }}
+          RPC_URL: ${{ secrets.RPC_URL }}
+          TIMELOCK: ${{ vars.PRAMAAN_TIMELOCK }}
+        run: pnpm --dir pramaan pramaan publish queue --manifest "$RUNNER_TEMP/release/pramaan-manifest.json" --timelock "$TIMELOCK" --rpc "$RPC_URL"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: pramaan-release-${{ env.TAG }}
+          path: |
+            ${{ runner.temp }}/release
+            ${{ runner.temp }}/bundle-scan.json
+          if-no-files-found: warn

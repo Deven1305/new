@@ -1,0 +1,3 @@
+{
+  "pairs": [{ "vulnerable": "EtherBank", "fixed": "EtherBankFixed" }]
+}

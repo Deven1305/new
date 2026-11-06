@@ -1,0 +1,34 @@
+{
+  "chainId": 31337,
+  "owner": "0xF4cEf957593D1F4dBF8EBED7D41A59Ce28259345",
+  "blockNumber": 12061259,
+  "token": {
+    "address": "0xD2ac4B08BFD0b23d49cD2BB45DC42564E3905b4A",
+    "runtimeCodehash": "0x46465a691a468f1e91595d9e386d52869b15e38b2743006bfe53bdf2df2a90e6",
+    "proxy": "none"
+  },
+  "nft": {
+    "address": "0x189C58515eb1aB1d360Cb21515095270555b5FFB",
+    "runtimeCodehash": "0x2944e4b10b4f91d8f22e613c4c58909d74b08c7b274246d173d5533794efb862",
+    "proxy": "none"
+  },
+  "vault": {
+    "address": "0x9B629165C75EDcf713e93e37a5d75C6Ddbd1629C",
+    "runtimeCodehash": "0x463e4e909b477931d6cdeacf86dd90bfa6e2fb73b76451a3cf3e684bc5ec46b5",
+    "proxy": "eip1967",
+    "implementation": "0xEe735b069b2055AaA264a7f2E5E244A03DC9dbd6",
+    "implementationCodehash": "0x2ba8dc49629d9c61fcff57541935b5057df529ce3ef932acb369b3ad2c730385"
+  },
+  "legacyVault": {
+    "address": "0x575652745279fa9D1b4D02FCaDC81D6D139EB913",
+    "runtimeCodehash": "0x463e4e909b477931d6cdeacf86dd90bfa6e2fb73b76451a3cf3e684bc5ec46b5",
+    "proxy": "eip1967",
+    "implementation": "0xbf3aCE659De8A809B0ac14d9ae1bda9A41f5e574",
+    "implementationCodehash": "0x8bd4351683392b7f1cc8d9daa4a5bd04f5ad0a4f1b33a226b170ecbcad76732c"
+  },
+  "unauditedImpl": {
+    "address": "0xdCaEc555FED0C0561ad4CfA8B47614D70DAa4254",
+    "runtimeCodehash": "0xcf6b3d6d9106e0a26bdd9fb7887e62dd4559ace0f436640b9150ecab8499e06f",
+    "proxy": "none"
+  }
+}

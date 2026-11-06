@@ -1,0 +1,17 @@
+{
+  "name": "@pramaan/decoder",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic transaction and signature decoding, risk rules, and English/Hindi/Marathi explanations.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@ethereum-sourcify/clear-signing": "0.3.0",
+    "viem": "2.57.7"
+  }
+}

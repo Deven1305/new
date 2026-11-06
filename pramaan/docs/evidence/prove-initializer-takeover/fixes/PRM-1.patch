@@ -1,0 +1,11 @@
+===================================================================
+--- a/src/RewardsPool.sol
++++ b/src/RewardsPool.sol
+@@ -12,6 +12,7 @@
+     event Funded(address indexed from, uint256 amount);
+ 
+     function initialize(address owner_, uint256 rewardRate_) external {
++        require(this.owner() == address(0), "already initialized");
+         owner = owner_;
+         rewardRate = rewardRate_;
+         emit Initialized(owner_, rewardRate_);

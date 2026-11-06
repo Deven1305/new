@@ -1,0 +1,25 @@
+Playwright, real Chromium + built extension, clean 'pnpm demo:up --fixtures' (Sepolia fork, PROVE run), 2026-11-06
+
+== extension.e2e.ts
+  ok 1 test\extension.e2e.ts:112:1 › VaultLab genuine → green, deposit goes through (5.1s)
+  ok 2 test\extension.e2e.ts:127:1 › MirrorYield genuine → green; tampered → red and signing blocked; restored → green (4.7s)
+  ok 3 test\extension.e2e.ts:147:1 › the same files on the lookalike origin fail the ENS domain binding (red) (1.4s)
+  ok 4 test\extension.e2e.ts:154:1 › PermitMarket: unlimited approval is high risk in en/hi/mr and rejected; exact approve is lower risk; permit is decoded (2.3s)
+  ok 5 test\extension.e2e.ts:188:1 › leak fixture: undeclared tracker shown, Block, next request blocked (4.6s)
+  ok 6 test\extension.e2e.ts:228:1 › backend down: verification still works (the extension never needs the Pramaan server) (741ms)
+  6 passed (23.1s)
+
+== v2.e2e.ts
+  ok 1 test\v2.e2e.ts:141:1 › signed release, changed served JS, and byte-identical restore gate the provider (5.4s)
+  ok 2 test\v2.e2e.ts:195:1 › unlisted contract spender holds approval and typed-data permit (1.2s)
+  ok 3 test\v2.e2e.ts:241:1 › pending pointer and revocation are read from the real fork resolver (11.7s)
+  3 passed (23.7s)
+
+== local.e2e.ts
+  ok 1 test\local.e2e.ts:119:1 › a request whose service worker is stopped mid-review fails closed (never silently allowed) (1.3s)
+  ok 2 test\local.e2e.ts:138:1 › intercepts the EIP-6963 provider and a replaced window.ethereum; unlimited approval is high risk in en/hi/mr; reject reaches the page (20.6s)
+  ok 3 test\local.e2e.ts:157:1 › address leaks over every channel are shown with host/method/match; Block stops the next request (3.5s)
+  ok 4 test\local.e2e.ts:206:1 › verification never contacts a Pramaan backend (no backend is running; only the page's own origin is read) (2.1s)
+  4 passed (29.9s)
+{"evidence":"local-fork-browser","manifest":"494a0bf7fdbbea2f82ce7cf40d8016862c4c3d7262212d012d570573ce920220","acceptedTx":"0xfb64c3b1db71490253b83c3b3853fa9e94c86cf9de7a02eb05741544048b3d06","nonceBeforeTamper":9,"nonceAfterReject":9,"providerCallsAfterTamper":1,"providerCallsAfterRestore":2}
+{"evidence":"pending-pointer-and-revocation","localMining":"manual-anvil-testclient","timelockOpId":3,"queuedEta":1793987716,"queueBlockTimestamp":1793987596,"activeManifest":"494a0bf7fdbbea2f82ce7cf40d8016862c4c3d7262212d012d570573ce920220","statusWhileQueued":"verified","pendingCountWhileQueued":1

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PRM-1",
+    "title": "Initializer can be called again by anyone",
+    "class": "unprotected-initializer",
+    "severity": "high",
+    "status": "fixed-verified",
+    "exploitTestSha256": "7f53d60779e8d57ca7f4ee1a7e2cefffdadca3fe494614ad360b3b719136eeb7",
+    "evidenceSha256": "b52f65261d6fb0807278b6d12a56623414ed817ca068a23a0449aae5627375da",
+    "fixCommit": null
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-11-05T02:43:11.2886800Z",
+  "baseCommit": "be8b4ab",
+  "testSha256": "5ab7666be3867f59d05262a6f3688ad49fae7ac430bc6241c3e8253a37f45bf3",
+  "scope": "Fresh-profile Chromium; local Sepolia fork31337; viem-backed injected test wallet; decoder backend stopped",
+  "result": "3passed0skipped",
+  "facts": [
+    {
+      "evidence": "local-fork-browser",
+      "manifest": "dc5012803557fc7f81f1cf02d8c84df2370f0174a12f8bf8c3143ca53649722f",
+      "acceptedTx": "0x6b0df6c95b5aef5aef66297c247360319f6cb207ff56c8567af7e359a6e05f2a",
+      "nonceBeforeTamper": 8,
+      "nonceAfterReject": 8,
+      "providerCallsAfterTamper": 1,
+      "providerCallsAfterRestore": 2
+    },
+    {
+      "evidence": "pending-pointer-and-revocation",
+      "localMining": "manual-anvil-testclient",
+      "timelockOpId": 3,
+      "queuedEta": 1793847179,
+      "queueBlockTimestamp": 1793847059,
+      "activeManifest": "dc5012803557fc7f81f1cf02d8c84df2370f0174a12f8bf8c3143ca53649722f",
+      "statusWhileQueued": "verified",
+      "pendingCountWhileQueued": 1,
+      "pendingCountAfterCancel": 0,
+      "statusWhileRevoked": "revoked",
+      "providerCallsWhileRevoked": 2,
+      "statusAfterRestore": "verified",
+      "providerCallsAfterRestore": 3,
+      "restoredTx": "0x60b4d5ffc84a513cebd67f2bab110a361c2e9445d5e451371d18ac67595f4fec"
+    }
+  ],
+  "limitations": [
+    "Local Anvil TestClient explicitly mines queue/cancel/revocation/restore blocks; not public testnet",
+    "MV3 re-fetch does not establish executed bytes against adversarial target",
+    "No sandbox PROVE or CRE CLI simulation"
+  ]
+}

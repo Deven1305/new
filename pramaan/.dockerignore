@@ -1,0 +1,7 @@
+# The sandbox image only needs docker/sandbox, tools/slither-plugin and contracts/lib/forge-std.
+**
+!docker/sandbox/**
+!tools/slither-plugin/**
+!contracts/lib/forge-std/**
+tools/slither-plugin/**/__pycache__
+tools/slither-plugin/**/*.egg-info

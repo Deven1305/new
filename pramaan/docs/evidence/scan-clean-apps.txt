@@ -1,0 +1,28 @@
+== dist/vaultlab
+Scanned 9 files; 7 finding(s); 8 external host(s).
+INFO     undeclared-third-party   (bundle)  4byte.sourcify.dev is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  arweave.net is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  docs.soliditylang.org is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  ipfs.io is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  oxlib.sh is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  pramaan.dev is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  viem.sh is referenced but not listed in the release's thirdParties[]
+Result: none of the secret or undeclared-tracker patterns were found (this is not a guarantee of no leaks).
+== dist/mirroryield
+Scanned 7 files; 6 finding(s); 7 external host(s).
+INFO     undeclared-third-party   (bundle)  4byte.sourcify.dev is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  arweave.net is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  docs.soliditylang.org is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  ipfs.io is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  oxlib.sh is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  viem.sh is referenced but not listed in the release's thirdParties[]
+Result: none of the secret or undeclared-tracker patterns were found (this is not a guarantee of no leaks).
+== dist/permitmarket
+Scanned 8 files; 6 finding(s); 7 external host(s).
+INFO     undeclared-third-party   (bundle)  4byte.sourcify.dev is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  arweave.net is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  docs.soliditylang.org is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  ipfs.io is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  oxlib.sh is referenced but not listed in the release's thirdParties[]
+INFO     undeclared-third-party   (bundle)  viem.sh is referenced but not listed in the release's thirdParties[]
+Result: none of the secret or undeclared-tracker patterns were found (this is not a guarantee of no leaks).

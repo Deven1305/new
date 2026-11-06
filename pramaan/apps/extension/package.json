@@ -1,0 +1,26 @@
+{
+  "name": "@pramaan/extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pramaan MV3 browser extension: independent release verification, wallet guard with en/hi/mr explanations, address-leak detection.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test:e2e": "playwright test -c playwright.config.ts",
+    "test": "vitest run -c vitest.config.ts",
+    "test:e2e:local": "playwright test -c playwright.config.ts local.e2e.ts"
+  },
+  "dependencies": {
+    "@anon-rpc/browser-extension-harness": "0.4.0",
+    "@pramaan/decoder": "workspace:*",
+    "@pramaan/manifest": "workspace:*",
+    "@pramaan/verifier-core": "workspace:*",
+    "viem": "2.57.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/chrome": "0.3.5",
+    "vite": "7.3.7"
+  }
+}

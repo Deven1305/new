@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PRM-3",
+    "title": "Missing access control on a value-moving function",
+    "class": "access-control",
+    "severity": "critical",
+    "status": "fixed-verified",
+    "exploitTestSha256": "badaa5467a09f93a3c664f960621beff32a43b3d905b9ee4fe1be6b7ebd98240",
+    "evidenceSha256": "9d943af718cace83509bfcd19ee34cedc79057f1202cbdb86250f95cf0514ee7",
+    "fixCommit": null
+  }
+]

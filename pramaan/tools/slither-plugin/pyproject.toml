@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pramaan-slither"
+version = "0.1.0"
+description = "Pramaan's extra Slither detectors: unprotected balance sweeps and unprotected initializers."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["slither-analyzer>=0.11"]
+
+[project.entry-points."slither_analyzer.plugin"]
+pramaan = "pramaan_slither:make_plugin"
+
+[tool.setuptools]
+packages = ["pramaan_slither"]

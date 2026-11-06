@@ -1,0 +1,411 @@
+@import "tailwindcss";
+
+/*
+ * Pramaan dashboard theme.
+ * Every colour is a semantic token defined below for light and dark. The OS setting applies by default
+ * (prefers-color-scheme); an explicit choice sets data-theme on <html> and wins both ways.
+ * Status colours are fixed (good / warning / serious / critical) and grey means unknown or unsupported.
+ * They always come with an icon and a text label, never colour alone.
+ */
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Nirmala UI", "Noto Sans Devanagari", "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-inset: var(--inset);
+  --color-hover: var(--hover);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-field: var(--field-border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-link: var(--link);
+  --color-focus: var(--focus);
+  --color-bar: var(--bar);
+  --color-good: var(--good);
+  --color-warning: var(--warning);
+  --color-serious: var(--serious);
+  --color-critical: var(--critical);
+  --color-unknown: var(--unknown);
+  --color-info: var(--info);
+  --color-good-ink: var(--good-ink);
+  --color-warning-ink: var(--warning-ink);
+  --color-serious-ink: var(--serious-ink);
+  --color-critical-ink: var(--critical-ink);
+  --color-unknown-ink: var(--unknown-ink);
+  --color-info-ink: var(--info-ink);
+}
+
+:root {
+  color-scheme: light;
+  --page: #f6f6f3;
+  --surface: #fcfcfb;
+  --inset: #f0efec;
+  --hover: #ebeae5;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #6b6a65;
+  --line: #e1e0d9;
+  --line-strong: #c3c2b7;
+  --field-border: #898781;
+  --accent: #256abf;
+  --accent-hover: #1c5cab;
+  --on-accent: #ffffff;
+  --link: #1c5cab;
+  --focus: #2a78d6;
+  --bar: #2a78d6;
+  --bar-track: #e8e7e2;
+  /* fixed status scale (never themed) */
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --unknown: #898781;
+  --info: #2a78d6;
+  /* status text/icon ink, >= 4.5:1 on surface, inset and page */
+  --good-ink: #006300;
+  --warning-ink: #7a5200;
+  --serious-ink: #9c4421;
+  --critical-ink: #b3261e;
+  --unknown-ink: #5f5e59;
+  --info-ink: #1c5cab;
+  /* code */
+  --tok-keyword: #6a32b0;
+  --tok-string: #0f6b3a;
+  --tok-number: #9c4421;
+  --tok-type: #1c5cab;
+  --tok-comment: #6b6a65;
+  --diff-add: color-mix(in oklab, #0ca30c 14%, var(--surface));
+  --diff-del: color-mix(in oklab, #d03b3b 13%, var(--surface));
+  --shadow: 0 1px 2px rgb(11 11 11 / 0.06), 0 1px 1px rgb(11 11 11 / 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --inset: #232322;
+    --hover: #2c2c2a;
+    --ink: #f0efec;
+    --ink-2: #c3c2b7;
+    --muted: #a19f97;
+    --line: #2c2c2a;
+    --line-strong: #45443f;
+    --field-border: #77756f;
+    --accent: #256abf;
+    --accent-hover: #1c5cab;
+    --on-accent: #ffffff;
+    --link: #86b6ef;
+    --focus: #6da7ec;
+    --bar: #3987e5;
+    --bar-track: #2c2c2a;
+    --good-ink: #0ca30c;
+    --warning-ink: #fab219;
+    --serious-ink: #ec835a;
+    --critical-ink: #e66767;
+    --unknown-ink: #a19f97;
+    --info-ink: #86b6ef;
+    --tok-keyword: #c4a7f5;
+    --tok-string: #7fd49b;
+    --tok-number: #f0a27d;
+    --tok-type: #86b6ef;
+    --tok-comment: #a19f97;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --inset: #232322;
+  --hover: #2c2c2a;
+  --ink: #f0efec;
+  --ink-2: #c3c2b7;
+  --muted: #a19f97;
+  --line: #2c2c2a;
+  --line-strong: #45443f;
+  --field-border: #77756f;
+  --accent: #256abf;
+  --accent-hover: #1c5cab;
+  --on-accent: #ffffff;
+  --link: #86b6ef;
+  --focus: #6da7ec;
+  --bar: #3987e5;
+  --bar-track: #2c2c2a;
+  --good-ink: #0ca30c;
+  --warning-ink: #fab219;
+  --serious-ink: #ec835a;
+  --critical-ink: #e66767;
+  --unknown-ink: #a19f97;
+  --info-ink: #86b6ef;
+  --tok-keyword: #c4a7f5;
+  --tok-string: #7fd49b;
+  --tok-number: #f0a27d;
+  --tok-type: #86b6ef;
+  --tok-comment: #a19f97;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.5);
+}
+
+@layer base {
+  html {
+    background: var(--page);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--focus) 30%, transparent);
+  }
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+  }
+  [lang="hi"],
+  [lang="mr"] {
+    line-height: 1.75;
+  }
+}
+
+@layer components {
+  /* Tone: every status element sets data-tone; the pair (--tone, --tone-ink) does the rest. */
+  [data-tone="good"] { --tone: var(--good); --tone-ink: var(--good-ink); }
+  [data-tone="warning"] { --tone: var(--warning); --tone-ink: var(--warning-ink); }
+  [data-tone="serious"] { --tone: var(--serious); --tone-ink: var(--serious-ink); }
+  [data-tone="critical"] { --tone: var(--critical); --tone-ink: var(--critical-ink); }
+  [data-tone="unknown"] { --tone: var(--unknown); --tone-ink: var(--unknown-ink); }
+  [data-tone="info"] { --tone: var(--info); --tone-ink: var(--info-ink); }
+  [data-tone="neutral"] { --tone: var(--line-strong); --tone-ink: var(--ink-2); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    max-width: 100%;
+    border-radius: 999px;
+    padding: 0.125rem 0.5rem 0.125rem 0.4375rem;
+    font-size: 0.75rem;
+    font-weight: 550;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    color: var(--ink);
+    background: color-mix(in oklab, var(--tone) 13%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--tone) 42%, var(--surface));
+  }
+  .chip > svg {
+    flex: none;
+    color: var(--tone-ink);
+  }
+
+  .tone-bar {
+    border-left: 4px solid var(--tone);
+  }
+  .tone-ink {
+    color: var(--tone-ink);
+  }
+  .tone-wash {
+    background: color-mix(in oklab, var(--tone) 9%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--tone) 35%, var(--surface));
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.25rem;
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 120ms, border-color 120ms, color 120ms;
+    white-space: nowrap;
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .btn-sm {
+    min-height: 1.875rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.8125rem;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn-primary:not(:disabled):hover {
+    background: var(--accent-hover);
+  }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--field-border);
+  }
+  .btn-secondary:not(:disabled):hover {
+    background: var(--hover);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:not(:disabled):hover {
+    background: var(--hover);
+  }
+  .btn-danger {
+    background: var(--surface);
+    color: var(--critical-ink);
+    border-color: color-mix(in oklab, var(--critical) 55%, var(--surface));
+  }
+  .btn-danger:not(:disabled):hover {
+    background: color-mix(in oklab, var(--critical) 10%, var(--surface));
+  }
+
+  .field {
+    display: block;
+    width: 100%;
+    min-height: 2.375rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--field-border);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0.4375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+  }
+  .field::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+  .field:disabled {
+    background: var(--inset);
+    cursor: not-allowed;
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--critical);
+  }
+  textarea.field {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .link {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .kbd-cmd {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    background: var(--inset);
+    border: 1px solid var(--line);
+    border-radius: 0.375rem;
+    padding: 0.0625rem 0.375rem;
+    overflow-wrap: anywhere;
+  }
+
+  .code-block {
+    background: var(--inset);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+  }
+  .tok-keyword { color: var(--tok-keyword); }
+  .tok-string { color: var(--tok-string); }
+  .tok-number { color: var(--tok-number); }
+  .tok-type { color: var(--tok-type); }
+  .tok-comment { color: var(--tok-comment); font-style: italic; }
+
+  .diff-add { background: var(--diff-add); }
+  .diff-del { background: var(--diff-del); }
+
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .data-table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .data-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .chip,
+  .card,
+  .btn {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,11 @@
+===================================================================
+--- a/src/OracleLoan.sol
++++ b/src/OracleLoan.sol
+@@ -53,6 +53,7 @@
+ 
+     function _price() internal view returns (uint256) {
+         (, int256 answer,,,) = feed.latestRoundData();
++        require(answer > 0, "Pramaan: oracle answer is not positive");
+         return uint256(answer);
+     }
+ }

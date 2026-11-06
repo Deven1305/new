@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PRM-5",
+    "title": "Oracle answer used without checking that it is positive",
+    "class": "unchecked-oracle",
+    "severity": "high",
+    "status": "fixed-verified",
+    "exploitTestSha256": "2ba9423dae4b1236a777e1175d7ea363bac8e03a86b1845ada9bd9dac17d2cb2",
+    "evidenceSha256": "2fd873aec00a4c70ecaef3da0adb37c46c16e376f41fdb672dabdede6fd851f4",
+    "fixCommit": null
+  }
+]

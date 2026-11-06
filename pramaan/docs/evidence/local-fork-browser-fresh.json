@@ -1,0 +1,33 @@
+{
+  "note": "Ephemeral local Sepolia fork; not a live deployment. The browser used a fresh profile and a viem test provider with a local fork key; backend was stopped. PROVE was not run. Fork is now stopped.",
+  "network": {
+    "chainId": 31337,
+    "kind": "anvil-fork"
+  },
+  "origin": "http://localhost:5182",
+  "ensName": "pramaan-mirroryield-cc4da8.eth",
+  "resolver": "0x129413FdD8eDCa04d90C54a6715BE138F77dC321",
+  "timelock": "0xe1412d6f2939C7DFe7eD0221844292FD28991A6a",
+  "contracts": {
+    "farm": "0x0bD797a42c92d83DBcf03572d9321E45a2aC2C5F",
+    "token": "0x2D884bBe4b57264147A20a2245016a8410b454A3"
+  },
+  "release": {
+    "tag": "v1.0.0",
+    "sha256": "c05404d0c23525d9cb1905cde748ca4e16038dfc17490798b01db3802b6fd42d",
+    "pointer": "pramaan:v1:v1.0.0:c05404d0c23525d9cb1905cde748ca4e16038dfc17490798b01db3802b6fd42d",
+    "queueTx": "0x6ba68ab3130135b0be3b28daaadf9149b8dcaca023d53dfd73157afbbe2153f0",
+    "executeTx": "0xe009a72dd5275d9906553d385fba3441e7bbab2362653362ebd4a6b8c5b751ff",
+    "timelockOpId": "1"
+  },
+  "browser": {
+    "acceptedTx": "0xd440f5b3942d8e7f498c96f6acc46e50a24e6af133c7e04e9269457d2c9fdfce",
+    "acceptedReceipt": "success",
+    "nonceBeforeTamper": 4,
+    "nonceAfterReject": 4,
+    "providerCallsAfterTamper": 1,
+    "providerCallsAfterRestore": 2,
+    "additional": "unlisted contract spender held for approval and typed-data permit",
+    "test": "PRAMAAN_EXPECT_BACKEND_OFF=1 pnpm --filter @pramaan/extension exec playwright test -c playwright.config.ts test/v2.e2e.ts"
+  }
+}

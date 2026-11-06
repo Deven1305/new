@@ -1,0 +1,107 @@
+{
+  "note": "Real Chromium + built extension, Sepolia via the Nox mixnet (Anon-RPC); a local page announces a non-existent ENS name, so the release result is mismatch. Shows the path of each read.",
+  "evidence": "anon-rpc-live",
+  "releaseStatus": "mismatch",
+  "byPath": {
+    "direct-local": 1,
+    "anon-rpc": 18
+  },
+  "reads": [
+    {
+      "what": "release hint: http://127.0.0.1:9151/.well-known/pramaan.json",
+      "endpoint": "127.0.0.1:9151",
+      "path": "direct-local",
+      "ok": true,
+      "ms": 12,
+      "note": null
+    },
+    {
+      "what": "chain id of the endpoint",
+      "endpoint": "sepolia.gateway.tenderly.co",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1894,
+      "note": null
+    },
+    {
+      "what": "chain id of the endpoint",
+      "endpoint": "rpc.sepolia.ethpandaops.io",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1991,
+      "note": null
+    },
+    {
+      "what": "chain id of the endpoint",
+      "endpoint": "sepolia.gateway.tenderly.co",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1416,
+      "note": null
+    },
+    {
+      "what": "chain id of the endpoint",
+      "endpoint": "rpc.sepolia.ethpandaops.io",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1778,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.revoked\" of pramaan-live-anon-check.eth",
+      "endpoint": "sepolia.gateway.tenderly.co",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1680,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.signer\" of pramaan-live-anon-check.eth",
+      "endpoint": "sepolia.gateway.tenderly.co",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1944,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.record\" of pramaan-live-anon-check.eth",
+      "endpoint": "rpc.sepolia.ethpandaops.io",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 1596,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.record\" of pramaan-live-anon-check.eth",
+      "endpoint": "sepolia.gateway.tenderly.co",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 2226,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.domain\" of pramaan-live-anon-check.eth",
+      "endpoint": "sepolia.gateway.tenderly.co",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 2502,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.revoked\" of pramaan-live-anon-check.eth",
+      "endpoint": "rpc.sepolia.ethpandaops.io",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 2152,
+      "note": null
+    },
+    {
+      "what": "ENS text \"pramaan.repo\" of pramaan-live-anon-check.eth",
+      "endpoint": "rpc.sepolia.ethpandaops.io",
+      "path": "anon-rpc",
+      "ok": true,
+      "ms": 2224,
+      "note": null
+    }
+  ]
+}

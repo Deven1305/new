@@ -1,0 +1,2 @@
+[slither_analyzer.plugin]
+pramaan = pramaan_slither:make_plugin

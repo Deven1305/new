@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PRM-3",
+    "title": "Reentrancy: state updated after an external call",
+    "class": "reentrancy",
+    "severity": "high",
+    "status": "fixed-verified",
+    "exploitTestSha256": "05378e14c27eb470ec31b0b2aaef8dd577d056d9e85c183c18e2c1ebe8e3f5c0",
+    "evidenceSha256": "8d6bdeaaeb70993e7c43e0092ddcfe90daf4d761a9786e1c263bb1a566f23b58",
+    "fixCommit": null
+  }
+]

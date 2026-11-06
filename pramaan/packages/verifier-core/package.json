@@ -1,0 +1,18 @@
+{
+  "name": "@pramaan/verifier-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Independent release verification: ENS pointer from two RPCs, manifest by hash, Sigstore/key signature policy, site files, contract code and proxies. Fails closed.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@freedomofpress/sigstore-browser": "0.3.0",
+    "@pramaan/manifest": "workspace:*",
+    "viem": "2.57.7"
+  }
+}

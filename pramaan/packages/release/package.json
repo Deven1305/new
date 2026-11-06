@@ -1,0 +1,18 @@
+{
+  "name": "@pramaan/release",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "PUBLISH: ENSv2 setup (registration, Permissioned Resolver, key-scoped timelock role), PramaanTimelock queue/execute, demo deployment, release manifest assembly, IPFS publication.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@pramaan/manifest": "workspace:*",
+    "@pramaan/verifier-core": "workspace:*",
+    "viem": "2.57.7"
+  }
+}

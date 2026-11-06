@@ -1,0 +1,32 @@
+{
+  "note": "Ephemeral local Sepolia fork only; not a live Sepolia deployment. Browser provider is a test adapter using a local fork key. PROVE was not run.",
+  "network": {
+    "chainId": 31337,
+    "kind": "anvil-fork"
+  },
+  "origin": "http://localhost:5182",
+  "ensName": "pramaan-mirroryield-b27c24.eth",
+  "resolver": "0xe80d8eB7B2B41e39914834C9519388176F646A5e",
+  "timelock": "0x348d318B2FfA7d53d022D613513a54eedfEa44dD",
+  "contracts": {
+    "farm": "0xF9Ef84a0fa9ff89b2C854ad728b0959D3899f8a2",
+    "token": "0x6f36fb2213FB644c0edD5FE46919Ecc084CEA783"
+  },
+  "release": {
+    "tag": "v1.0.0",
+    "sha256": "bf8222cafef82463fec5f85319a9ecb5e3d44212dda39e90d861861af42bd1eb",
+    "pointer": "pramaan:v1:v1.0.0:bf8222cafef82463fec5f85319a9ecb5e3d44212dda39e90d861861af42bd1eb",
+    "queueTx": "0xe53cae3f6e43521005f5ae677b9f3f6d24551193881fbd715cadc1d263aed3de",
+    "executeTx": "0x4a6c81fba70952f2ba3b33fdc8039259365c10cd4c64f746bfdfc6996c1972f5",
+    "timelockOpId": "1"
+  },
+  "browser": {
+    "acceptedTx": "0x85c9ef0bb1422aad39c6008ab32ebc7446f329c06e058d24971e471b69117739",
+    "acceptedReceipt": "success",
+    "nonceBeforeTamper": 9,
+    "nonceAfterReject": 9,
+    "providerCallsAfterTamper": 1,
+    "providerCallsAfterRestore": 2,
+    "test": "pnpm --filter @pramaan/extension exec playwright test -c playwright.config.ts test/v2.e2e.ts"
+  }
+}

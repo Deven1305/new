@@ -1,0 +1,35 @@
+# CRE Workflow Configuration (CRE CLI 1.39+)
+staging:
+  user-workflow:
+    workflow-name: "pramaan-monitor"
+  workflow-artifacts:
+    workflow-path: "main.ts"
+    config-path: "config.sample.json"
+    secrets-path: ""
+
+# Log-only target: empty secrets-path (never reads secrets)
+local-simulation:
+  user-workflow:
+    workflow-name: "pramaan-monitor"
+  workflow-artifacts:
+    workflow-path: "main.ts"
+    config-path: "config.sample.json"
+    secrets-path: ""
+
+# Optional ingest target: references non-secret secretsNames mapping in secrets.yaml
+local-simulation-ingest:
+  user-workflow:
+    workflow-name: "pramaan-monitor"
+  workflow-artifacts:
+    workflow-path: "main.ts"
+    config-path: "config.ingest.sample.json"
+    secrets-path: "secrets.yaml"
+
+# Simulation against the live local demo; ingest posts to the Pramaan server using the secret mapped in secrets.yaml
+local-simulation-demo:
+  user-workflow:
+    workflow-name: "pramaan-monitor"
+  workflow-artifacts:
+    workflow-path: "main.ts"
+    config-path: "config.demo.json"
+    secrets-path: "secrets.yaml"

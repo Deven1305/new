@@ -1,0 +1,6 @@
+{
+  "$comment": "Pramaan project config: optional. pairs = the same exploit is re-run against the fixed contract; regression.excludePaths = reference exploit tests that expect the bug to exist.",
+  "pairs": [{ "vulnerable": "VulnerableVault", "fixed": "VaultV2" }],
+  "exclude": [],
+  "regression": { "excludePaths": ["test/exploits/*"] }
+}

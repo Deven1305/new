@@ -1,0 +1,14 @@
+{
+  "$comment": "ENSv2 on Sepolia. Source: https://docs.ens.domains/learn/deployments (Sepolia section). Every address had code and a verified source on Sourcify on 2026-11-04 (UserRegistryImpl 0x9bd8… = project/src/registry/UserRegistry.sol exact_match; its LABEL_STORE() is the LabelStore below). `pramaan ens check` / `pramaan doctor` re-verify on-chain before use. The Sepolia ENS deployment can be reset (last reset 2026-10-01).",
+  "chainId": 11155111,
+  "universalResolver": "0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe",
+  "ethRegistrar": "0xf633e7FC17e2bbE0D0965D18ec1821dcB754a3d3",
+  "ethRegistry": "0xD4eBcbBdF463C9c45784603Db0dDD499BC44A8B4",
+  "verifiableFactory": "0xDa70306C98E97eCe36F997a21368e53298572991",
+  "permissionedResolverImpl": "0x115eb53F0c60696633855F90b138178Fb40b2b2C",
+  "mockUsdc": "0x240b0316Df57887DBBE58b586508b19e633a14aa",
+  "userRegistryImpl": "0x9bd8a88719068d09ecee662f36c0e3856708366a",
+  "rootRegistry": "0xB458D6a3a77919449d03e7A6903C26827c1eC43f",
+  "labelStore": "0xed8246FF02203a4d4cb262bD78bEAA7408A57cAE",
+  "universalResolverV2Impl": "0x24e1d8e068620b647ca097f961a61055f4f42d72"
+}
