@@ -3,3 +3,4 @@ packages:
   - "packages/*"
   - "apps/*"
   - "sentinel/hexfence-sentinel"
+  - "integration"

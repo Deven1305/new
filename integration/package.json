@@ -1,0 +1,21 @@
+{
+  "name": "@hexfence/integration",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Runs HexFence (recipient) and Pramaan (action) checks together through @hexfence/core.",
+  "type": "module",
+  "scripts": {
+    "check": "tsx src/merged-check.ts",
+    "test": "tsx src/merged-check.ts --assert"
+  },
+  "dependencies": {
+    "@hexfence/core": "workspace:*",
+    "@hexfence/shared": "workspace:*",
+    "viem": "2.57.16"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}
