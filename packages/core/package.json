@@ -1,0 +1,17 @@
+{
+  "name": "@hexfence/core",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "One verdict model for HexFence + Pramaan: rows, policy, combine().",
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}
