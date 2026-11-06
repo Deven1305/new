@@ -46,3 +46,9 @@ Branch codex/gemini-work. d1cfc2f implements real SIWE/session/CSRF/scoped-token
 be8b4ab adds SDK1.23 CRE EVM adapter, ENSv2 profile reads, pinned block state and proper JSON/protobuf byte encoding:38Bun unit tests and typecheck pass. Direct codec reads matched all3local-fork resolvers. Runner/HTTP/config still next slice. CLI1.39.0 and Bun1.4.4 checksums verified; explicit SDK Javy setup succeeded. CLI login absent, so no CRE simulation is claimed.
 
 Pending/revocation browser test is now enabled and passed alongside the other2V2 browser tests with backend off. Explicit local Anvil TestClient mining resolves queue/cancel/revocation receipt waits. Active digest remains current while future pointer queues; distinct guardian cancels; revoked state prevents provider invocation; exact restoration permits a new mined approval. Evidence docs/evidence/pending-revocation-browser.json. Historical skipped/timeout notes above are superseded by this run, not deleted. No Docker PROVE or public deployment claimed.
+
+## Leftover pass (6 November 2026)
+
+- Web footer: `/readyz` answering 503 with a readiness body now shows "Backend degraded" (worker/Docker reason), not "unreachable"; only transport failures stay offline. Web typecheck passes; no new web unit test was added.
+- Production bootstrap: new `ADMIN_ADDRESS` makes that wallet the first admin (SIWE sign-in, no token minted or logged). Production without it now fails fast instead of minting an unretrievable token. 2 new tests; server typecheck and all 21 server tests pass.
+- Still unfinished (large, not started here): jobs/findings backend routes, release queue/execute, GitHub webhook, active monitor poller, CRE `config-from-demo` generator and CRE simulation (needs CLI login), Docker PROVE run, Sepolia/mainnet deployment, ETHGlobal eligibility confirmation.

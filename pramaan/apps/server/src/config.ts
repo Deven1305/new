@@ -22,6 +22,8 @@ const Env = z.object({
   /** postgres://... for production; unset = embedded PGlite in DATA_DIR/pglite. */
   DATABASE_URL: optionalSecret,
   DATA_DIR: z.string().default(".pramaan/server"),
+  /** Wallet address that becomes the first admin (sign in with SIWE). Preferred over a token in production. */
+  ADMIN_ADDRESS: optionalSecret,
   /** Run the job worker and chain monitor inside the API process (required with PGlite). */
   EMBEDDED_WORKER: flag("1"),
   TRUST_PROXY: flag("0"),

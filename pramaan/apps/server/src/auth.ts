@@ -168,19 +168,25 @@ export async function assertRole(db: Db, user: AuthUser | null, projectId: strin
 
 /**
  * First start: create the admin user and a one-time API token. Only the hash is stored. Outside production the token
- * is written to DATA_DIR/admin-token.txt (mode 0600) so the operator can find it; it is never printed in production.
+ * is written to DATA_DIR/admin-token.txt (mode 0600). In production ADMIN_ADDRESS is required and no token is minted.
  */
 export async function bootstrapAdmin(db: Db, cfg: Config, log: (msg: string) => void): Promise<{ created: boolean; tokenFile: string | null }> {
   const file = join(cfg.DATA_DIR, "admin-token.txt");
   const existing = await db.one("SELECT id FROM users WHERE is_admin = true LIMIT 1");
   if (existing) return { created: false, tokenFile: existsSync(file) ? file : null };
-  const user = await db.one<{ id: string }>("INSERT INTO users (display_name, is_admin) VALUES ('admin', true) RETURNING id");
-  const { token } = await createApiToken(db, user!.id, "bootstrap admin token", null);
-  if (cfg.production) {
-    // Production: shown exactly once on stdout, never written to disk.
-    log(`admin API token (shown once, store it now): ${token}`);
+  if (cfg.ADMIN_ADDRESS) {
+    // Explicit admin wallet: no token is minted; the operator signs in with SIWE from this address.
+    if (!isAddress(cfg.ADMIN_ADDRESS, { strict: false })) throw new Error("ADMIN_ADDRESS is not a valid Ethereum address");
+    await db.query("INSERT INTO users (address, display_name, is_admin) VALUES ($1, 'admin', true) ON CONFLICT (address) DO UPDATE SET is_admin = true", [getAddress(cfg.ADMIN_ADDRESS)]);
+    log(`admin wallet bootstrapped: ${getAddress(cfg.ADMIN_ADDRESS)}`);
     return { created: true, tokenFile: null };
   }
+  if (cfg.production) {
+    // Production without ADMIN_ADDRESS: refuse to create an admin whose credential nobody can retrieve.
+    throw new Error("production first start requires ADMIN_ADDRESS (the wallet that becomes the first admin)");
+  }
+  const user = await db.one<{ id: string }>("INSERT INTO users (display_name, is_admin) VALUES ('admin', true) RETURNING id");
+  const { token } = await createApiToken(db, user!.id, "bootstrap admin token", null);
   mkdirSync(cfg.DATA_DIR, { recursive: true });
   writeFileSync(file, `${token}\n`, { mode: 0o600 });
   try {

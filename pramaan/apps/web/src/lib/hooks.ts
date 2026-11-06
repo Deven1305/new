@@ -56,8 +56,30 @@ export function useConfig(): UseQueryResult<BackendConfig, Error> {
   return useGet<BackendConfig>(["config"], "/v1/config", { staleTime: 60_000 });
 }
 
+/** A reachable backend answering 503 with a readiness body is degraded, not offline; only transport failures stay errors. */
+export function readinessFromError(err: unknown): Readiness | null {
+  if (!isApiError(err) || err.status !== 503) return null;
+  const b = err.body as Partial<Readiness> | null | undefined;
+  if (!b || typeof b !== "object" || typeof b.ok !== "boolean") return null;
+  return { ...(b as Readiness), ok: false };
+}
+
 export function useReadiness(): UseQueryResult<Readiness, Error> {
-  return useGet<Readiness>(["readyz"], "/readyz", { staleTime: 15_000 });
+  const authVersion = useAuthMode();
+  return useQuery<Readiness, Error>({
+    queryKey: ["readyz", authVersion],
+    queryFn: async ({ signal }) => {
+      try {
+        return await api.get<Readiness>("/readyz", { signal });
+      } catch (err) {
+        const degraded = readinessFromError(err);
+        if (degraded) return degraded;
+        throw err;
+      }
+    },
+    staleTime: 15_000,
+    retry: retryPolicy,
+  });
 }
 
 /** Reasons shown next to actions the backend cannot perform with its current configuration. */
