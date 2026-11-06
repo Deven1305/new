@@ -55,15 +55,18 @@ Pramaan's own guide: `pramaan/docs/DEPLOY_SIMPLE.md`. Summary:
 | Extension | zip `apps/extension/dist`; testers use Chrome → Load unpacked | Chrome Web Store is optional |
 | CRE monitor | `cre workflow simulate` | real DON deployment needs CRE access |
 
-Order matters (each app's ENS record `pramaan.domain` must equal its final URL, and the manifest hashes the exact files you upload):
+**What is automated and what is not (corrected 7 Nov):** `pnpm demo:up` is **local-fork only**. It has no `--network sepolia` mode (an earlier version of this file said it did; that was wrong, and Pramaan's `NEXT_LAPTOP.md` item 2 says "Not implemented"). What exists for live Sepolia today is the **ENS identities** step:
+
 ```bash
 cd pramaan
 cp .env.example .env     # SEPOLIA_RPC_URL_A and _B (two different providers), OWNER/PROPOSER/GUARDIAN_PRIVATE_KEY, PRAMAAN_PARENT_LABEL
-pnpm run doctor --network sepolia --parent <label>      # must say READY
-pnpm demo:up --network sepolia --origins vaultlab=https://…,mirroryield=https://…,permitmarket=https://…
+pnpm pramaan keygen                                    # release signing key -> .pramaan/release-key.pem (keep private)
+pnpm run doctor --network sepolia --parent <label>     # prints the 3 addresses; must end READY once they are funded
+pnpm pramaan deploy identities --network sepolia --parent <label> --yes --broadcast-negative      --domain vaultlab=https://<vaultlab-url> --domain mirroryield=https://<mirroryield-url> --domain permitmarket=https://<permitmarket-url>
 ```
-Then upload each `apps/demos/dist/<app>` folder, start the backend, build the dashboard and the extension. Backend env: `DATABASE_URL`, `WEB_ORIGINS`, `SIWE_DOMAINS`, `COOKIE_SECURE=true`, `ADMIN_ADDRESS` (first admin; production refuses to start without it), optional `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID`, `CRE_INGEST_SECRET`.
-`demo:up --network sepolia` was **rehearsed on a fork only**; a first live run may need fixes. Say "local fork" in any demo that uses `demo:up` locally.
+Without `--yes` it is a dry run. The step-by-step for the rest (demo contracts, building apps with the final URLs, manifest, signing, queueing, execute, hosting) is in `10_REMAINING_WORK_HOWTO.md` section 3, including the one piece that still needs code.
+
+Then upload each `apps/demos/dist/<app>` folder unchanged, start the backend, build the dashboard and the extension. Backend env: `DATABASE_URL`, `WEB_ORIGINS`, `SIWE_DOMAINS`, `COOKIE_SECURE=true`, `ADMIN_ADDRESS` (first admin; production refuses to start without it), optional `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID`, `CRE_INGEST_SECRET`.
 
 ## C. Deploying the merged product
 

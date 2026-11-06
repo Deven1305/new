@@ -59,7 +59,7 @@ PowerShell: replace `$PWD` with `${PWD}`. Put Foundry on PATH for the session: `
 ## 3. Deploy
 
 - **HexFence (already live on GitHub Pages and Sepolia):** push to `main` → `pages.yml` deploys site, explorer, Pay. Contracts: `cd contracts && npx hardhat run scripts/deploy.js --network sepolia` (Guard v1 is permanent: rehearse first). Evidence: `publish-evidence.yml` every 6 h.
-- **Pramaan (not live anywhere yet):** fund 3 Sepolia accounts, fill `pramaan/.env`, `pnpm --dir pramaan run doctor --network sepolia`, then `pnpm --dir pramaan demo:up --network sepolia --origins vaultlab=https://…,…`. Upload each `pramaan/apps/demos/dist/<app>` unchanged to its own static host. Backend on Render/VPS (`DATABASE_URL`, `ADMIN_ADDRESS`, …). Zip the extension `dist` for testers.
+- **Pramaan (not live anywhere yet):** `demo:up` is local-fork only (no `--network sepolia`). Live Sepolia has the ENS-identities step (`pnpm --dir pramaan pramaan deploy identities --network sepolia …`); the rest is manual today. Exact steps and the one missing piece: `docs/merged/10_REMAINING_WORK_HOWTO.md`.
 - **Merged:** deploy both as above; do not publish the merged tree before payout.
 Full steps: `docs/merged/02_DEPLOY.md`, `pramaan/docs/DEPLOY_SIMPLE.md`.
 

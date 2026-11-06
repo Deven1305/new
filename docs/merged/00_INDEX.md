@@ -45,6 +45,8 @@ Pramaan stays its own workspace on purpose: it pins different tool versions (vit
 | [06_EXTENSIONS_AND_WEBSITE.md](06_EXTENSIONS_AND_WEBSITE.md) | How do I use it as a Chrome extension or a website? |
 | [07_SCREENS_EXPLAINED.md](07_SCREENS_EXPLAINED.md) | What does each screen / colour / row mean? |
 | [08_VERIFICATION_REPORT.md](08_VERIFICATION_REPORT.md) | What was actually run here, and what was not? |
+| [09_STEP_BY_STEP_RUN.md](09_STEP_BY_STEP_RUN.md) | Detailed run guide: project, both extensions, MCP |
+| [10_REMAINING_WORK_HOWTO.md](10_REMAINING_WORK_HOWTO.md) | How to finish the 4 "not done" items |
 
 ## One-minute proof that the merge works
 
