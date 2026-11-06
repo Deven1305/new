@@ -11,6 +11,7 @@ import { getAddress, isAddress, parseEther, type Address } from "viem";
 import { combine, type CheckRow, type Level } from "../../packages/core/src/index.js";
 import { sha256Hex } from "../../pramaan/packages/manifest/src/hash.js";
 import { checkSite, compareContract, inspectAgreed, verifySiteRelease, type ObservedResource } from "../../pramaan/packages/verifier-core/src/index.js";
+import { loadEnsv2Config } from "../../pramaan/packages/release/src/index.js";
 import { checkTx } from "./merged-check.js";
 
 const arg = (name: string, def?: string) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : def; };
@@ -21,7 +22,7 @@ const chainSpec = arg("chain", "31337=http://127.0.0.1:8545")!;
 const [chainIdText, rpcList] = chainSpec.split("=");
 const chainId = Number(chainIdText);
 const rpcUrls = rpcList!.split(",");
-const cfg = { chainId, rpcUrls, minAgreement: 1 };
+const cfg = { chainId, rpcUrls, universalResolver: loadEnsv2Config().universalResolver, minAgreement: chainId === 31337 ? 1 : Math.min(2, rpcUrls.length) };
 
 const rows: CheckRow[] = [];
 const lvl = (s: "green" | "amber" | "red"): Level => s;

@@ -8,6 +8,7 @@ coverage/
 .env
 .env.*
 !.env.example
+!.env.public.example
 .pair.local.json
 
 # Detector output (published to Arkiv; regenerate with the detector)
