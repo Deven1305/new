@@ -38,7 +38,9 @@
     "doctor": "pnpm pramaan doctor",
     "deploy:identities": "pnpm pramaan deploy identities",
     "test:extension": "pnpm --filter @pramaan/extension test",
-    "test:e2e:local": "pnpm --filter @pramaan/extension test:e2e:local"
+    "test:e2e:local": "pnpm --filter @pramaan/extension test:e2e:local",
+    "demo:rehearse": "tsx apps/cli/src/demo-up.ts --network rehearsal",
+    "demo:sepolia": "tsx apps/cli/src/demo-up.ts --network sepolia"
   },
   "devDependencies": {
     "@types/node": "20.19.43",

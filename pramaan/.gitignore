@@ -44,3 +44,4 @@ apps/demos/*/dist-local/
 apps/demos/*/dist-fixture-local/
 .tamper/
 **/.tamper/
+apps/demos/hosted-*/
