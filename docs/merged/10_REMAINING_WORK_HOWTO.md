@@ -58,6 +58,8 @@ Read the warning first: all of this is *post-submission / post-payout* work for 
 - An **existing funded Sepolia test key** (a throwaway key, ~0.01 ETH) for `CRE_ETH_PRIVATE_KEY`. Never use a real-money key.
 - Optional, for the Telegram part: a bot from @BotFather (`TELEGRAM_BOT_TOKEN_ALL`) and your chat id.
 
+**UPDATE: one command now.** `pnpm chainlink:simulate` checks every prerequisite, runs the simulation and saves the real output to `sentinel/SIMULATION.md` only if the CLI succeeds. Authentication is the one thing it cannot do for you: either `cre login` (browser) or an API key from your Chainlink account in `CRE_API_KEY`. The CLI refuses to simulate without one (verified: "Authentication required: not logged in and no CRE_API_KEY set"). Without `--broadcast` it is a dry run that needs no funded key; add `--broadcast` for the on-chain alert.
+
 **Steps (Sentinel).**
 1. `cre login` (opens a browser; log in; it saves credentials locally). The CLI should report you as logged in (run `cre --help` for the account command in your version).
 2. In `ROOT`: `pnpm install --frozen-lockfile`.
@@ -98,6 +100,8 @@ Read the warning first: all of this is *post-submission / post-payout* work for 
 | j | Extension: in its settings use two independent Sepolia RPCs; open the live app → green | built |
 
 **Funding the accounts (a):** follow `pramaan/docs/FAUCETS.md`. The MockUSDC the ENS registration needs is minted automatically by `deploy identities`. Keys go only in `pramaan/.env` (git-ignored). Generate the three keys fresh; never reuse a wallet that holds real money.
+
+**UPDATE (7 Nov, later): steps e and f are now built** as `pnpm --dir pramaan demo:sepolia` and tested end to end on a separate local fork (`demo:rehearse`). Follow `12_GO_LIVE_SEPOLIA.md`; only funding the keys and creating the three hosts remain. The text below is the original plan, kept for the record.
 
 **The engineering task (e + f), what to build:** add a `--network sepolia` branch to `pramaan/apps/cli/src/demo-up.ts` that (1) skips the anvil fork, (2) calls the same `deployDemoSuite` with the real Sepolia signer, (3) writes the Sepolia state file, (4) runs `deployIdentities` for the three apps with the real `--origins`, (5) runs PROVE, builds the apps, signs and queues the releases, then (6) waits the delay and executes. Test it **on the fork first** (the existing rehearsal), then flip to Sepolia. I can implement this when you ask; I did not, because it needs funded keys to prove it and the rules say not to push before payout.
 

@@ -39,7 +39,7 @@ Remove the older "HexFence interception spike" and any previous "Pramaan" card f
 - Not tried on the real `app.safe.global` with MetaMask and a real Sepolia Safe (item A in `10_REMAINING_WORK_HOWTO.md`). The Safe request shapes are decoded by HexFence's own tested parser, but Safe's real page has never driven this build.
 - The earlier full Pramaan browser suite (13 tests) was **not** re-run against your live demo after this change, because those tests tamper with and revoke releases on the running demo. Run it on a fresh `merged:up` when you are not demoing.
 - Evidence from Arkiv ("listed in public poisoning evidence") is not wired into the merged extension yet; the lookalike rule is.
-- UI: the review window and popup still carry Pramaan's styling and icons. Better branding assets are future work.
+- UI: the extension now has a HexFence hexagon-and-check icon (generated at build, no binary assets), a hexagon logo in the popup / review / options pages, and a recipient-specific block message in English, Hindi and Marathi. The overall page layout is still Pramaan's.
 - Chrome Web Store: not published. Distribution today is the zip (Load unpacked).
 
 ## Distribution options (after you have tested locally)
