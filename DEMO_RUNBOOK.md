@@ -18,8 +18,7 @@ Stop: Ctrl+C in each terminal. If anything stays alive: Task Manager → end `an
 ## 1. Browser setup (once, 5 min)
 
 1. Chrome → `chrome://extensions` → Developer mode → **Load unpacked**:
-   - `pramaan\apps\extension\dist` (Pramaan)
-   - `apps\extension\dist` (HexFence; only acts on app.safe.global)
+   - `pramaan\apps\extension\dist`: the **single** HexFence extension (Pramaan engine + the HexFence Recipient check). Remove the old "HexFence interception spike" card if it is still there, and click the reload arrow on the extension after any rebuild (`pnpm extension:package`).
 2. MetaMask/Rabby with a **new test-only wallet**. Add network: RPC `http://127.0.0.1:8545`, chain id `31337`, symbol ETH.
 3. Import the demo user account (fresh on every `merged:up`, local-only, worthless): in a terminal run
    `node -e "console.log(require('./pramaan/.pramaan/demo/keys.json').user)"` and paste into MetaMask → Import account → Private key. Never share or commit that file.
