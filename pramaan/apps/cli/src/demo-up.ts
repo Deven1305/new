@@ -7,6 +7,8 @@ import { createServer } from "node:net";
 import { generateReleaseKey, releaseStatement, signStatementWithKey } from "@pramaan/manifest/node";
 import { assembleDemoApp, connect, deployDemoSuite, deployResolver, deployTimelock, executeOp, freshLocalSigner, grantRecordRole, loadEnsv2Config, negativeWriteTest, queuePointer, registerName, REPO_ROOT, setOwnerText, waitSeconds, type DemoAppId, type DemoStateV2 } from "@pramaan/release";
 import { verifySiteRelease } from "@pramaan/verifier-core";
+import { dockerStatus } from "@pramaan/engine";
+import { runProve } from "./prove.js";
 
 const rpc = "http://127.0.0.1:8545";
 const fork = process.env.SEPOLIA_RPC_URL_A ?? "https://sepolia.gateway.tenderly.co";
@@ -79,7 +81,19 @@ async function main() {
   save();
   writeFileSync(join(dir, "keys.json"), JSON.stringify({ note: "LOCAL FORK ONLY", owner: owner.privateKey, proposer: proposer.privateKey, guardian: guardian.privateKey, user: user.privateKey }, null, 2), { mode: 0o600 });
   writeFileSync(join(dir, "release-key.pem"), key.privateKeyPkcs8Pem, { mode: 0o600 });
-  console.log("PROVE not run; releases will not claim reproduced findings.");
+  // PROVE the demo contracts in the sandbox; the verified VaultLab finding goes into the signed release. Without Docker
+  // (or with --skip-prove) no finding is claimed.
+  const sandbox = process.argv.includes("--skip-prove") ? null : await dockerStatus();
+  if (sandbox?.available && sandbox.imagePresent) {
+    console.log("PROVE: analysing the demo contracts in the sandbox (about 3 minutes)...");
+    const proveDir = join(dir, "prove");
+    const result = await runProve({ repoDir: join(REPO_ROOT, "contracts"), outDir: proveDir, fix: true, onProgress: (p) => console.log(`  [${p.step}] ${p.status}: ${p.message}`) });
+    state.prove = { reportJson: join(proveDir, "report.json"), reportMd: join(proveDir, "report.md"), findings: result.manifestFindings.map((f) => ({ id: f.id, title: f.title ?? f.id, class: f.class, severity: f.severity, status: f.status, exploitTestSha256: f.exploitTestSha256 ?? null, evidenceSha256: f.evidenceSha256 ?? null, fixCommit: f.fixCommit ?? null })) };
+    save();
+    console.log(`PROVE: ${result.manifestFindings.length} finding(s) with proof recorded in the VaultLab release.`);
+  } else {
+    console.log(sandbox ? "PROVE not run: the sandbox image is missing (pnpm pramaan sandbox build); releases will not claim findings." : "PROVE skipped (--skip-prove); releases will not claim findings.");
+  }
   await run(process.execPath, [join(REPO_ROOT, "apps/demos/scripts/build.mjs"), "--state", statePath, "--no-fixtures"]);
   for (const id of ids) {
     const release = await assembleDemoApp({ ctx, state, appId: id });
@@ -108,6 +122,6 @@ async function main() {
     console.log(`${id}: ${check.status}, manifest ${state.apps[id].release?.sha256}`);
     if (check.status !== "verified") throw new Error(`${id} release verification failed: ${check.reason}`);
   }
-  console.log("Local fork demo ready; Ctrl+C stops the hosts and chain. No sandbox analysis was run.");
+  console.log("Local fork demo ready; Ctrl+C stops the hosts and chain. " + (state.prove ? "Findings in the VaultLab release come from a real sandbox run." : "No sandbox analysis was run."));
 }
 main().catch((err: Error) => { console.error(`demo:up failed: ${err.message}`); stop(); process.exit(1); });
