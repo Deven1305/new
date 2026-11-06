@@ -49,3 +49,13 @@ export async function assertSafeHttpUrl(raw: string, allowPrivate: boolean, what
   if (addresses.some(isPrivateAddress)) throw new HttpError(400, "PRIVATE_ADDRESS", `${what} resolves to a private address`);
   return u;
 }
+
+/** An RPC URL as it may be shown to clients: origin only, because provider API keys usually live in the path or query. */
+export function publicRpcOrigin(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return null;
+  }
+}

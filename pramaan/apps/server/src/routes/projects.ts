@@ -1,3 +1,4 @@
+import { publicRpcOrigin } from "../net.js";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import {
@@ -190,7 +191,7 @@ async function getProjectDetail(ctx: Ctx, projectId: string, userRole: Role) {
       kind: m.kind,
       chainId: m.chain_id,
       address: m.address,
-      rpcUrl: m.rpc_url,
+      rpcUrl: publicRpcOrigin(m.rpc_url),
       label: m.label,
       status: m.status,
       lastBlock: m.last_block !== null ? Number(m.last_block) : null,

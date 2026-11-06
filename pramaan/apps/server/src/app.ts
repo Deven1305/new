@@ -20,6 +20,7 @@ import { registerFindingRoutes } from "./routes/findings.js";
 import { registerJobRoutes } from "./routes/jobs.js";
 import { registerPublicRoutes } from "./routes/public.js";
 import { registerReleaseRoutes } from "./routes/releases.js";
+import { startMonitorPoller } from "./monitor.js";
 import { startWorker } from "./worker.js";
 import { registerIngestRoutes } from "./routes/ingest.js";
 import { registerMonitorRoutes } from "./routes/monitors.js";
@@ -34,6 +35,8 @@ export interface AppOptions {
   skipBootstrap?: boolean;
   /** Run the analysis job worker inside this process (the dev server does; tests do not). */
   worker?: boolean;
+  /** Run the on-chain monitor poller inside this process (defaults to the `worker` setting). */
+  monitors?: boolean;
   logger?: boolean;
 }
 
@@ -60,6 +63,7 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
   };
 
   let worker: { stop: () => Promise<void> } | null = null;
+  let poller: { stop: () => Promise<void> } | null = null;
 
   const secretList = [
     cfg.TELEGRAM_BOT_TOKEN,
@@ -176,6 +180,7 @@ export async function createApp(opts: AppOptions = {}): Promise<FastifyInstance>
   }
 
   if (opts.worker) worker = startWorker(db, cfg, app.log);
+  if (opts.monitors ?? opts.worker) poller = startMonitorPoller(ctx);
 
   // Health and readiness endpoints
   app.get("/healthz", async () => ({ ok: true }));

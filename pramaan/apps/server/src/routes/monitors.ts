@@ -3,7 +3,9 @@ import { z } from "zod";
 import { formatAlertText, sendTelegram, telegramConfigured, type AlertRow } from "../alerts.js";
 import { assertRole, audit, requireUser } from "../auth.js";
 import type { Ctx } from "../context.js";
-import { HttpError, notConfigured, notFound, parse } from "../errors.js";
+import { conflict, HttpError, notConfigured, notFound, parse } from "../errors.js";
+import { MONITOR_KINDS, pollMonitor, type MonitorRow } from "../monitor.js";
+import { assertSafeHttpUrl, publicRpcOrigin } from "../net.js";
 
 const ProjectParamsSchema = z.object({
   id: z.string().uuid("Invalid project ID"),
@@ -20,6 +22,16 @@ const AlertsQuerySchema = z.object({
 
 const EventsQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(200).optional(),
+});
+
+const CreateMonitorSchema = z.object({
+  kind: z.enum(MONITOR_KINDS),
+  chainId: z.number().int().positive(),
+  address: z.string().regex(/^0x[0-9a-fA-F]{40}$/, "address must be a 0x… 20-byte address"),
+  rpcUrl: z.string().trim().url().max(500).optional(),
+  label: z.string().trim().min(1).max(120),
+  /** Start scanning at this block instead of the recent-blocks lookback. */
+  fromBlock: z.number().int().min(1).optional(),
 });
 
 interface MonitorDbRow {
@@ -83,7 +95,7 @@ function formatMonitor(m: MonitorDbRow) {
     kind: m.kind,
     chainId: m.chain_id,
     address: m.address,
-    rpcUrl: m.rpc_url,
+    rpcUrl: publicRpcOrigin(m.rpc_url),
     label: m.label,
     status: m.status,
     lastBlock: m.last_block !== null ? Number(m.last_block) : null,
@@ -225,9 +237,42 @@ export function registerMonitorRoutes(app: FastifyInstance, ctx: Ctx): void {
     return rows.map(formatEvent);
   });
 
-  // Keep POST monitor unimplemented 501 (do not invent active monitoring)
-  app.post("/v1/projects/:id/monitors", async () => {
-    throw notConfigured("NOT_IMPLEMENTED", "This API endpoint is not implemented yet");
+  /**
+   * POST /v1/projects/:id/monitors — watch one contract for the events that matter for its kind. The server polls it
+   * every MONITOR_INTERVAL_MS (embedded poller); the first poll runs immediately so a bad RPC or chain shows up now.
+   */
+  app.post("/v1/projects/:id/monitors", async (req, reply) => {
+    const user = requireUser(req.user);
+    const params = parse(ProjectParamsSchema, req.params, "project params");
+    await assertRole(ctx.db, user, params.id, "maintainer");
+    const body = parse(CreateMonitorSchema, req.body, "monitor body");
+    const project = await ctx.db.one<{ rpc_url: string | null; chain_id: number | null }>("SELECT rpc_url, chain_id FROM projects WHERE id = $1", [params.id]);
+    if (!project) throw notFound("project");
+    const rpcUrl = body.rpcUrl ?? project.rpc_url;
+    if (!rpcUrl) throw new HttpError(400, "VALIDATION_FAILED", "rpcUrl is required (or set one on the project)");
+    await assertSafeHttpUrl(rpcUrl, ctx.cfg.allowPrivateNetwork, "rpcUrl");
+    const address = body.address.toLowerCase();
+    const dup = await ctx.db.one("SELECT id FROM monitors WHERE project_id = $1 AND kind = $2 AND chain_id = $3 AND address = $4", [params.id, body.kind, body.chainId, address]);
+    if (dup) throw conflict("this contract is already monitored for that kind", "MONITOR_EXISTS");
+    const row = await ctx.db.one<MonitorRow & { created_at: Date }>(
+      `INSERT INTO monitors (project_id, kind, chain_id, address, rpc_url, label, last_block)
+       VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id, project_id, kind, chain_id, address, rpc_url, label, config, last_block, created_at`,
+      [params.id, body.kind, body.chainId, address, rpcUrl, body.label, body.fromBlock === undefined ? null : body.fromBlock - 1],
+    );
+    await audit(ctx.db, user.id, params.id, "monitor.create", row!.id, { kind: body.kind, chainId: body.chainId, address });
+    await pollMonitor(ctx, row!);
+    const fresh = await ctx.db.one<MonitorDbRow>("SELECT * FROM monitors WHERE id = $1", [row!.id]);
+    return reply.code(201).send(formatMonitor(fresh!));
+  });
+
+  app.delete("/v1/projects/:id/monitors/:monitorId", async (req) => {
+    const user = requireUser(req.user);
+    const params = parse(ProjectParamsSchema.extend({ monitorId: z.string().uuid() }), req.params, "monitor params");
+    await assertRole(ctx.db, user, params.id, "maintainer");
+    const gone = await ctx.db.one<{ id: string }>("DELETE FROM monitors WHERE id = $1 AND project_id = $2 RETURNING id", [params.monitorId, params.id]);
+    if (!gone) throw notFound("monitor");
+    await audit(ctx.db, user.id, params.id, "monitor.delete", params.monitorId, {});
+    return { ok: true };
   });
 
   /** Sends one clearly-labelled test message. Nothing is stored; the result is Telegram's real answer. */

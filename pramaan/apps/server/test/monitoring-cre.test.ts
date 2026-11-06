@@ -1092,14 +1092,14 @@ describe("Authenticated monitoring, alerts, and CRE ingest backend", () => {
       expect(evList[0].address).toBe("0x1111111111111111111111111111111111111111");
       expect(evList[0].assessment).toBe("warning");
 
-      // --- TEST UNIMPLEMENTED ROUTES (501) ---
+      // --- POST monitors is implemented (see monitors.test.ts); an incomplete body is a validation error, not a 501 ---
       const postMon = await app.inject({
         method: "POST",
         url: `/v1/projects/${projectA.id}/monitors`,
         headers: { authorization: `Bearer ${tokenA}` },
         payload: { kind: "timelock", address: "0x1111111111111111111111111111111111111111" },
       });
-      expect(postMon.statusCode).toBe(501);
+      expect(postMon.statusCode).toBe(400);
 
       const postTelegram = await app.inject({
         method: "POST",
