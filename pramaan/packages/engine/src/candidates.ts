@@ -15,12 +15,14 @@ const CLASS_BY_DETECTOR: Record<string, VulnClass> = {
   "state-change-after-external-call": "reentrancy",
   "pramaan-unprotected-initializer": "unprotected-initializer",
   "unprotected-initializer": "unprotected-initializer",
+  "pramaan-unchecked-oracle": "unchecked-oracle",
 };
 
 const TITLE_BY_CLASS: Record<string, string> = {
   "access-control": "Missing access control on a value-moving function",
   reentrancy: "Reentrancy: state updated after an external call",
   "unprotected-initializer": "Initializer can be called again by anyone",
+  "unchecked-oracle": "Oracle answer used without checking that it is positive",
 };
 
 function severityFrom(impact: string): Severity {

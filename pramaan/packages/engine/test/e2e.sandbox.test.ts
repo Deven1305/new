@@ -92,6 +92,24 @@ describe.runIf(enabled)("PROVE pipeline in the sandbox", () => {
     expect((await verifyFix({ repoDir: dir, finding: f!, fix: fix.fix })).verified).toBe(true);
   }, 900_000);
 
+  it("reproduces the unchecked oracle answer in OracleLoan, verifies the deterministic fix and sees OracleLoanFixed resist", async (ctx) => {
+    if (!ready) ctx.skip();
+    const dir = join(ROOT, "examples", "oracle-lending");
+    const r = await analyzeProject({ repoDir: dir, repo: "local:examples/oracle-lending", commit: null, config: config(dir) });
+    const f = r.findings.find((x) => x.templateId === "oracle-unchecked-price" && x.candidate.contract === "OracleLoan");
+    expect(f?.status).toBe("reproduced");
+    expect(f?.vulnerableRun.logs.some((l) => l.includes("pramaan.attacker_gain"))).toBe(true);
+    expect(f?.pairs[0]).toMatchObject({ fixedContract: "OracleLoanFixed", verified: true });
+    // The already-fixed twin must not be reported as vulnerable.
+    expect(r.findings.some((x) => x.status === "reproduced" && x.candidate.contract === "OracleLoanFixed")).toBe(false);
+    const c = r.contracts.find((x) => x.name === "OracleLoan")!;
+    const fix = proposeFix(dir, c, c.functions.find((x) => x.name === "borrow")!, "unchecked-oracle");
+    expect(fix.ok).toBe(true);
+    if (!fix.ok) return;
+    expect(fix.fix.after).toContain("require(answer > 0");
+    expect((await verifyFix({ repoDir: dir, finding: f!, fix: fix.fix })).verified).toBe(true);
+  }, 900_000);
+
   it("contains a malicious repository that enables FFI and tries to run shell commands", async (ctx) => {
     if (!ready) ctx.skip();
     const dir = mkdtempSync(join(tmpdir(), "pramaan-evil-"));

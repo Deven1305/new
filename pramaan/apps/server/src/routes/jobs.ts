@@ -15,7 +15,7 @@ import { inspectZip } from "../zip.js";
 const IdParams = z.object({ id: z.string().uuid("invalid id") });
 
 const SourceSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("example"), name: z.enum(["contracts", "reentrancy-bank", "initializer-takeover"]) }),
+  z.object({ type: z.literal("example"), name: z.enum(["contracts", "reentrancy-bank", "initializer-takeover", "oracle-lending"]) }),
   z.object({ type: z.literal("github"), url: z.string().trim().max(300), ref: z.string().trim().max(200).optional() }),
   z.object({ type: z.literal("upload"), uploadId: z.string().uuid() }),
 ]);

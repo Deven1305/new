@@ -10,6 +10,7 @@ export const EXAMPLES: Record<string, { dir: string; label: string }> = {
   contracts: { dir: join(REPO_ROOT, "contracts"), label: "local:pramaan/contracts (Kosh Vault demo)" },
   "reentrancy-bank": { dir: join(REPO_ROOT, "examples", "reentrancy-bank"), label: "local:pramaan/examples/reentrancy-bank" },
   "initializer-takeover": { dir: join(REPO_ROOT, "examples", "initializer-takeover"), label: "local:pramaan/examples/initializer-takeover" },
+  "oracle-lending": { dir: join(REPO_ROOT, "examples", "oracle-lending"), label: "local:pramaan/examples/oracle-lending" },
 };
 
 export interface Workspace {

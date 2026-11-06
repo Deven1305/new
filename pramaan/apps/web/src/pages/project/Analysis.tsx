@@ -15,6 +15,7 @@ const EXAMPLES = [
   { name: "contracts", label: "contracts", text: "the demo project's contract set" },
   { name: "reentrancy-bank", label: "reentrancy-bank", text: "a bank with a classic reentrancy hole" },
   { name: "initializer-takeover", label: "initializer-takeover", text: "an upgradeable contract with an unprotected initializer" },
+  { name: "oracle-lending", label: "oracle-lending", text: "a lending pool that uses a price-feed answer without checking it is positive" },
 ] as const;
 
 type SourceKind = "example" | "github" | "upload";

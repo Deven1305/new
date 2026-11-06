@@ -116,3 +116,93 @@ class PramaanUnprotectedInitializer(AbstractDetector):
                 info = [function, " writes privileged state and can be called again by anyone\n"]
                 results.append(self.generate_result(info))
         return results
+
+
+_ORACLE_CALLS = ("latestRoundData", "latestAnswer")
+_ORACLE_TUPLE = re.compile(r"\(([^;()]*)\)\s*=\s*[^;]*?\blatestRoundData\s*\(\s*\)\s*;")
+_ORACLE_SINGLE = re.compile(r"\bu?int256\s+(\w+)\s*=\s*[^;]*?\blatestAnswer\s*\(\s*\)\s*;")
+
+
+def _call_name(call) -> str:
+    """Name of the function a high-level call IR targets (Slither versions expose it as .function or .function_name)."""
+    called = call[1] if isinstance(call, tuple) else call
+    fn = getattr(called, "function", None)
+    name = getattr(fn, "name", None)
+    if not name:
+        raw = getattr(called, "function_name", None)
+        name = getattr(raw, "value", raw)
+    return str(name or "")
+
+
+def _reads_oracle(function: Function) -> bool:
+    # direct calls only: all_high_level_calls() is transitive and would make every caller of a price helper a "reader"
+    return any(_call_name(call) in _ORACLE_CALLS for call in function.high_level_calls)
+
+
+def _internal_callees(function: Function):
+    out = []
+    for call in function.all_internal_calls():
+        target = getattr(call, "function", call)
+        if isinstance(target, Function) and target not in out:
+            out.append(target)
+    return out
+
+
+def _answer_variables(source: str):
+    """Names the price answer is bound to; an empty string means it is used inline and so can never be checked."""
+    names = []
+    for m in _ORACLE_TUPLE.finditer(source):
+        parts = [p.strip().split()[-1] if p.strip() else "" for p in m.group(1).split(",")]
+        names.append(parts[1] if len(parts) > 1 else "")
+    for m in _ORACLE_SINGLE.finditer(source):
+        names.append(m.group(1))
+    return names
+
+
+def _is_checked(name: str, source: str) -> bool:
+    if not name:
+        return False
+    n = re.escape(name)
+    return bool(re.search(r"\b%s\b\s*(?:>|>=|!=|<=|<)\s*[01]\b|\b[01]\s*(?:<|<=|!=|>)\s*\b%s\b" % (n, n), source))
+
+
+class PramaanUncheckedOracle(AbstractDetector):
+    ARGUMENT = "pramaan-unchecked-oracle"
+    HELP = "Price feed answer is used without checking that it is positive"
+    IMPACT = DetectorClassification.HIGH
+    CONFIDENCE = DetectorClassification.MEDIUM
+
+    WIKI = "https://github.com/pramaan-dev/pramaan/blob/main/docs/SECURITY.md#detectors"
+    WIKI_TITLE = "Unchecked oracle answer"
+    WIKI_DESCRIPTION = (
+        "A state-changing function reads `latestRoundData()` / `latestAnswer()` and converts the signed answer to "
+        "`uint256` without requiring it to be positive. An invalid round returns a non-positive number, which the "
+        "cast turns into an enormous price."
+    )
+    WIKI_EXPLOIT_SCENARIO = (
+        "A feed reports -1 during an incident. `uint256(answer)` becomes 2**256-1 and a borrower with 1 wei of "
+        "collateral can borrow the whole pool."
+    )
+    WIKI_RECOMMENDATION = "Require `answer > 0` and a recent `updatedAt` before using the price."
+
+    def _detect(self):
+        results = []
+        for contract in self.compilation_unit.contracts_derived:
+            if contract.is_interface or contract.is_library:
+                continue
+            for function in contract.functions:
+                if function.contract_declarer != contract or not _is_entry_point(function):
+                    continue
+                reachable = [function] + _internal_callees(function)
+                readers = [f for f in reachable if _reads_oracle(f)]
+                if not readers:
+                    continue
+                combined = "\n".join(_source(f) for f in reachable)
+                answers = []
+                for f in readers:
+                    answers.extend(_answer_variables(_source(f)) or [""])
+                if answers and all(_is_checked(a, combined) for a in answers):
+                    continue
+                info = [function, " uses a price feed answer without requiring it to be positive\n"]
+                results.append(self.generate_result(info))
+        return results

@@ -6,8 +6,8 @@ needs these extra detectors. They produce *candidates* only: Pramaan reports a v
 exploit test reproduces it.
 """
 
-from .detectors import PramaanUnprotectedInitializer, PramaanUnprotectedSweep
+from .detectors import PramaanUncheckedOracle, PramaanUnprotectedInitializer, PramaanUnprotectedSweep
 
 
 def make_plugin():
-    return [PramaanUnprotectedSweep, PramaanUnprotectedInitializer], []
+    return [PramaanUnprotectedSweep, PramaanUnprotectedInitializer, PramaanUncheckedOracle], []

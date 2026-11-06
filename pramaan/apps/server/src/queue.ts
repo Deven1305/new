@@ -27,7 +27,7 @@ export interface JobRow {
 }
 
 export type JobSource =
-  | { type: "example"; name: "contracts" | "reentrancy-bank" | "initializer-takeover" }
+  | { type: "example"; name: "contracts" | "reentrancy-bank" | "initializer-takeover" | "oracle-lending" }
   | { type: "github"; url: string; ref?: string }
   | { type: "upload"; uploadId: string }
   | { type: "finding"; findingId: string };

@@ -46,6 +46,47 @@ function addRequireAtBodyStart(source: Buffer, fn: ContractFunction, statement: 
   return Buffer.concat([source.subarray(0, open), Buffer.from(`\n${indent}${statement}`, "utf8"), source.subarray(open)]);
 }
 
+const SANITY_AFTER = 600; // characters after the read that are searched for an existing check
+
+/**
+ * Adds `require(answer > 0)` (and a one-day staleness bound when the updatedAt slot is named) right after every
+ * `latestRoundData()` / `latestAnswer()` read that is not already checked. Only handles the destructuring and the
+ * `int256 x = feed.latestAnswer();` forms; anything else is left for a human or the AI drafter.
+ */
+export function guardOracleReads(text: string): { ok: true; text: string; stale: boolean } | { ok: false; reason: string } {
+  type Edit = { at: number; insert: string };
+  const edits: Edit[] = [];
+  let stale = false;
+  const checked = (name: string, after: string) =>
+    new RegExp(`\\b${name}\\b\\s*(?:>|>=|!=|<=|<)\\s*[01]\\b|\\b[01]\\s*(?:<|<=|!=|>)\\s*\\b${name}\\b`).test(after.slice(0, SANITY_AFTER));
+
+  const tuple = /^([ \t]*)\(([^;()]*)\)\s*=\s*[^;]*?\blatestRoundData\s*\(\s*\)\s*;/gm;
+  for (const m of text.matchAll(tuple)) {
+    const names = m[2]!.split(",").map((s) => s.trim().split(/\s+/).pop() ?? "");
+    const answer = names[1] ?? "";
+    if (!/^[A-Za-z_]\w*$/.test(answer)) return { ok: false, reason: "the oracle answer is not bound to a named variable, so a check cannot be placed deterministically" };
+    const end = m.index! + m[0].length;
+    const after = text.slice(end);
+    const lines: string[] = [];
+    if (!checked(answer, after)) lines.push(`require(${answer} > 0, "Pramaan: oracle answer is not positive");`);
+    const updated = names[3] ?? "";
+    if (/^[A-Za-z_]\w*$/.test(updated) && !new RegExp(`block\\.timestamp\\s*-\\s*${updated}`).test(after.slice(0, SANITY_AFTER))) {
+      lines.push(`require(block.timestamp - ${updated} <= 1 days, "Pramaan: oracle answer is stale");`);
+      stale = true;
+    }
+    if (lines.length) edits.push({ at: end, insert: lines.map((l) => `\n${m[1]}${l}`).join("") });
+  }
+  const single = /^([ \t]*)(?:u?int256)\s+(\w+)\s*=\s*[^;]*?\blatestAnswer\s*\(\s*\)\s*;/gm;
+  for (const m of text.matchAll(single)) {
+    const end = m.index! + m[0].length;
+    if (!checked(m[2]!, text.slice(end))) edits.push({ at: end, insert: `\n${m[1]}require(${m[2]} > 0, "Pramaan: oracle answer is not positive");` });
+  }
+  if (edits.length === 0) return { ok: false, reason: "no unchecked latestRoundData()/latestAnswer() read in a form the deterministic fixer understands" };
+  let out = text;
+  for (const e of edits.sort((a, b) => b.at - a.at)) out = out.slice(0, e.at) + e.insert + out.slice(e.at);
+  return { ok: true, text: out, stale };
+}
+
 const has = (c: ContractInfo, re: RegExp) => c.bases.some((b) => re.test(b));
 const abiHas = (c: ContractInfo, name: string) => c.abi.some((e) => e.type === "function" && e.name === name);
 
@@ -107,6 +148,12 @@ export function proposeFix(repoDir: string, contract: ContractInfo, fn: Contract
     } else {
       return { ok: false, reason: `no initializer guard available for ${contract.name}` };
     }
+  } else if (vulnClass === "unchecked-oracle") {
+    const fixed = guardOracleReads(original.toString("utf8"));
+    if (!fixed.ok) return { ok: false, reason: fixed.reason };
+    patched = Buffer.from(fixed.text, "utf8");
+    change = `require a positive${fixed.stale ? " and fresh" : ""} oracle answer in ${contract.name}`;
+    explanation = `${contract.name}.${fn.name}() reads the price feed and uses the answer as an unsigned price without checking it. A non-positive answer (an invalid round) is cast to an enormous uint256, which makes any account look massively over-collateralised. The patch rejects non-positive answers${fixed.stale ? " and answers older than one day (adjust to the feed's heartbeat)" : ""}.`;
   } else {
     return { ok: false, reason: `no deterministic fix for class "${vulnClass}"` };
   }
