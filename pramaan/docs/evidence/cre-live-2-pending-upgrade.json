@@ -1,0 +1,35 @@
+{
+  "runner": "live-decision-harness (the workflow's own collectObservation/decide against a live fork; NOT cre workflow simulate)",
+  "at": "2026-11-06T15:57:13.182Z",
+  "chainId": 31337,
+  "app": "vaultlab",
+  "ensName": "pramaan-vaultlab-9bd292.eth",
+  "decision": "PENDING_UPGRADE",
+  "severity": "high",
+  "summary": "upgrade of 0x5ABb19720E65fA27785FFf7168c188bdD29668C4 to 0xf6f2CC826f74cDCe0A7A6973Fc165060A572a983 scheduled (implementation is NOT in the active release), executable in 120s",
+  "findings": [
+    {
+      "decision": "PENDING_UPGRADE",
+      "severity": "high",
+      "subject": "upgrade:0x6f4ca3779011263022b82cec64e70e3a0abb6abbccbb26ac5d5b68e9e13db89a",
+      "summary": "upgrade of 0x5ABb19720E65fA27785FFf7168c188bdD29668C4 to 0xf6f2CC826f74cDCe0A7A6973Fc165060A572a983 scheduled (implementation is NOT in the active release), executable in 120s",
+      "details": {
+        "operationId": "0x6f4ca3779011263022b82cec64e70e3a0abb6abbccbb26ac5d5b68e9e13db89a",
+        "target": "0x5ABb19720E65fA27785FFf7168c188bdD29668C4",
+        "newImplementation": "0xf6f2CC826f74cDCe0A7A6973Fc165060A572a983",
+        "selector": "0x4f1ef286",
+        "targetInRelease": false,
+        "eta": 1793981278,
+        "etaIso": "2026-11-06T16:07:58.000Z",
+        "secondsUntilEta": 120,
+        "executable": false,
+        "scheduledInBlock": 12077592
+      }
+    }
+  ],
+  "ingest": {
+    "attempted": true,
+    "status": 200,
+    "response": "{\"ok\":true,\"workflow\":\"pramaan-monitor\",\"runId\":\"3e375b4571e9bee2c3843ecd\",\"decision\":\"PENDING_UPGRADE\",\"projectId\":\"aae32515-259a-4158-8611-88ad092ad877\",\"alertId\":\"f2bd4677-8e55-4c80-9ee4-46c282b31d01\"}"
+  }
+}

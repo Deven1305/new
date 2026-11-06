@@ -34,6 +34,7 @@
     "demo:tamper": "tsx apps/cli/src/demo-actions.ts tamper",
     "demo:restore": "tsx apps/cli/src/demo-actions.ts restore",
     "demo:upgrade": "tsx apps/cli/src/demo-actions.ts upgrade",
+    "demo:release": "tsx apps/cli/src/demo-actions.ts release",
     "doctor": "pnpm pramaan doctor",
     "deploy:identities": "pnpm pramaan deploy identities",
     "test:extension": "pnpm --filter @pramaan/extension test",

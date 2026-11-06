@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { encodeFunctionData, getAddress, keccak256, parseAbi, toBytes, type Hex } from "viem";
-import { connect, loadDemoState, REPO_ROOT, send, signerFromKey, waitSeconds, write, type ChainCtx, type DemoStateV2, type Signer } from "@pramaan/release";
+import { cancelOp, connect, loadDemoState, queuePointer, REPO_ROOT, send, signerFromKey, waitSeconds, write, type ChainCtx, type DemoStateV2, type Signer } from "@pramaan/release";
 import { backupDirFor, restore as restoreFiles, status as fileStatus, tamper as tamperFiles, type TamperStatus } from "../../demos/scripts/tamper.mjs";
 
 const repoPath = (p: string): string => (isAbsolute(p) ? p : join(REPO_ROOT, p));
@@ -104,13 +104,14 @@ export async function upgradePlan(ctx: ChainCtx, state: DemoStateV2): Promise<Up
   return { timelock, vault, newImplementation, data, operationId };
 }
 
-export function ownerSigner(ctx: ChainCtx, statePath: string): Signer {
+export function keySigner(ctx: ChainCtx, statePath: string, role: "owner" | "proposer" | "guardian"): Signer {
   const keysPath = join(dirname(statePath), "keys.json");
   if (!existsSync(keysPath)) throw new Error(`missing ${keysPath} (written by demo:up; holds the local test keys)`);
   const keys = JSON.parse(readFileSync(keysPath, "utf8")) as Record<string, unknown>;
-  const key = keys["owner"];
-  return signerFromKey(ctx, typeof key === "string" ? key : undefined, "keys.json owner");
+  const key = keys[role];
+  return signerFromKey(ctx, typeof key === "string" ? key : undefined, `keys.json ${role}`);
 }
+export const ownerSigner = (ctx: ChainCtx, statePath: string): Signer => keySigner(ctx, statePath, "owner");
 
 export interface UpgradeStatus {
   operationId: Hex;
@@ -186,7 +187,7 @@ async function main(argv: string[]): Promise<void> {
   const positional: string[] = [];
   for (let i = 0; i < args.length; i++) {
     const a = args[i]!;
-    if (a === "--state" || a === "--out") i++;
+    if (a === "--state" || a === "--out" || a === "--app" || a === "--id") i++;
     else if (!a.startsWith("--")) positional.push(a);
   }
   const [command, sub] = positional;
@@ -220,7 +221,25 @@ async function main(argv: string[]): Promise<void> {
     log(`executed (tx ${r.txHash}): proxy now points at ${r.implementation}, version "${r.version}"`);
     return;
   }
-  throw new Error("usage: demo-actions tamper [status] | restore | upgrade schedule|execute [--advance]|status   [--state <file>] [--out <dir>]");
+  if (command === "release" && (sub === "queue-evil" || sub === "cancel")) {
+    const appId = (opt("app") ?? "vaultlab") as keyof DemoStateV2["apps"];
+    const app = state.apps[appId];
+    if (!app) throw new Error(`demo state has no app "${appId}"`);
+    const ctx = await connect(state.network.rpcUrl);
+    if (sub === "queue-evil") {
+      // A pointer nobody released: the proposer key can only QUEUE it, and it stays pending behind the timelock delay.
+      const pointer = `pramaan:v1:v9.9.9-evil:${keccak256(toBytes("pramaan-demo-malicious-manifest")).slice(2)}`;
+      const r = await queuePointer(ctx, keySigner(ctx, statePath, "proposer"), app.timelock, pointer);
+      return void log(`queued operation #${r.id} on ${app.ensName} (tx ${r.txHash}); executable at unix ${r.eta} (${new Date(Number(r.eta) * 1000).toISOString()})
+  pointer ${pointer}
+  cancel it with: pnpm demo:release cancel --id ${r.id}`);
+    }
+    const id = opt("id");
+    if (!id || !/^[0-9]+$/.test(id)) throw new Error("release cancel needs --id <operation number>");
+    const tx = await cancelOp(ctx, keySigner(ctx, statePath, "guardian"), app.timelock, BigInt(id));
+    return void log(`cancelled operation #${id} on ${app.ensName} (guardian tx ${tx})`);
+  }
+  throw new Error("usage: demo-actions tamper [status] | restore | upgrade schedule|execute [--advance]|status | release queue-evil|cancel --id N [--app <id>]   [--state <file>] [--out <dir>]");
 }
 
 const entry = process.argv[1];

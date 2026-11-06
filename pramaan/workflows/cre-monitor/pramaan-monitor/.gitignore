@@ -2,3 +2,4 @@
 .cre_build_tmp.*
 dist/
 *.wasm
+config.demo.json

@@ -1,0 +1,48 @@
+{
+  "runner": "live-decision-harness (the workflow's own collectObservation/decide against a live fork; NOT cre workflow simulate)",
+  "at": "2026-11-06T16:00:12.130Z",
+  "chainId": 31337,
+  "app": "vaultlab",
+  "ensName": "pramaan-vaultlab-9bd292.eth",
+  "decision": "UNEXPECTED_IMPLEMENTATION",
+  "severity": "critical",
+  "summary": "proxy VaultV2 proxy (Upgraded events) points to 0xf6f2CC826f74cDCe0A7A6973Fc165060A572a983 but release v1.0.0 lists 0xc02D0fd689F3A8b846De92A12fBC3240415Eb0B2",
+  "findings": [
+    {
+      "decision": "UNEXPECTED_IMPLEMENTATION",
+      "severity": "critical",
+      "subject": "0x5abb19720e65fa27785fff7168c188bdd29668c4:0xf6f2cc826f74cdce0a7a6973fc165060a572a983",
+      "summary": "proxy VaultV2 proxy (Upgraded events) points to 0xf6f2CC826f74cDCe0A7A6973Fc165060A572a983 but release v1.0.0 lists 0xc02D0fd689F3A8b846De92A12fBC3240415Eb0B2",
+      "details": {
+        "proxy": "0x5ABb19720E65fA27785FFf7168c188bdD29668C4",
+        "label": "VaultV2 proxy (Upgraded events)",
+        "liveImplementation": "0xf6f2CC826f74cDCe0A7A6973Fc165060A572a983",
+        "expectedImplementation": "0xc02D0fd689F3A8b846De92A12fBC3240415Eb0B2",
+        "tag": "v1.0.0",
+        "sinceBlock": 12077594
+      }
+    },
+    {
+      "decision": "PENDING_RELEASE_CHANGE",
+      "severity": "medium",
+      "subject": "op:2:1c473bb6727e8b12a7d2f59ef033bf14c8b8c727db1b26c9c7bd52d89aba7b0d",
+      "summary": "release pointer change queued (operation 2, v9.9.9-evil), executable in 120s",
+      "details": {
+        "operationId": "2",
+        "pointer": "pramaan:v1:v9.9.9-evil:1c473bb6727e8b12a7d2f59ef033bf14c8b8c727db1b26c9c7bd52d89aba7b0d",
+        "tag": "v9.9.9-evil",
+        "sha256": "1c473bb6727e8b12a7d2f59ef033bf14c8b8c727db1b26c9c7bd52d89aba7b0d",
+        "eta": 1793981582,
+        "etaIso": "2026-11-06T16:13:02.000Z",
+        "secondsUntilEta": 120,
+        "executable": false,
+        "currentPointer": "pramaan:v1:v1.0.0:45f3c60d7c9ea1576d88dcd4749254ffd0b75fbb541f5b5a29122d73e3aee881"
+      }
+    }
+  ],
+  "ingest": {
+    "attempted": true,
+    "status": 200,
+    "response": "{\"ok\":true,\"workflow\":\"pramaan-monitor\",\"runId\":\"2591ef3b8aaa8b65db3a6e50\",\"decision\":\"UNEXPECTED_IMPLEMENTATION\",\"projectId\":\"aae32515-259a-4158-8611-88ad092ad877\",\"alertId\":null}"
+  }
+}
