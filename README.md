@@ -295,3 +295,7 @@ The match-length chart compares observed full-address common prefix+suffix lengt
 
 The optional `hexfence.release.v1` publisher is a prototype, not a proved live integration. The B7 follow-up corrects the oversized manifest to tested `bytes` encoding with digest/size/path checks. No live publication has been performed; the inspected job skipped for a missing publisher secret. The publisher secret is also a human configuration step. Attestations establish build provenance, not an audit or protection against a compromised maintainer.
 
+
+## Provenance: Pramaan (pre-event prototype)
+
+`pramaan/` is the **Pramaan** prototype, imported with its full git history (original dates and authors kept). Its base commit `6d30220` is dated 5 Nov 2026 01:01 IST and the last pre-kickoff commit is `1f10464`, **before** ETHGlobal Mumbai hacking began (5 Nov 21:00 IST). It is pre-existing work, not event work. HexFence itself starts at `dc6e0c6` (6 Nov 01:19 IST). Merge plan: `docs/planning/final_hexfence/`.
