@@ -22,6 +22,9 @@
     "smoke:pramaan-server": "node scripts/smoke-pramaan-server.mjs",
     "merged:verify": "pnpm --filter @hexfence/integration verify",
     "smoke:browser": "node scripts/browser-smoke.mjs",
-    "smoke:pay-live": "node scripts/pay-live-check.mjs ."
+    "smoke:pay-live": "node scripts/pay-live-check.mjs .",
+    "extension:build": "pnpm --dir pramaan build:extension",
+    "extension:package": "node scripts/package-extension.mjs",
+    "extension:test": "pnpm --dir pramaan --filter @pramaan/extension exec vitest run"
   }
 }

@@ -1,0 +1,73 @@
+# Merged HexFence + Pramaan CI. NOT pushed anywhere yet: it only runs once this tree is pushed to GitHub.
+# Tests both workspaces, builds the single extension and uploads it as a downloadable artifact; a tag `ext-v*`
+# also attaches the zip to a GitHub Release (the public "install link" for judges and testers).
+name: merged-ci
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    tags: ["ext-v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  hexfence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: corepack enable && corepack prepare pnpm@10.34.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Compile and test the Guard contracts
+        working-directory: contracts
+        run: npm ci --legacy-peer-deps && npx hardhat compile && npx hardhat test
+      - run: pnpm -r test
+      - run: pnpm merged:test
+
+  pramaan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: foundry-rs/foundry-toolchain@v1
+        with: { version: v1.8.7 }
+      - run: corepack enable && corepack prepare pnpm@10.34.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
+        working-directory: pramaan
+      - run: forge build
+        working-directory: pramaan/contracts
+      - run: pnpm test
+        working-directory: pramaan
+      - run: pnpm typecheck
+        working-directory: pramaan
+
+  extension:
+    needs: [hexfence, pramaan]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # only used to attach the zip to a release on ext-v* tags
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: corepack enable && corepack prepare pnpm@10.34.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
+        working-directory: pramaan
+      - run: pnpm extension:package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hexfence-extension
+          path: release/hexfence-extension-*.zip
+      - name: Attach to the GitHub Release (tag ext-v*)
+        if: startsWith(github.ref, 'refs/tags/ext-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/hexfence-extension-*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
